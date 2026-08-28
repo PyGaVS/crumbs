@@ -17,4 +17,4 @@ export const SPRITE_SIZE = 64;
 /** Taille d'une frame dans les spritesheets de public/assets. */
 export const FRAME_SIZE = 128;
 
-export const PHANTOM_NAMES = [ 'blinky', 'pinky', 'inky', 'clyde' ] as const;
+export const PHANTOM_NAMES = ['blinky', 'pinky', 'inky', 'clyde'] as const;

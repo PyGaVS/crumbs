@@ -12,6 +12,7 @@
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
+    "prettier": "^3.9.6",
     "terser": "^5.39.0",
     "typescript": "~5.7.2",
     "vite": "^6.3.1"
