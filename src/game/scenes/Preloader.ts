@@ -1,4 +1,8 @@
 import { Scene } from 'phaser';
+import { FRAME_SIZE, PHANTOM_NAMES, SCREEN_HEIGHT, SCREEN_WIDTH } from '../core/settings';
+
+/** Cadence des animations (Python : utils/animation.py, 10 FPS). */
+const ANIMATION_FPS = 10;
 
 export class Preloader extends Scene
 {
@@ -9,38 +13,78 @@ export class Preloader extends Scene
 
     init ()
     {
-        //  We loaded this image in our Boot Scene, so we can display it here
-        this.add.image(512, 384, 'background');
+        this.add.image(0, 0, 'background').setOrigin(0).setDisplaySize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-        //  A simple progress bar. This is the outline of the bar.
-        this.add.rectangle(512, 384, 468, 32).setStrokeStyle(1, 0xffffff);
+        //  Barre de progression : contour + remplissage
+        const centerX = SCREEN_WIDTH / 2;
+        const centerY = SCREEN_HEIGHT / 2;
 
-        //  This is the progress bar itself. It will increase in size from the left based on the % of progress.
-        const bar = this.add.rectangle(512-230, 384, 4, 28, 0xffffff);
+        this.add.rectangle(centerX, centerY, 468, 32).setStrokeStyle(1, 0xffffff);
 
-        //  Use the 'progress' event emitted by the LoaderPlugin to update the loading bar
-        this.load.on('progress', (progress: number) => {
+        const bar = this.add.rectangle(centerX - 230, centerY, 4, 28, 0xffffff);
 
-            //  Update the progress bar (our bar is 464px wide, so 100% = 464px)
+        this.load.on('progress', (progress: number) =>
+        {
             bar.width = 4 + (460 * progress);
-
         });
     }
 
     preload ()
     {
-        //  Load the assets for the game - Replace with your own assets
         this.load.setPath('assets');
 
-        this.load.image('logo', 'logo.png');
+        const frameConfig = { frameWidth: FRAME_SIZE, frameHeight: FRAME_SIZE };
+
+        //  pacman.png : 3 frames (bouche fermée → ouverte)
+        this.load.spritesheet('pacman', 'pacman.png', frameConfig);
+
+        //  <fantôme>.png : 6 frames = right x2, up x2, down x2 (gauche = droite retournée)
+        for (const name of PHANTOM_NAMES)
+        {
+            this.load.spritesheet(name, `${name}.png`, frameConfig);
+        }
     }
 
     create ()
     {
-        //  When all the assets have loaded, it's often worth creating global objects here that the rest of the game can use.
-        //  For example, you can define global animations here, so we can use them in other scenes.
+        //  Animations globales, réutilisées par toutes les scènes
+        this.anims.create({
+            key: 'pacman',
+            frames: this.anims.generateFrameNumbers('pacman', { frames: [ 2, 0, 1 ] }),
+            frameRate: ANIMATION_FPS,
+            repeat: -1
+        });
 
-        //  Move to the MainMenu. You could also swap this for a Scene Transition, such as a camera fade.
+        for (const name of PHANTOM_NAMES)
+        {
+            this.anims.create({
+                key: `${name}-right`,
+                frames: this.anims.generateFrameNumbers(name, { start: 0, end: 1 }),
+                frameRate: ANIMATION_FPS,
+                repeat: -1
+            });
+            this.anims.create({
+                key: `${name}-up`,
+                frames: this.anims.generateFrameNumbers(name, { start: 2, end: 3 }),
+                frameRate: ANIMATION_FPS,
+                repeat: -1
+            });
+            this.anims.create({
+                key: `${name}-down`,
+                frames: this.anims.generateFrameNumbers(name, { start: 4, end: 5 }),
+                frameRate: ANIMATION_FPS,
+                repeat: -1
+            });
+        }
+
+        //  Texture de pac-gomme : cercle blanc de 32 px (Python : arcade.make_circle_texture)
+        const graphics = this.add.graphics();
+
+        graphics.fillStyle(0xffffff, 1);
+        graphics.fillCircle(16, 16, 16);
+        graphics.generateTexture('dot', 32, 32);
+        graphics.destroy();
+
         this.scene.start('MainMenu');
     }
 }
