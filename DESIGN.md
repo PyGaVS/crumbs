@@ -97,6 +97,25 @@ Les deux armes sont portées en même temps et une touche permet de basculer de 
 l'autre. Le choix du moment où l'on change devient une partie du skill, au même titre que
 l'exécution des combos : la bonne arme au bon moment, y compris au milieu d'un échange.
 
+### Comment une technique s'écrit
+
+Les techniques sont présentées au joueur avec une notation unique, la même partout : écran
+de liste, menu de composition, aide en jeu.
+
+| Notation         | Sens                                    |
+| ---------------- | --------------------------------------- |
+| `←` `→` `↑` `↓`  | Cette direction précise                 |
+| `←/→`            | L'une ou l'autre, au choix du joueur    |
+| `↕`              | Haut et bas, quel que soit l'ordre      |
+| `↔`              | Gauche et droite, quel que soit l'ordre |
+| Icône d'attaque  | À définir                               |
+| Icône de bascule | À définir (changement d'arme)           |
+
+Exemple : `↓ ↓ ←/→` se lit « bas, bas, puis gauche ou droite ».
+
+Cette notation n'est pas un détail d'interface. C'est le vocabulaire dans lequel le joueur
+mémorise ses techniques, donc il doit rester identique d'une classe et d'une arme à l'autre.
+
 ### La génération interdit la mémorisation
 
 Les niveaux sont générés aléatoirement : aucun parcours ne se retient, aucune position
@@ -179,6 +198,8 @@ Le code actuel est une migration d'un exercice Python ; ces briques sont réutil
 - [ ] **Les séquences de touches.** Une même technique garde-t-elle la même entrée d'une
       classe à l'autre ? Si chaque classe a ses propres séquences, le joueur repart de zéro
       à chaque déblocage, ce qui va contre la progression par le skill.
+- [ ] **Les icônes de la notation.** Quel symbole pour l'attaque et pour le changement
+      d'arme ? Le reste de la notation est fixé, ces deux-là restent à dessiner.
 - [ ] **La taille du catalogue au lancement.** Combien de classes et combien d'armes pour
       une première version jouable ?
 - [ ] **La lisibilité des ennemis.** Comment un ennemi annonce-t-il ce qu'il va faire :
@@ -230,3 +251,4 @@ le fond spatial du prototype sont des placeholders, pas un choix.
 | 2026-09-21 | 100 PV, 30 d'armure, environ 10 dégâts par coup ennemi         | Trois coups absorbés avant toute conséquence durable, treize avant la mort             |
 | 2026-09-21 | L'armure encaisse tout tant qu'elle n'est pas à 0              | Rend la marge lisible : le joueur sait exactement quand il commence à payer vraiment   |
 | 2026-09-21 | L'armure se recharge à la fin d'un niveau, jamais pendant      | Chaque niveau devient une épreuve à part, avec la même franchise de trois erreurs      |
+| 2026-09-22 | Notation unique pour écrire les techniques au joueur           | C'est le vocabulaire dans lequel il les mémorise, il doit être stable partout          |
