@@ -14,6 +14,8 @@ const config: Phaser.Types.Core.GameConfig = {
   height: SCREEN_HEIGHT,
   parent: 'game-container',
   backgroundColor: '#000000',
+  //  Sprites 16 px agrandis x4 : désactive le lissage pour garder les pixels nets
+  pixelArt: true,
   //  Le jeu garde sa résolution logique et s'adapte à la taille de la fenêtre
   scale: {
     mode: Scale.FIT,

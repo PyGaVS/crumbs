@@ -1,0 +1,67 @@
+{
+  "boot": {
+    "path": "assets",
+    "files": [
+      {
+        "type": "image",
+        "key": "background",
+        "url": "space.jpeg"
+      }
+    ]
+  },
+  "game": {
+    "path": "assets",
+    "files": [
+      {
+        "type": "spritesheet",
+        "key": "ninjaGreen",
+        "url": "characters/ninjaGreen/SeparateAnim/Walk.png",
+        "frameConfig": {
+          "frameWidth": 16,
+          "frameHeight": 16
+        }
+      },
+      {
+        "type": "spritesheet",
+        "key": "blinky",
+        "url": "blinky.png",
+        "frameConfig": {
+          "frameWidth": 128,
+          "frameHeight": 128
+        }
+      },
+      {
+        "type": "spritesheet",
+        "key": "pinky",
+        "url": "pinky.png",
+        "frameConfig": {
+          "frameWidth": 128,
+          "frameHeight": 128
+        }
+      },
+      {
+        "type": "spritesheet",
+        "key": "inky",
+        "url": "inky.png",
+        "frameConfig": {
+          "frameWidth": 128,
+          "frameHeight": 128
+        }
+      },
+      {
+        "type": "spritesheet",
+        "key": "clyde",
+        "url": "clyde.png",
+        "frameConfig": {
+          "frameWidth": 128,
+          "frameHeight": 128
+        }
+      },
+      {
+        "type": "animation",
+        "key": "animations",
+        "url": "animations.json"
+      }
+    ]
+  }
+}

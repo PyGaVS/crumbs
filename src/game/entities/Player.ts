@@ -3,16 +3,16 @@ import { SCREEN_HEIGHT, SCREEN_WIDTH, SPRITE_SIZE } from '../core/settings';
 import { Cardinal, InputHistory, Special } from '../utils/input';
 import { Direction, Entity } from './Entity';
 
-/** Rotation du sprite (en degrés, sens horaire) pour chaque direction. */
-const ANGLES: Record<Direction, number> = {
-  R: 0,
-  L: 180,
-  U: -90,
-  D: 90,
-  RU: -45,
-  LU: -135,
-  LD: 135,
-  RD: 45,
+/** Animation jouée pour chaque direction (les diagonales utilisent la composante horizontale). */
+const ANIMATIONS: Record<Direction, string> = {
+  R: 'ninja-right',
+  L: 'ninja-left',
+  U: 'ninja-up',
+  D: 'ninja-down',
+  RU: 'ninja-right',
+  LU: 'ninja-left',
+  LD: 'ninja-left',
+  RD: 'ninja-right',
 };
 
 /** Touches clavier (KeyboardEvent.code) → direction. */
@@ -30,12 +30,12 @@ export class Player extends Entity {
   speedBoost = 0;
 
   constructor(scene: Scene) {
-    super(scene, SCREEN_WIDTH / 10, SCREEN_HEIGHT - SCREEN_HEIGHT / 10, 'pacman', 2);
+    super(scene, SCREEN_WIDTH / 10, SCREEN_HEIGHT - SCREEN_HEIGHT / 10, 'ninjaGreen', 3);
 
     this.name = 'player';
     this.speed = 6;
     this.setScale(SPRITE_SIZE / this.width);
-    this.play('pacman');
+    this.play(ANIMATIONS[this.direction]);
   }
 
   onKeyPress(code: string): void {
@@ -54,7 +54,7 @@ export class Player extends Entity {
 
   override setDirection(direction: Direction): void {
     this.direction = direction;
-    this.angle = ANGLES[direction];
+    this.play(ANIMATIONS[direction], true);
     this.speedBoost = 0;
   }
 

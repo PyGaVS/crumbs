@@ -1,0 +1,24 @@
+{
+  "$comment": "Source de public/assets/animations.json — généré par vite/plugins/animations.ts au démarrage de Vite (dev et build).",
+  "output": "public/assets/animations.json",
+  "frameRate": 10,
+  "repeat": -1,
+  "sheets": [
+    {
+      "$comment": "Pack Ninja Adventure : une colonne par direction, une ligne par frame de marche.",
+      "keys": ["ninjaGreen"],
+      "prefix": "ninja",
+      "layout": "column",
+      "columns": 4,
+      "rows": 4,
+      "animations": ["down", "up", "left", "right"]
+    },
+    {
+      "$comment": "Fantômes : frames consécutives, 2 par direction (gauche = droite retournée dans le code).",
+      "keys": ["blinky", "pinky", "inky", "clyde"],
+      "layout": "sequence",
+      "framesPerAnimation": 2,
+      "animations": ["right", "up", "down"]
+    }
+  ]
+}

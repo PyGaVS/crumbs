@@ -14,8 +14,6 @@ const MOVES: Record<Direction, readonly [number, number]> = {
   LD: [-1, 1],
   RD: [1, 1],
 };
-
-/** Équivalent de entities/entity.py : un sprite qui avance dans une direction et rebondit sur les bords. */
 export class Entity extends GameObjects.Sprite {
   direction: Direction = 'R';
   speed = 5;

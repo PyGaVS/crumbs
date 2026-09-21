@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Généré au build par vite/plugins/animations.ts
+public/assets/animations.json
