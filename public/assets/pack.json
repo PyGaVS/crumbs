@@ -1,14 +1,4 @@
 {
-  "boot": {
-    "path": "assets",
-    "files": [
-      {
-        "type": "image",
-        "key": "background",
-        "url": "space.jpeg"
-      }
-    ]
-  },
   "game": {
     "path": "assets",
     "files": [
@@ -22,40 +12,9 @@
         }
       },
       {
-        "type": "spritesheet",
-        "key": "blinky",
-        "url": "blinky.png",
-        "frameConfig": {
-          "frameWidth": 128,
-          "frameHeight": 128
-        }
-      },
-      {
-        "type": "spritesheet",
-        "key": "pinky",
-        "url": "pinky.png",
-        "frameConfig": {
-          "frameWidth": 128,
-          "frameHeight": 128
-        }
-      },
-      {
-        "type": "spritesheet",
-        "key": "inky",
-        "url": "inky.png",
-        "frameConfig": {
-          "frameWidth": 128,
-          "frameHeight": 128
-        }
-      },
-      {
-        "type": "spritesheet",
-        "key": "clyde",
-        "url": "clyde.png",
-        "frameConfig": {
-          "frameWidth": 128,
-          "frameHeight": 128
-        }
+        "type": "image",
+        "key": "rock",
+        "url": "items/rock.png"
       },
       {
         "type": "animation",

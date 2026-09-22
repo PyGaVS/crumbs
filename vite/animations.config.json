@@ -12,13 +12,6 @@
       "columns": 4,
       "rows": 4,
       "animations": ["down", "up", "left", "right"]
-    },
-    {
-      "$comment": "Fantômes : frames consécutives, 2 par direction (gauche = droite retournée dans le code).",
-      "keys": ["blinky", "pinky", "inky", "clyde"],
-      "layout": "sequence",
-      "framesPerAnimation": 2,
-      "animations": ["right", "up", "down"]
     }
   ]
 }
