@@ -1,4 +1,5 @@
-import type { CharClassId, TechniqueId } from './ids';
+import type { CharClassId } from './enums/CharClassId';
+import type { TechniqueId } from './enums/TechniqueId';
 import type { Technique } from './Technique';
 import { getTechnique } from './techniques';
 

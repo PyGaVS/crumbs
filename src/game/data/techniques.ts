@@ -1,4 +1,4 @@
-import { TechniqueId } from './ids';
+import { TechniqueId } from './enums/TechniqueId';
 import { Technique } from './Technique';
 
 /** Catalogue des techniques. Combos du prototype en placeholder (jalon 0.2). */

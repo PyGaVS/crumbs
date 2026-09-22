@@ -10,7 +10,13 @@ Instructions pour Claude Code sur ce projet.
 
 ## Projet
 
-- Jeu Phaser 4 + Vite + TypeScript. Design dans docs/DESIGN.md, jalons dans docs/ROADMAP.md.
+- Jeu Phaser 4 + Vite + TypeScript. Design dans docs/DESIGN.md, jalons dans docs/ROADMAP.md, architecture dans docs/ARCHITECTURE.md.
 - `src/game/data/` : définitions pures (classes, armes, techniques, ennemis), n'importe jamais Phaser. Le pont vers Phaser passe par des interfaces (ex. TechniqueUser) implémentées par les entités.
 - Assets décrits dans public/assets/pack.json ; animations générées par vite/plugins/animations.ts depuis vite/animations.config.json.
 - `npm run dev` : serveur sur http://localhost:8080. Ne jamais arrêter un serveur lancé par l'utilisateur sans lui demander.
+## REGLES D'OR
+
+- Ne rien commit sans autorisations explicites de l'utilisateur
+- Respect des conventions concernant le style de code
+- Pas de duplication de code
+- Respect de l'architecture

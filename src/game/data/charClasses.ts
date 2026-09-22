@@ -1,5 +1,6 @@
 import { CharClass } from './CharClass';
-import { CharClassId, TechniqueId } from './ids';
+import { CharClassId } from './enums/CharClassId';
+import { TechniqueId } from './enums/TechniqueId';
 
 /** Catalogue des classes. La répartition des techniques est provisoire (jalon 0.4). */
 export const ALL_CHAR_CLASSES: readonly CharClass[] = [

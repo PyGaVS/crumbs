@@ -1,4 +1,5 @@
-import type { TechniqueId, WeaponId } from './ids';
+import type { TechniqueId } from './enums/TechniqueId';
+import type { WeaponId } from './enums/WeaponId';
 import type { Technique } from './Technique';
 import { getTechnique } from './techniques';
 

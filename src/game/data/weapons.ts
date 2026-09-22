@@ -1,4 +1,5 @@
-import { TechniqueId, WeaponId } from './ids';
+import { TechniqueId } from './enums/TechniqueId';
+import { WeaponId } from './enums/WeaponId';
 import { Weapon } from './Weapon';
 
 /** Catalogue des armes. La répartition des techniques est provisoire (jalon 0.3). */
