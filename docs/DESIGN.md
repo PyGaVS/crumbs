@@ -48,8 +48,10 @@ montée en statistiques qui remplace la maîtrise.
 | Niveaux            | Générés aléatoirement. Rien ne s'apprend par cœur                                                    |
 | Combat             | Tient entièrement sur un écran : tous les ennemis sont visibles en permanence, aucun hors-champ      |
 | Déplacement        | Continu, on ne dirige que la direction, rebond sur les bords (hérité du proto)                       |
+| Halt               | Un input à part entière (Espace) : stoppe le déplacement jusqu'à la prochaine direction, s'écrit `H` |
 | Attaque            | Une attaque simple toujours disponible, plus des techniques spéciales via les combos                 |
 | Combos             | Enchaînements au clavier, lus dans l'historique des dernières touches                                |
+| Amorce des combos  | La direction de course compte comme premier input de l'historique                                    |
 | Ennemis            | Intelligents et variés : chacun sa stratégie, capables de coordination et de réagir au jeu du joueur |
 | Encaissement       | 100 PV qui ne se régénèrent pas, 30 d'armure qui se régénère. Un coup ennemi ôte 10 en moyenne       |
 | Ordre des dégâts   | L'armure encaisse tout. Les PV ne baissent qu'une fois l'armure tombée à 0                           |
@@ -108,10 +110,20 @@ de liste, menu de composition, aide en jeu.
 | `←/→`            | L'une ou l'autre, au choix du joueur    |
 | `↕`              | Haut et bas, quel que soit l'ordre      |
 | `↔`              | Gauche et droite, quel que soit l'ordre |
+| `H`              | Halt : l'arrêt                          |
 | Icône d'attaque  | À définir                               |
 | Icône de bascule | À définir (changement d'arme)           |
 
 Exemple : `↓ ↓ ←/→` se lit « bas, bas, puis gauche ou droite ».
+
+La direction de course amorce l'historique : à la première frappe d'un enchaînement
+(celle qui suit une coupure `N`), la direction que le joueur tenait à cet instant est
+insérée juste avant dans l'historique (à l'arrêt, c'est `H` qui amorce). C'est bien la direction d'avant l'enchaînement qui
+compte, pas celle du moment où le combo se termine, puisque les frappes du combo la
+changent en route. Une technique alignée avec la course s'exécute donc avec une frappe de
+moins (en courant à droite, `→ → ←` se sort en tapant `→ ←`), et le même geste produit la
+version verticale en courant vers le haut. Un combo non aligné reste accessible en tapant
+la séquence entière. Course en diagonale : pas d'amorce pour le moment, on l'ignore.
 
 Cette notation n'est pas un détail d'interface. C'est le vocabulaire dans lequel le joueur
 mémorise ses techniques, donc il doit rester identique d'une classe et d'une arme à l'autre.
@@ -231,24 +243,26 @@ le fond spatial du prototype sont des placeholders, pas un choix.
 
 ## 9. Journal des décisions
 
-| Date       | Décision                                                       | Pourquoi                                                                               |
-| ---------- | -------------------------------------------------------------- | -------------------------------------------------------------------------------------- |
-| 2026-08-29 | Assets et animations décrits en JSON, pas en dur dans le code  | Ajouter un personnage ne doit pas demander de toucher au code                          |
-| 2026-09-21 | Roguelike où l'on progresse par le skill, pas par la puissance | C'est l'intention qui arbitre tout le reste                                            |
-| 2026-09-21 | Vie non régénérable et armure régénérable                      | Rendre l'erreur punitive sans la rendre définitive (_Soul Knight_)                     |
-| 2026-09-21 | Aucun ramassage pendant un run                                 | Le seul levier du joueur doit être sa propre exécution                                 |
-| 2026-09-21 | Les déblocages apportent de la variété, jamais de la puissance | Sinon on progresse en jouant beaucoup, pas en jouant mieux                             |
-| 2026-09-21 | Les ennemis sont intelligents, variés et coordonnés            | Sans ramassage ni montée en puissance, c'est eux qui portent l'intérêt du jeu          |
-| 2026-09-21 | Le joueur doit se sentir fort                                  | C'est la récompense du skill, et la raison pour laquelle aucune arme ne doit la donner |
-| 2026-09-21 | Le run est découpé en biomes, eux-mêmes découpés en niveaux    | Remplace l'idée d'étages successifs                                                    |
-| 2026-09-21 | Tout le combat tient sur un écran, aucun ennemi hors-champ     | Le joueur doit pouvoir lire toute la situation pour qu'une mort soit sa faute          |
-| 2026-09-21 | Un biome a son propre jeu d'ennemis et son propre terrain      | Sinon le changement de biome n'est qu'un changement de décor                           |
-| 2026-09-21 | Les niveaux sont générés aléatoirement                         | Interdire la mémorisation, pour que seule la lecture de situation fasse progresser     |
-| 2026-09-21 | Pas de personnage fixe : une classe plus deux armes            | La variété devient multiplicative sans qu'aucune composition soit plus forte           |
-| 2026-09-21 | Les techniques viennent de la classe et de chaque arme         | Ajouter une brique enrichit toutes les compositions existantes                         |
-| 2026-09-21 | Deux armes portées en même temps, avec une touche de bascule   | Choisir le bon moment pour changer d'arme devient une composante du skill              |
-| 2026-09-21 | La composition se choisit avant le run, dans un menu           | Cohérent avec l'absence de ramassage pendant un run                                    |
-| 2026-09-21 | 100 PV, 30 d'armure, environ 10 dégâts par coup ennemi         | Trois coups absorbés avant toute conséquence durable, treize avant la mort             |
-| 2026-09-21 | L'armure encaisse tout tant qu'elle n'est pas à 0              | Rend la marge lisible : le joueur sait exactement quand il commence à payer vraiment   |
-| 2026-09-21 | L'armure se recharge à la fin d'un niveau, jamais pendant      | Chaque niveau devient une épreuve à part, avec la même franchise de trois erreurs      |
-| 2026-09-22 | Notation unique pour écrire les techniques au joueur           | C'est le vocabulaire dans lequel il les mémorise, il doit être stable partout          |
+| Date       | Décision                                                       | Pourquoi                                                                                 |
+| ---------- | -------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| 2026-08-29 | Assets et animations décrits en JSON, pas en dur dans le code  | Ajouter un personnage ne doit pas demander de toucher au code                            |
+| 2026-09-21 | Roguelike où l'on progresse par le skill, pas par la puissance | C'est l'intention qui arbitre tout le reste                                              |
+| 2026-09-21 | Vie non régénérable et armure régénérable                      | Rendre l'erreur punitive sans la rendre définitive (_Soul Knight_)                       |
+| 2026-09-21 | Aucun ramassage pendant un run                                 | Le seul levier du joueur doit être sa propre exécution                                   |
+| 2026-09-21 | Les déblocages apportent de la variété, jamais de la puissance | Sinon on progresse en jouant beaucoup, pas en jouant mieux                               |
+| 2026-09-21 | Les ennemis sont intelligents, variés et coordonnés            | Sans ramassage ni montée en puissance, c'est eux qui portent l'intérêt du jeu            |
+| 2026-09-21 | Le joueur doit se sentir fort                                  | C'est la récompense du skill, et la raison pour laquelle aucune arme ne doit la donner   |
+| 2026-09-21 | Le run est découpé en biomes, eux-mêmes découpés en niveaux    | Remplace l'idée d'étages successifs                                                      |
+| 2026-09-21 | Tout le combat tient sur un écran, aucun ennemi hors-champ     | Le joueur doit pouvoir lire toute la situation pour qu'une mort soit sa faute            |
+| 2026-09-21 | Un biome a son propre jeu d'ennemis et son propre terrain      | Sinon le changement de biome n'est qu'un changement de décor                             |
+| 2026-09-21 | Les niveaux sont générés aléatoirement                         | Interdire la mémorisation, pour que seule la lecture de situation fasse progresser       |
+| 2026-09-21 | Pas de personnage fixe : une classe plus deux armes            | La variété devient multiplicative sans qu'aucune composition soit plus forte             |
+| 2026-09-21 | Les techniques viennent de la classe et de chaque arme         | Ajouter une brique enrichit toutes les compositions existantes                           |
+| 2026-09-21 | Deux armes portées en même temps, avec une touche de bascule   | Choisir le bon moment pour changer d'arme devient une composante du skill                |
+| 2026-09-21 | La composition se choisit avant le run, dans un menu           | Cohérent avec l'absence de ramassage pendant un run                                      |
+| 2026-09-21 | 100 PV, 30 d'armure, environ 10 dégâts par coup ennemi         | Trois coups absorbés avant toute conséquence durable, treize avant la mort               |
+| 2026-09-21 | L'armure encaisse tout tant qu'elle n'est pas à 0              | Rend la marge lisible : le joueur sait exactement quand il commence à payer vraiment     |
+| 2026-09-21 | L'armure se recharge à la fin d'un niveau, jamais pendant      | Chaque niveau devient une épreuve à part, avec la même franchise de trois erreurs        |
+| 2026-09-22 | Notation unique pour écrire les techniques au joueur           | C'est le vocabulaire dans lequel il les mémorise, il doit être stable partout            |
+| 2026-09-23 | La direction de course amorce l'historique des combos          | Une technique alignée avec la course coûte une frappe de moins, sans changer la notation |
+| 2026-09-23 | Halt (Espace) : un input qui stoppe le déplacement, écrit `H`  | Ouvre des techniques depuis l'arrêt et enrichit le vocabulaire des combos                |

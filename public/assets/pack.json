@@ -12,6 +12,15 @@
         }
       },
       {
+        "type": "spritesheet",
+        "key": "ninjaGreen-idle",
+        "url": "characters/ninjaGreen/SeparateAnim/Idle.png",
+        "frameConfig": {
+          "frameWidth": 16,
+          "frameHeight": 16
+        }
+      },
+      {
         "type": "image",
         "key": "rock",
         "url": "items/rock.png"

@@ -6,6 +6,7 @@ export type TechniqueStep =
   | { kind: 'dir'; dir: Cardinal }
   | { kind: 'either'; dirs: [Cardinal, Cardinal] }
   | { kind: 'both'; axis: 'horizontal' | 'vertical' }
+  | { kind: 'halt' }
   | { kind: 'attack' }
   | { kind: 'switch' };
 
@@ -39,6 +40,8 @@ function stepNotation(step: TechniqueStep): string {
       return `${ARROWS[step.dirs[0]]}/${ARROWS[step.dirs[1]]}`;
     case 'both':
       return step.axis === 'vertical' ? '↕' : '↔';
+    case 'halt':
+      return 'H';
     case 'attack':
       return 'ATK'; // icône à définir (DESIGN.md §6)
     case 'switch':

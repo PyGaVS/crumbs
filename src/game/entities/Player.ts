@@ -15,6 +15,18 @@ const ANIMATIONS: Record<Direction, string> = {
   RD: 'ninja-right',
 };
 
+/** Frame de la feuille Idle par direction (mêmes colonnes que la feuille Walk). */
+const IDLE_FRAMES: Record<Direction, number> = {
+  R: 3,
+  L: 2,
+  U: 1,
+  D: 0,
+  RU: 3,
+  LU: 2,
+  LD: 2,
+  RD: 3,
+};
+
 /** Touches clavier (KeyboardEvent.code) → direction. */
 const KEYS: Partial<Record<string, Cardinal>> = {
   ArrowRight: 'R',
@@ -28,17 +40,25 @@ export class Player extends Entity {
   score = 0;
   inputHistory = new InputHistory();
   speedBoost = 0;
+  private moving = false;
+  name = 'player';
+  speed = 6;
 
   constructor(scene: Scene) {
     super(scene, SCREEN_WIDTH / 10, SCREEN_HEIGHT - SCREEN_HEIGHT / 10, 'ninjaGreen', 3);
-
-    this.name = 'player';
-    this.speed = 6;
     this.setScale(SPRITE_SIZE / this.width);
-    this.play(ANIMATIONS[this.direction]);
+    this.halt();
   }
 
   onKeyPress(code: string): void {
+    const course = this.moving ? this.direction : 'H';
+
+    if (code === 'Space') {
+      if (this.moving) { this.halt(); }
+      this.inputHistory.addInput('H', course);
+      return;
+    }
+
     const input = KEYS[code];
 
     if (!input) {
@@ -47,18 +67,30 @@ export class Player extends Entity {
 
     this.setDirection(input);
 
-    const special = this.inputHistory.addInput(input);
+    const special = this.inputHistory.addInput(input, course);
 
     this.applySpecial(special);
   }
 
   override setDirection(direction: Direction): void {
     this.direction = direction;
+    this.moving = true;
     this.play(ANIMATIONS[direction], true);
     this.speedBoost = 0;
   }
 
+  /** Immobilise le perso : il garde sa direction mais passe sur sa frame d'attente. */
+  halt(): void {
+    this.moving = false;
+    this.stop();
+    this.setTexture('ninjaGreen-idle', IDLE_FRAMES[this.direction]);
+  }
+
   move(delta: number): void {
+    if (!this.moving) {
+      return;
+    }
+
     this.checkBorder();
     this.forward(delta, this.speedBoost);
   }

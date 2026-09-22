@@ -16,5 +16,3 @@ export const SPRITE_SIZE = 64;
 
 /** Asset Pack Phaser décrivant tous les fichiers à charger (images, spritesheets, animations). */
 export const ASSET_PACK = 'assets/pack.json';
-
-export const PHANTOM_NAMES = ['blinky', 'pinky', 'inky', 'clyde'] as const;

@@ -1,14 +1,20 @@
-export type Cardinal = 'R' | 'L' | 'U' | 'D';
+export const CARDINALS = ['R', 'L', 'U', 'D'] as const;
+
+export type Cardinal = (typeof CARDINALS)[number];
 export type Diagonal = 'RU' | 'LU' | 'LD' | 'RD';
 
-/** 'N' = aucune touche pressée pendant 250 ms, sert à séparer les combos. */
-export type InputKey = Cardinal | 'N';
+/** 'H' = halt, un input du joueur. 'N' = aucune touche pendant 250 ms, sépare les combos. */
+export type InputKey = Cardinal | 'H' | 'N';
 
 export type Special = 'speed' | Diagonal | '';
 
 const OPPOSITES: Record<Cardinal, Cardinal> = { R: 'L', L: 'R', U: 'D', D: 'U' };
 
-const SYMBOLS: Record<Cardinal, string> = { R: '→', L: '←', U: '↑', D: '↓' };
+export function isCardinal(input: string): input is Cardinal {
+  return (CARDINALS as readonly string[]).includes(input);
+}
+
+const SYMBOLS: Record<InputKey, string> = { R: '→', L: '←', U: '↑', D: '↓', H: 'H', N: ' ' };
 
 /** Paire (dernière touche + avant-dernière) → diagonale. */
 const DIAGONALS: Partial<Record<string, Diagonal>> = {
@@ -29,11 +35,20 @@ const DIAGONALS: Partial<Record<string, Diagonal>> = {
 export class InputHistory {
   history: InputKey[] = ['N', 'N', 'N', 'N'];
 
-  addInput(input: InputKey): Special {
+  addInput(input: InputKey, course?: Cardinal | Diagonal | 'H'): Special {
+    // Amorce : au début d'un enchaînement, la direction de course compte comme la frappe précédente
+    if (input !== 'N' && course !== undefined && this.isChainStart() && (isCardinal(course) || course === 'H')) {
+      this.history.push(course);
+    }
+
     this.history.push(input);
     this.history = this.history.slice(-4);
 
     return this.checkSpecial();
+  }
+
+  private isChainStart(): boolean {
+    return this.history[this.history.length - 1] === 'N';
   }
 
   checkSpecial(): Special {
@@ -54,11 +69,11 @@ export class InputHistory {
   }
 
   opposite(input: InputKey): Cardinal | undefined {
-    return input === 'N' ? undefined : OPPOSITES[input];
+    return isCardinal(input) ? OPPOSITES[input] : undefined;
   }
 
   getHistory(): string {
-    return this.history.map((input) => (input === 'N' ? ' ' : SYMBOLS[input])).join(' ');
+    return this.history.map((input) => SYMBOLS[input]).join(' ');
   }
 
   getDiagonal(): Diagonal | '' {
