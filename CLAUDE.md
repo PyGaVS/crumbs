@@ -1,0 +1,16 @@
+# CLAUDE.md
+
+Instructions pour Claude Code sur ce projet.
+
+## Style de code
+
+- Commentaires au plus simple : une ligne courte quand elle apporte quelque chose, jamais de pavé. Le code doit se lire sans.
+- Commentaires et documentation en français, sans tiret cadratin.
+- Formatage Prettier, vérification `npm run typecheck` avant de livrer.
+
+## Projet
+
+- Jeu Phaser 4 + Vite + TypeScript. Design dans docs/DESIGN.md, jalons dans docs/ROADMAP.md.
+- `src/game/data/` : définitions pures (classes, armes, techniques, ennemis), n'importe jamais Phaser. Le pont vers Phaser passe par des interfaces (ex. TechniqueUser) implémentées par les entités.
+- Assets décrits dans public/assets/pack.json ; animations générées par vite/plugins/animations.ts depuis vite/animations.config.json.
+- `npm run dev` : serveur sur http://localhost:8080. Ne jamais arrêter un serveur lancé par l'utilisateur sans lui demander.
