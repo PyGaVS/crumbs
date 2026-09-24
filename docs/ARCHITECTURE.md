@@ -12,8 +12,9 @@ src/
     main.ts               Config Phaser (résolution, pixelArt, liste des scènes)
     core/settings.ts      Constantes globales (écran, SPRITE_SIZE, ASSET_PACK…)
     scenes/               Les écrans du jeu
-    entities/             Les objets Phaser qui vivent dans une scène
-    data/                 Les définitions de gameplay, sans aucun Phaser
+    entities/             Les entités : sprites Phaser (Player…) et entités métier
+                          pures (Technique, CharClass, Weapon, EnemyKind, Composition)
+    data/                 La donnée pure : catalogues d'instances et enums
     utils/input.ts        Historique de touches et détection des séquences
 vite/
   config.dev.ts / config.prod.ts
@@ -27,10 +28,11 @@ docs/                     DESIGN.md, ROADMAP.md, ce fichier
 ## La règle de dépendance
 
 ```
-scenes ──► entities ──► data ──► (rien)
+scenes ──► sprites (Player…) ──► data (catalogues) ──► entités métier ──► (rien)
 ```
 
-Chaque couche n'importe que celle d'en dessous, et `data/` n'importe jamais Phaser.
+La règle n'est pas portée par les dossiers mais par la nature des fichiers : tout ce qui
+décrit le gameplay (les entités métier et `data/`) n'importe jamais Phaser.
 Le pont se fait par des interfaces : une technique agit sur un `TechniqueUser`
 (déclaré dans `data/`), et c'est `Player`, sprite Phaser, qui implémente ce contrat.
 Conséquences : les définitions se testent sans lancer le jeu, et changer de moteur ou de
@@ -49,28 +51,38 @@ Boot ──► Preloader ──► MainMenu ──► Game ⇄ GameOver
 - **Game** : l'arène du jalon 0. Recrée tout dans `create()` à chaque partie : les objets
   d'une scène meurent avec elle, seuls les textures et les animations sont globaux.
 
-## Les données de gameplay (`data/`)
+## La donnée de gameplay (`data/`)
 
 - `enums/` : un fichier par enum de chaînes (`CharClassId.NINJA`…). Ce sont les identifiants
   uniques, utilisables comme clés de texture et sérialisables pour les sauvegardes.
-- Un fichier par concept (`Technique.ts`, `CharClass.ts`, `Weapon.ts`, `EnemyKind.ts`) et
-  un catalogue par concept (`techniques.ts`, `charClasses.ts`…) : un tableau constant
-  d'instances plus un accesseur `getX(id)` qui échoue bruyamment sur un id inconnu.
+- Un catalogue par concept (`techniques.ts`, `charClasses.ts`, `weapons.ts`, `enemies.ts`) :
+  un tableau constant d'instances plus un accesseur `getX(id)` qui échoue bruyamment sur un
+  id inconnu.
 - Les liens entre concepts passent par les ids (`techniqueIds: TechniqueId[]`), jamais par
   des références directes : pas d'imports circulaires.
-- `Composition.ts` : l'assemblage d'un run (1 classe + 2 armes).
-  `techniquesWith(armeActive)` donne le répertoire du moment.
-- Une `Technique` porte sa séquence de touches (dont découle sa notation affichée) et son
-  effet `execute(user)`.
 
 ## Les entités (`entities/`)
 
+Deux natures cohabitent, et seule la première a le droit d'importer Phaser.
+
+Les sprites, qui vivent dans une scène :
+
 - `Entity` : un sprite qui avance dans une direction, rebondit sur les bords et sait
   tester une collision en rectangle.
-- `Player` : le ninja. Branché sur l'historique de touches ; implémentera `TechniqueUser`
-  et recevra une `Composition` (roadmap 0.2).
+- `Player` : le ninja. Branché sur l'historique de touches, implémente `TechniqueUser` et
+  recevra une `Composition` (roadmap 0.4).
 - `Phantom` et ses quatre stratégies, `Dot` : hérités du prototype, plus chargés ni
   affichés, gardés comme base pour les ennemis du jalon 0.5.
+
+Les entités métier, instanciées par les catalogues de `data/`, sans aucun Phaser :
+
+- `Technique` : ses variantes de séquences (dont découle la notation affichée), la
+  détection `matches(history)` et l'effet `execute(user)`. `TechniqueUser` y déclare ce
+  qu'une technique peut faire ; les sprites l'implémentent, c'est le pont entre les deux
+  natures.
+- `CharClass`, `Weapon`, `EnemyKind` : les concepts du design et leurs chiffres.
+- `Composition` : l'assemblage d'un run (1 classe + 2 armes). `techniquesWith(armeActive)`
+  donne le répertoire du moment.
 
 ## Les assets
 

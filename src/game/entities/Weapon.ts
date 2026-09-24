@@ -1,7 +1,7 @@
-import type { TechniqueId } from './enums/TechniqueId';
-import type { WeaponId } from './enums/WeaponId';
+import type { TechniqueId } from '../data/enums/TechniqueId';
+import type { WeaponId } from '../data/enums/WeaponId';
 import type { Technique } from './Technique';
-import { getTechnique } from './techniques';
+import { getTechnique } from '../data/techniques';
 
 /** Une arme et ses techniques. Stats de combat au jalon 0.3. */
 export class Weapon {

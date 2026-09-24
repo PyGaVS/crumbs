@@ -1,7 +1,7 @@
-import type { CharClassId } from './enums/CharClassId';
-import type { TechniqueId } from './enums/TechniqueId';
+import type { CharClassId } from '../data/enums/CharClassId';
+import type { TechniqueId } from '../data/enums/TechniqueId';
 import type { Technique } from './Technique';
-import { getTechnique } from './techniques';
+import { getTechnique } from '../data/techniques';
 
 /** Une classe jouable et ses techniques (DESIGN.md §4). */
 export class CharClass {

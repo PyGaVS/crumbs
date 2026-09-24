@@ -1,6 +1,6 @@
 import { TechniqueId } from './enums/TechniqueId';
 import { WeaponId } from './enums/WeaponId';
-import { Weapon } from './Weapon';
+import { Weapon } from '../entities/Weapon';
 
 /** Catalogue des armes. La répartition des techniques est provisoire (jalon 0.3). */
 export const ALL_WEAPONS: readonly Weapon[] = [

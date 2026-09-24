@@ -1,5 +1,5 @@
 import type { Cardinal, Diagonal } from '../utils/input';
-import type { TechniqueId } from './enums/TechniqueId';
+import type { TechniqueId } from '../data/enums/TechniqueId';
 
 /** Une étape d'une séquence, selon la notation de DESIGN.md. */
 export type TechniqueStep =

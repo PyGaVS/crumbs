@@ -1,4 +1,4 @@
-import { EnemyKind } from './EnemyKind';
+import { EnemyKind } from '../entities/EnemyKind';
 import { EnemyId } from './enums/EnemyId';
 
 /** Catalogue des ennemis. Un seul pour l'instant, les vrais arrivent au jalon 0.5. */

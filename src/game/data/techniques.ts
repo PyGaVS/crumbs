@@ -1,5 +1,5 @@
 import { TechniqueId } from './enums/TechniqueId';
-import { Technique } from './Technique';
+import { Technique } from '../entities/Technique';
 
 /** Catalogue des techniques. Combos du prototype en placeholder (jalon 0.2). */
 export const ALL_TECHNIQUES: readonly Technique[] = [

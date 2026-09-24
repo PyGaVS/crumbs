@@ -1,4 +1,4 @@
-import type { EnemyId } from './enums/EnemyId';
+import type { EnemyId } from '../data/enums/EnemyId';
 
 export class EnemyKind {
   constructor(

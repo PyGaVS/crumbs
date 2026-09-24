@@ -54,7 +54,9 @@ export class Player extends Entity {
     const course = this.moving ? this.direction : 'H';
 
     if (code === 'Space') {
-      if (this.moving) { this.halt(); }
+      if (this.moving) {
+        this.halt();
+      }
       this.inputHistory.addInput('H', course);
       return;
     }
