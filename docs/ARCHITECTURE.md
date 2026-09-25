@@ -32,11 +32,11 @@ scenes ──► sprites (Player…) ──► data (catalogues) ──► entit
 ```
 
 La règle n'est pas portée par les dossiers mais par la nature des fichiers : tout ce qui
-décrit le gameplay (les entités métier et `data/`) n'importe jamais Phaser.
-Le pont se fait par des interfaces : une technique agit sur un `TechniqueUser`
-(déclaré dans `data/`), et c'est `Player`, sprite Phaser, qui implémente ce contrat.
-Conséquences : les définitions se testent sans lancer le jeu, et changer de moteur ou de
-scène ne touche pas au gameplay décrit dans `data/`.
+décrit le gameplay (les entités métier et `data/`) n'importe jamais Phaser au runtime.
+Les effets des techniques sont des fonctions exportées par `data/techniques.ts` qui
+reçoivent l'entité `Player` (import de type uniquement) et passent par ses méthodes
+publiques, comme `applyBoost`. Conséquences : les définitions se testent sans lancer le
+jeu, et changer de moteur ou de scène ne touche pas au gameplay décrit dans `data/`.
 
 ## Les scènes
 
@@ -53,8 +53,8 @@ Boot ──► Preloader ──► MainMenu ──► Game ⇄ GameOver
 
 ## La donnée de gameplay (`data/`)
 
-- `enums/` : un fichier par enum de chaînes (`CharClassId.NINJA`…). Ce sont les identifiants
-  uniques, utilisables comme clés de texture et sérialisables pour les sauvegardes.
+- `enums/` : un fichier par enum (`CharClassId.NINJA`…). Ce sont les identifiants uniques
+  qui relient les catalogues entre eux.
 - Un catalogue par concept (`techniques.ts`, `charClasses.ts`, `weapons.ts`, `enemies.ts`) :
   un tableau constant d'instances plus un accesseur `getX(id)` qui échoue bruyamment sur un
   id inconnu.
@@ -69,17 +69,16 @@ Les sprites, qui vivent dans une scène :
 
 - `Entity` : un sprite qui avance dans une direction, rebondit sur les bords et sait
   tester une collision en rectangle.
-- `Player` : le ninja. Branché sur l'historique de touches, implémente `TechniqueUser` et
-  recevra une `Composition` (roadmap 0.4).
+- `Player` : le ninja. Branché sur l'historique de touches, il expose les primitives que
+  les techniques utilisent (`applyBoost`…) et recevra une `Composition` (roadmap 0.4).
 - `Phantom` et ses quatre stratégies, `Dot` : hérités du prototype, plus chargés ni
   affichés, gardés comme base pour les ennemis du jalon 0.5.
 
 Les entités métier, instanciées par les catalogues de `data/`, sans aucun Phaser :
 
 - `Technique` : ses variantes de séquences (dont découle la notation affichée), la
-  détection `matches(history)` et l'effet `execute(user)`. `TechniqueUser` y déclare ce
-  qu'une technique peut faire ; les sprites l'implémentent, c'est le pont entre les deux
-  natures.
+  détection `matches(history)` et l'effet `execute(player)`, une fonction définie à côté
+  du catalogue dans `data/techniques.ts`.
 - `CharClass`, `Weapon`, `EnemyKind` : les concepts du design et leurs chiffres.
 - `Composition` : l'assemblage d'un run (1 classe + 2 armes). `techniquesWith(armeActive)`
   donne le répertoire du moment.

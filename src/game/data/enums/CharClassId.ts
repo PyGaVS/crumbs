@@ -1,4 +1,4 @@
 export enum CharClassId {
-  NINJA = 'ninja',
-  ROBOT = 'robot',
+  NINJA,
+  ROBOT,
 }

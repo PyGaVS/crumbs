@@ -1,29 +1,18 @@
+import type { Player } from '../entities/Player';
 import { TechniqueId } from './enums/TechniqueId';
 import { Technique } from '../entities/Technique';
+import Sequence from '../utils/Sequence';
 
-/** Catalogue des techniques. Combos du prototype en placeholder (jalon 0.2). */
+/** Accélération brutale et brève dans la direction courante. */
+export function dash(player: Player): void {
+  const DASH_BOOST = 18;
+  const DASH_DURATION = 150;
+  player.applyBoost(DASH_BOOST, DASH_DURATION);
+}
+
+/** Catalogue des techniques. */
 export const ALL_TECHNIQUES: readonly Technique[] = [
-  new Technique(
-    TechniqueId.SPEED_BOOST,
-    'Sprint',
-    [
-      { kind: 'dir', dir: 'L' },
-      { kind: 'dir', dir: 'L' },
-      { kind: 'dir', dir: 'R' },
-    ],
-    (user) => user.applySpeedBoost(),
-  ),
-  new Technique(
-    TechniqueId.DIAGONAL,
-    'Pas de côté',
-    [
-      { kind: 'dir', dir: 'R' },
-      { kind: 'dir', dir: 'U' },
-      { kind: 'dir', dir: 'R' },
-      { kind: 'dir', dir: 'U' },
-    ],
-    (user) => user.setDirection('RU'),
-  ),
+  new Technique(TechniqueId.DASH, 'Dash', new Sequence().same().same().opposite(), dash),
 ];
 
 export function getTechnique(id: TechniqueId): Technique {

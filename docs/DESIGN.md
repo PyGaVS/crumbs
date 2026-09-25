@@ -168,14 +168,14 @@ pas anticiper empêche de progresser et casse le sentiment de force visé.
 
 Le code actuel est une migration d'un exercice Python ; ces briques sont réutilisables.
 
-| Brique                | État                                                                            |
-| --------------------- | ------------------------------------------------------------------------------- |
-| Historique de touches | Retient les 4 dernières, `N` inséré après 250 ms d'inactivité pour couper       |
-| Combos reconnus       | `← ← →` (aller-retour) donne un boost de vitesse ; `→ ↑ → ↑` donne la diagonale |
-| Déplacement           | Avance en continu, rebondit sur les bords de l'écran                            |
-| Ennemis               | 4 stratégies : fonceur, intercepteur, évite-ses-alliés, erratique               |
-| Difficulté            | Chaque point accélère les ennemis ; tous les 4, le joueur accélère aussi        |
-| Collision             | Rectangles, mort instantanée au contact                                         |
+| Brique                | État                                                                                               |
+| --------------------- | -------------------------------------------------------------------------------------------------- |
+| Historique de touches | Retient les 4 dernières, `N` inséré après 250 ms d'inactivité pour couper                          |
+| Techniques            | Séquences déclarées dans `data/`, comparées à l'historique ; première : le dash du ninja (`← ← →`) |
+| Déplacement           | Avance en continu, rebondit sur les bords de l'écran                                               |
+| Ennemis               | 4 stratégies : fonceur, intercepteur, évite-ses-alliés, erratique                                  |
+| Difficulté            | Chaque point accélère les ennemis ; tous les 4, le joueur accélère aussi                           |
+| Collision             | Rectangles, mort instantanée au contact                                                            |
 
 ## 6. À décider
 

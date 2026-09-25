@@ -1,50 +1,35 @@
-import type { Cardinal, Diagonal } from '../utils/input';
+import type { InputKey } from '../utils/input';
+import { getSymbol } from '../utils/input';
 import type { TechniqueId } from '../data/enums/TechniqueId';
-
-/** Une étape d'une séquence, selon la notation de DESIGN.md. */
-export type TechniqueStep =
-  | { kind: 'dir'; dir: Cardinal }
-  | { kind: 'either'; dirs: [Cardinal, Cardinal] }
-  | { kind: 'both'; axis: 'horizontal' | 'vertical' }
-  | { kind: 'halt' }
-  | { kind: 'attack' }
-  | { kind: 'switch' };
-
-/** Ce qu'une technique peut faire sur son exécutant. Implémentée par les entités Phaser. */
-export interface TechniqueUser {
-  setDirection(direction: Cardinal | Diagonal): void;
-  applySpeedBoost(): void;
-}
+import type { Player } from './Player';
+import type Sequence from '../utils/Sequence';
 
 export class Technique {
+  /** Les suites d'inputs acceptées, aplaties depuis l'arbre à la construction. */
+  private readonly paths: InputKey[][];
+
   constructor(
     readonly id: TechniqueId,
     readonly name: string,
-    readonly sequence: readonly TechniqueStep[],
-    readonly execute: (user: TechniqueUser) => void,
-  ) {}
+    readonly sequence: Sequence,
+    readonly execute: (player: Player) => void,
+  ) {
+    this.paths = sequence.paths();
+  }
 
-  /** Notation affichée au joueur, par exemple `↓ ↓ ←/→`. */
-  get notation(): string {
-    return this.sequence.map(stepNotation).join(' ');
+  /** Notation affichée au joueur, une par branche de l'arbre. */
+  get notations(): string[] {
+    return this.paths.map((path) => path.map(getSymbol).join(' '));
+  }
+
+  matches(history: readonly InputKey[]): boolean {
+    return this.paths.some((path) => pathMatches(path, history));
   }
 }
 
-const ARROWS: Record<Cardinal, string> = { R: '→', L: '←', U: '↑', D: '↓' };
+/** La suite d'inputs correspond-elle aux dernières entrées de l'historique ? */
+function pathMatches(path: readonly InputKey[], history: readonly InputKey[]): boolean {
+  const start = history.length - path.length;
 
-function stepNotation(step: TechniqueStep): string {
-  switch (step.kind) {
-    case 'dir':
-      return ARROWS[step.dir];
-    case 'either':
-      return `${ARROWS[step.dirs[0]]}/${ARROWS[step.dirs[1]]}`;
-    case 'both':
-      return step.axis === 'vertical' ? '↕' : '↔';
-    case 'halt':
-      return 'H';
-    case 'attack':
-      return 'ATK'; // icône à définir (DESIGN.md §6)
-    case 'switch':
-      return 'SWP'; // icône à définir (DESIGN.md §6)
-  }
+  return start >= 0 && path.every((input, i) => history[start + i] === input);
 }

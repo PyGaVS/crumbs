@@ -1,6 +1,8 @@
 import { Scene } from 'phaser';
 import { SCREEN_HEIGHT, SCREEN_WIDTH, SPRITE_SIZE } from '../core/settings';
-import { Cardinal, InputHistory, Special } from '../utils/input';
+import { CharClassId } from '../data/enums/CharClassId';
+import { getCharClass } from '../data/charClasses';
+import { Cardinal, InputHistory } from '../utils/input';
 import { Direction, Entity } from './Entity';
 
 /** Animation jouée pour chaque direction (les diagonales utilisent la composante horizontale). */
@@ -35,11 +37,13 @@ const KEYS: Partial<Record<string, Cardinal>> = {
   ArrowDown: 'D',
 };
 
-/** Équivalent de entities/player.py */
 export class Player extends Entity {
   score = 0;
   inputHistory = new InputHistory();
-  speedBoost = 0;
+  /** En attendant la Composition (roadmap 0.4), le joueur est la classe ninja. */
+  private readonly techniques = getCharClass(CharClassId.NINJA).techniques;
+  private boostAmount = 0;
+  private boostTimer = 0;
   private moving = false;
   name = 'player';
   speed = 6;
@@ -58,6 +62,8 @@ export class Player extends Entity {
         this.halt();
       }
       this.inputHistory.addInput('H', course);
+      this.detectTechnique();
+
       return;
     }
 
@@ -68,17 +74,26 @@ export class Player extends Entity {
     }
 
     this.setDirection(input);
+    this.inputHistory.addInput(input, course);
+    this.detectTechnique();
+  }
 
-    const special = this.inputHistory.addInput(input, course);
+  private detectTechnique(): void {
+    const technique = this.techniques.find((t) => t.matches(this.inputHistory.history));
 
-    this.applySpecial(special);
+    technique?.execute(this);
+  }
+
+  /** Surcroît de vitesse temporaire, en px par frame pendant `duration` ms. */
+  applyBoost(amount: number, duration: number): void {
+    this.boostAmount = amount;
+    this.boostTimer = duration;
   }
 
   override setDirection(direction: Direction): void {
     this.direction = direction;
     this.moving = true;
     this.play(ANIMATIONS[direction], true);
-    this.speedBoost = 0;
   }
 
   /** Immobilise le perso : il garde sa direction mais passe sur sa frame d'attente. */
@@ -93,15 +108,8 @@ export class Player extends Entity {
       return;
     }
 
+    this.boostTimer = Math.max(0, this.boostTimer - delta);
     this.checkBorder();
-    this.forward(delta, this.speedBoost);
-  }
-
-  applySpecial(special: Special): void {
-    if (special === 'speed') {
-      this.speedBoost = this.speed / 2 + 1;
-    } else if (special !== '') {
-      this.setDirection(special);
-    }
+    this.forward(delta, this.boostTimer > 0 ? this.boostAmount : 0);
   }
 }
