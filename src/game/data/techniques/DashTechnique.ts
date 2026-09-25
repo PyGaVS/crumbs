@@ -44,11 +44,12 @@ export default class DashTechnique extends Technique {
     )[player.direction];
 
     const target = this.resolveDashTarget(player, ux, uy);
+    const duration = this.resolveDashDuration(player, target);
 
     player.scene.tweens.add({
       ...this.tweenConfig,
       targets: player,
-      duration: this.tweenConfig.duration ?? 100,
+      duration,
       x: target.x,
       y: target.y,
       onComplete: (tween, targets, ...params) => {
@@ -58,13 +59,17 @@ export default class DashTechnique extends Technique {
     });
   }
 
+  resolveDashDuration(player: Player, target: { x: number; y: number }): number {
+    const traveled = Math.abs(target.x - player.x) + Math.abs(target.y - player.y);
+    return (Number(this.tweenConfig.duration ?? 100) * traveled) / this.distance;
+  }
+
   resolveDashTarget(player: Player, ux: number, uy: number): { x: number; y: number } {
     const reach = (d: number) => ({ x: player.x + ux * d, y: player.y + uy * d });
 
     return this.ignoreWalls ? this.throughTarget(player, reach) : this.blockedTarget(player, reach);
   }
 
-  /** Traverse : la destination si elle est libre, sinon la sortie du mur, sinon juste avant lui. */
   private throughTarget(player: Player, reach: (d: number) => { x: number; y: number }): { x: number; y: number } {
     for (let d = this.distance; d <= this.distance + DASH_MAX_EXTENSION; d += DASH_STEP) {
       const target = reach(d);

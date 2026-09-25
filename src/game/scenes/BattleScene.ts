@@ -10,10 +10,10 @@ const TEXT_STYLE = { fontFamily: 'Arial', fontSize: 20, color: '#ffffff' };
 
 /** L'arène d'entraînement du jalon 0 : le joueur et un mannequin. */
 export class BattleScene extends Scene {
-  private player: Player;
-  private walls: Physics.Arcade.StaticGroup;
-  private historyText: GameObjects.Text;
-  private inputTime: number;
+  private player!: Player;
+  private walls!: Physics.Arcade.StaticGroup;
+  private historyText!: GameObjects.Text;
+  private inputTime!: number;
 
   constructor() {
     super('BattleScene');
@@ -23,13 +23,12 @@ export class BattleScene extends Scene {
     this.add.image(0, 0, 'background').setOrigin(0).setDisplaySize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
     this.player = new Player(this);
-
     this.walls = this.physics.add.staticGroup();
 
     // Mannequin provisoire (roadmap 0.1), remplacé quand il saura encaisser
     const dummy: Physics.Arcade.Sprite = this.walls.create(SCREEN_WIDTH * 0.65, SCREEN_HEIGHT / 2, 'rock');
     dummy.setScale(SPRITE_SIZE / dummy.width).refreshBody();
-    
+
     this.physics.add.collider(this.player, this.walls, undefined, () => !this.player.ignoresWalls);
 
     this.historyText = this.add.text(50, 30, '', TEXT_STYLE);
