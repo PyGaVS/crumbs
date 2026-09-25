@@ -1,7 +1,7 @@
 import { Scene } from 'phaser';
-import { SCREEN_WIDTH } from '../core/settings';
+import { SCREEN_WIDTH } from '../../core/settings';
 import { Phantom } from './Phantom';
-import type { Player } from './Player';
+import type { Player } from '../Player';
 
 /** Inky suit le joueur mais s'écarte des autres fantômes quand ils sont trop proches. */
 export class Inky extends Phantom {

@@ -1,4 +1,4 @@
-import type { InputKey } from '../utils/input';
+import type { Inputs } from '../data/enums/Inputs';
 import { getSymbol } from '../utils/input';
 import type { TechniqueId } from '../data/enums/TechniqueId';
 import type { Player } from './Player';
@@ -6,7 +6,7 @@ import type Sequence from '../utils/Sequence';
 
 export class Technique {
   /** Les suites d'inputs acceptées, aplaties depuis l'arbre à la construction. */
-  private readonly paths: InputKey[][];
+  private readonly paths: Inputs[][];
 
   constructor(
     readonly id: TechniqueId,
@@ -22,13 +22,13 @@ export class Technique {
     return this.paths.map((path) => path.map(getSymbol).join(' '));
   }
 
-  matches(history: readonly InputKey[]): boolean {
+  matches(history: readonly Inputs[]): boolean {
     return this.paths.some((path) => pathMatches(path, history));
   }
 }
 
 /** La suite d'inputs correspond-elle aux dernières entrées de l'historique ? */
-function pathMatches(path: readonly InputKey[], history: readonly InputKey[]): boolean {
+function pathMatches(path: readonly Inputs[], history: readonly Inputs[]): boolean {
   const start = history.length - path.length;
 
   return start >= 0 && path.every((input, i) => history[start + i] === input);

@@ -71,8 +71,8 @@ Les sprites, qui vivent dans une scène :
   tester une collision en rectangle.
 - `Player` : le ninja. Branché sur l'historique de touches, il expose les primitives que
   les techniques utilisent (`applyBoost`…) et recevra une `Composition` (roadmap 0.4).
-- `Phantom` et ses quatre stratégies, `Dot` : hérités du prototype, plus chargés ni
-  affichés, gardés comme base pour les ennemis du jalon 0.5.
+- `entities/deprecated/` : `Phantom`, ses quatre stratégies et `Dot`, hérités du
+  prototype et plus utilisés, gardés comme base pour les ennemis du jalon 0.5.
 
 Les entités métier, instanciées par les catalogues de `data/`, sans aucun Phaser :
 

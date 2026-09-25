@@ -1,7 +1,8 @@
 import { Scene } from 'phaser';
-import { SPRITE_SIZE } from '../core/settings';
-import { Direction, Entity } from './Entity';
-import type { Player } from './Player';
+import { SPRITE_SIZE } from '../../core/settings';
+import { Inputs } from '../../data/enums/Inputs';
+import { Direction, Entity } from '../Entity';
+import type { Player } from '../Player';
 
 /** Équivalent de entities/phantom.py : classe de base des 4 fantômes. */
 export abstract class Phantom extends Entity {
@@ -15,14 +16,14 @@ export abstract class Phantom extends Entity {
     this.name = name;
     this.speed = 2;
     this.setScale(SPRITE_SIZE / this.width);
-    this.setDirection('L');
+    this.setDirection(Inputs.LEFT);
   }
 
   /** Les fantômes n'ont que 4 directions ; "gauche" réutilise les frames "droite" retournées horizontalement. */
   override setDirection(direction: Direction): void {
-    const animation = direction === 'U' ? 'up' : direction === 'D' ? 'down' : 'right';
+    const animation = direction === Inputs.UP ? 'up' : direction === Inputs.DOWN ? 'down' : 'right';
 
-    this.setFlipX(direction === 'L');
+    this.setFlipX(direction === Inputs.LEFT);
     this.play(`${this.name}-${animation}`, true);
     this.direction = direction;
   }
@@ -48,9 +49,9 @@ export abstract class Phantom extends Entity {
     const dy = y - this.y;
 
     if (Math.abs(dx) >= Math.abs(dy)) {
-      this.setDirection(dx < 0 ? 'L' : 'R');
+      this.setDirection(dx < 0 ? Inputs.LEFT : Inputs.RIGHT);
     } else {
-      this.setDirection(dy < 0 ? 'U' : 'D');
+      this.setDirection(dy < 0 ? Inputs.UP : Inputs.DOWN);
     }
   }
 
@@ -60,9 +61,9 @@ export abstract class Phantom extends Entity {
     const dy = y - this.y;
 
     if (Math.abs(dx) <= Math.abs(dy)) {
-      this.setDirection(dx > 0 ? 'L' : 'R');
+      this.setDirection(dx > 0 ? Inputs.LEFT : Inputs.RIGHT);
     } else {
-      this.setDirection(dy < 0 ? 'D' : 'U');
+      this.setDirection(dy < 0 ? Inputs.DOWN : Inputs.UP);
     }
   }
 }

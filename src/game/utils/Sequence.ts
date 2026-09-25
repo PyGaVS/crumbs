@@ -1,4 +1,5 @@
-import { CARDINALS, getOpposite, getPerpendicularDirections, InputKey } from './input';
+import { Inputs } from '../data/enums/Inputs';
+import { CARDINALS, getOpposite, getPerpendicularDirections } from './input';
 
 /**
  * L'input requis d'une technique : un arbre de possibilités construit en fluent
@@ -7,9 +8,9 @@ import { CARDINALS, getOpposite, getPerpendicularDirections, InputKey } from './
  */
 export default class Sequence {
   child: Sequence[] = [];
-  input: InputKey = 'N';
+  input: Inputs = Inputs.NONE;
 
-  private addLeaves(inputs: (leaf: Sequence) => readonly InputKey[]): this {
+  private addLeaves(inputs: (leaf: Sequence) => readonly Inputs[]): this {
     if (this.child.length === 0) {
       for (const input of inputs(this)) {
         const leaf = new Sequence();
@@ -26,37 +27,37 @@ export default class Sequence {
     return this;
   }
 
-  setInput(input: InputKey): this {
+  setInput(input: Inputs): this {
     this.input = input;
 
     return this;
   }
 
   up(): this {
-    return this.addLeaves(() => ['U']);
+    return this.addLeaves(() => [Inputs.UP]);
   }
 
   down(): this {
-    return this.addLeaves(() => ['D']);
+    return this.addLeaves(() => [Inputs.DOWN]);
   }
 
   left(): this {
-    return this.addLeaves(() => ['L']);
+    return this.addLeaves(() => [Inputs.LEFT]);
   }
 
   right(): this {
-    return this.addLeaves(() => ['R']);
+    return this.addLeaves(() => [Inputs.RIGHT]);
   }
 
   halt(): this {
-    return this.addLeaves(() => ['H']);
+    return this.addLeaves(() => [Inputs.HALT]);
   }
 
   attack(): this {
-    return this.addLeaves(() => ['A']);
+    return this.addLeaves(() => [Inputs.ATTACK]);
   }
 
-  among(inputs: InputKey[]): this {
+  among(inputs: Inputs[]): this {
     return this.addLeaves(() => inputs);
   }
 
@@ -65,7 +66,7 @@ export default class Sequence {
   }
 
   same(): this {
-    return this.addLeaves((leaf) => (leaf.input === 'N' ? CARDINALS : [leaf.input]));
+    return this.addLeaves((leaf) => (leaf.input === Inputs.NONE ? CARDINALS : [leaf.input]));
   }
 
   opposite(): this {
@@ -76,7 +77,7 @@ export default class Sequence {
     return this.addLeaves((leaf) => getPerpendicularDirections(leaf.input));
   }
 
-  paths(): InputKey[][] {
+  paths(): Inputs[][] {
     if (this.child.length === 0) {
       return [[]];
     }

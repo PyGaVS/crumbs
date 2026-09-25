@@ -1,7 +1,8 @@
 import { Scene } from 'phaser';
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../core/settings';
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../../core/settings';
+import { Inputs } from '../../data/enums/Inputs';
 import { Phantom } from './Phantom';
-import type { Player } from './Player';
+import type { Player } from '../Player';
 
 /** Clyde erre au hasard (avec une tendance à revenir au centre) et n'attaque que de près. */
 export class Clyde extends Phantom {
@@ -13,13 +14,13 @@ export class Clyde extends Phantom {
     const random = Math.floor(Math.random() * 5);
 
     if (random === 0) {
-      this.setDirection('U');
+      this.setDirection(Inputs.UP);
     } else if (random === 1) {
-      this.setDirection('D');
+      this.setDirection(Inputs.DOWN);
     } else if (random === 2) {
-      this.setDirection('R');
+      this.setDirection(Inputs.RIGHT);
     } else if (random === 3) {
-      this.setDirection('L');
+      this.setDirection(Inputs.LEFT);
     } else {
       this.aim(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2);
     }

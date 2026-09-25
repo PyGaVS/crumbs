@@ -1,6 +1,6 @@
 import { Math as PhaserMath, Scene } from 'phaser';
-import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../core/settings';
-import { Entity } from './Entity';
+import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../../core/settings';
+import { Entity } from '../Entity';
 
 /** Couleurs de l'arc-en-ciel (valeurs d'arcade.color), cyclées toutes les 100 ms. */
 const COLORS = [0xff0000, 0xff7f00, 0xffff00, 0x00ff00, 0x0000ff, 0x6f00ff, 0x8f00ff];

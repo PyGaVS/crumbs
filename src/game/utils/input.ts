@@ -1,18 +1,22 @@
-export const CARDINALS = ['R', 'L', 'U', 'D'] as const;
+import { Inputs } from '../data/enums/Inputs';
+
+export const CARDINALS = [Inputs.RIGHT, Inputs.LEFT, Inputs.UP, Inputs.DOWN] as const;
 
 export type Cardinal = (typeof CARDINALS)[number];
 export type Diagonal = 'RU' | 'LU' | 'LD' | 'RD';
 
-/** 'H' = halt, un input du joueur. 'N' = aucune touche pendant 250 ms, sépare les combos. */
-export type InputKey = Cardinal | 'H' | 'A' | 'N';
-
-export const OPPOSITES: Record<Cardinal, Cardinal> = { R: 'L', L: 'R', U: 'D', D: 'U' };
+export const OPPOSITES: Record<Cardinal, Cardinal> = {
+  [Inputs.RIGHT]: Inputs.LEFT,
+  [Inputs.LEFT]: Inputs.RIGHT,
+  [Inputs.UP]: Inputs.DOWN,
+  [Inputs.DOWN]: Inputs.UP,
+};
 
 export function isCardinal(input: string): input is Cardinal {
   return (CARDINALS as readonly string[]).includes(input);
 }
 
-export function getOpposite(input: InputKey): InputKey {
+export function getOpposite(input: Inputs): Inputs {
   if (isCardinal(input)) {
     return OPPOSITES[input];
   }
@@ -20,35 +24,48 @@ export function getOpposite(input: InputKey): InputKey {
   return input;
 }
 
-export function getPerpendicularDirections(input: InputKey): InputKey[] {
+export function getPerpendicularDirections(input: Inputs): Inputs[] {
   switch (input) {
-    case 'R':
-    case 'L':
-      return ['U', 'D'];
-    case 'U':
-    case 'D':
-      return ['R', 'L'];
+    case Inputs.RIGHT:
+    case Inputs.LEFT:
+      return [Inputs.UP, Inputs.DOWN];
+    case Inputs.UP:
+    case Inputs.DOWN:
+      return [Inputs.RIGHT, Inputs.LEFT];
     default:
       return [];
   }
 }
 
-const SYMBOLS: Record<InputKey, string> = { R: '→', L: '←', U: '↑', D: '↓', H: 'H', A: 'x', N: ' ' };
+const SYMBOLS: Record<Inputs, string> = {
+  [Inputs.RIGHT]: '→',
+  [Inputs.LEFT]: '←',
+  [Inputs.UP]: '↑',
+  [Inputs.DOWN]: '↓',
+  [Inputs.HALT]: 'H',
+  [Inputs.ATTACK]: 'x',
+  [Inputs.NONE]: ' ',
+};
 
-export function getSymbol(input: InputKey): string {
+export function getSymbol(input: Inputs): string {
   return SYMBOLS[input];
 }
 
 /**
- * Garde les dernières touches ; la détection des séquences est dans data/Technique.
+ * Garde les dernières touches ; la détection des séquences est dans Technique.
  * (Nommé InputHistory car `input` est déjà une propriété des GameObjects Phaser.)
  */
 export class InputHistory {
-  history: InputKey[] = ['N', 'N', 'N', 'N'];
+  history: Inputs[] = [Inputs.NONE, Inputs.NONE, Inputs.NONE, Inputs.NONE];
 
-  addInput(input: InputKey, course?: Cardinal | Diagonal | 'H'): void {
+  addInput(input: Inputs, course?: Cardinal | Diagonal | Inputs.HALT): void {
     // Amorce : au début d'un enchaînement, la direction de course compte comme la frappe précédente
-    if (input !== 'N' && course !== undefined && this.isChainStart() && (isCardinal(course) || course === 'H')) {
+    if (
+      input !== Inputs.NONE &&
+      course !== undefined &&
+      this.isChainStart() &&
+      (isCardinal(course) || course === Inputs.HALT)
+    ) {
       this.history.push(course);
     }
 
@@ -57,10 +74,10 @@ export class InputHistory {
   }
 
   private isChainStart(): boolean {
-    return this.history[this.history.length - 1] === 'N';
+    return this.history[this.history.length - 1] === Inputs.NONE;
   }
 
   getHistory(): string {
-    return this.history.map((input) => SYMBOLS[input]).join(' ');
+    return this.history.map(getSymbol).join(' ');
   }
 }

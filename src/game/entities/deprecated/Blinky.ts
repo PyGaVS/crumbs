@@ -1,7 +1,7 @@
 import { Scene } from 'phaser';
-import { SCREEN_WIDTH } from '../core/settings';
+import { SCREEN_WIDTH } from '../../core/settings';
 import { Phantom } from './Phantom';
-import type { Player } from './Player';
+import type { Player } from '../Player';
 
 /** Blinky suit directement le joueur, et décide deux fois plus souvent que les autres. */
 export class Blinky extends Phantom {

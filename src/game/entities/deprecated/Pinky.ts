@@ -1,8 +1,9 @@
 import { Scene } from 'phaser';
-import { SCREEN_WIDTH } from '../core/settings';
-import { Direction } from './Entity';
+import { SCREEN_WIDTH } from '../../core/settings';
+import { Inputs } from '../../data/enums/Inputs';
+import { Direction } from '../Entity';
 import { Phantom } from './Phantom';
-import type { Player } from './Player';
+import type { Player } from '../Player';
 
 /** Pinky vise un point devant le joueur pour lui couper la route. */
 export class Pinky extends Phantom {
@@ -14,10 +15,10 @@ export class Pinky extends Phantom {
     const range = this.getTargetRange(player.x, player.y, 400);
 
     const targets: Partial<Record<Direction, [number, number]>> = {
-      R: [player.x + range, player.y],
-      L: [player.x - range, player.y],
-      U: [player.x, player.y - range],
-      D: [player.x, player.y + range],
+      [Inputs.RIGHT]: [player.x + range, player.y],
+      [Inputs.LEFT]: [player.x - range, player.y],
+      [Inputs.UP]: [player.x, player.y - range],
+      [Inputs.DOWN]: [player.x, player.y + range],
     };
 
     const [targetX, targetY] = targets[player.direction] ?? [player.x, player.y];

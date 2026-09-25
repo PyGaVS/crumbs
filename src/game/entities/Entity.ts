@@ -1,21 +1,23 @@
 import { GameObjects, Geom, Scene } from 'phaser';
+import { Inputs } from '../data/enums/Inputs';
+import { Cardinal, Diagonal } from '../utils/input';
 import { FRAME_MS, SCREEN_HEIGHT, SCREEN_WIDTH } from '../core/settings';
 
-export type Direction = 'R' | 'L' | 'U' | 'D' | 'RU' | 'LU' | 'LD' | 'RD';
+export type Direction = Cardinal | Diagonal;
 
 /** Déplacement unitaire par direction. Attention : dans Phaser l'axe Y pointe vers le BAS (inverse d'Arcade). */
 const MOVES: Record<Direction, readonly [number, number]> = {
-  R: [1, 0],
-  L: [-1, 0],
-  U: [0, -1],
-  D: [0, 1],
+  [Inputs.RIGHT]: [1, 0],
+  [Inputs.LEFT]: [-1, 0],
+  [Inputs.UP]: [0, -1],
+  [Inputs.DOWN]: [0, 1],
   RU: [1, -1],
   LU: [-1, -1],
   LD: [-1, 1],
   RD: [1, 1],
 };
 export class Entity extends GameObjects.Sprite {
-  direction: Direction = 'R';
+  direction: Direction = Inputs.RIGHT;
   speed = 5;
 
   private readonly hitBox = new Geom.Rectangle();
@@ -40,13 +42,13 @@ export class Entity extends GameObjects.Sprite {
     const halfHeight = this.displayHeight / 2;
 
     if (this.x + halfWidth >= SCREEN_WIDTH) {
-      this.setDirection('L');
+      this.setDirection(Inputs.LEFT);
     } else if (this.x - halfWidth <= 1) {
-      this.setDirection('R');
+      this.setDirection(Inputs.RIGHT);
     } else if (this.y - halfHeight <= 1) {
-      this.setDirection('D');
+      this.setDirection(Inputs.DOWN);
     } else if (this.y + halfHeight >= SCREEN_HEIGHT) {
-      this.setDirection('U');
+      this.setDirection(Inputs.UP);
     }
   }
 

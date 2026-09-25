@@ -1,5 +1,6 @@
 import { GameObjects, Scene } from 'phaser';
 import { SCREEN_HEIGHT, SCREEN_WIDTH, SPRITE_SIZE } from '../core/settings';
+import { Inputs } from '../data/enums/Inputs';
 import { Player } from '../entities/Player';
 
 /** Sans touche pressée pendant ce délai, un "N" est ajouté à l'historique (coupe les combos). */
@@ -37,7 +38,7 @@ export class Game extends Scene {
 
     if (this.inputTime >= INPUT_TIMEOUT) {
       this.inputTime = 0;
-      this.player.inputHistory.addInput('N');
+      this.player.inputHistory.addInput(Inputs.NONE);
     }
 
     this.player.move(delta);
