@@ -9,13 +9,13 @@ const INPUT_TIMEOUT = 250;
 const TEXT_STYLE = { fontFamily: 'Arial', fontSize: 20, color: '#ffffff' };
 
 /** L'arène d'entraînement du jalon 0 : le joueur et un mannequin. */
-export class Game extends Scene {
+export class BattleScene extends Scene {
   private player: Player;
   private historyText: GameObjects.Text;
   private inputTime: number;
 
   constructor() {
-    super('Game');
+    super('BattleScene');
   }
 
   create() {
@@ -34,6 +34,7 @@ export class Game extends Scene {
   }
 
   update(_time: number, delta: number) {
+    console.log(this.player.x, this.player.y);
     this.inputTime += delta;
 
     if (this.inputTime >= INPUT_TIMEOUT) {

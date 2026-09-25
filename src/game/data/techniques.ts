@@ -2,12 +2,26 @@ import type { Player } from '../entities/Player';
 import { TechniqueId } from './enums/TechniqueId';
 import { Technique } from '../entities/Technique';
 import Sequence from '../utils/Sequence';
+import { Inputs } from './enums/Inputs';
+import { Cardinal } from '../utils/input';
 
 /** Accélération brutale et brève dans la direction courante. */
 export function dash(player: Player): void {
-  const DASH_BOOST = 18;
-  const DASH_DURATION = 150;
-  player.applyBoost(DASH_BOOST, DASH_DURATION);
+
+  const [dx, dy]: [number, number] = ({
+    [Inputs.RIGHT]: [256, 0],
+    [Inputs.LEFT]: [-256, 0],
+    [Inputs.UP]: [0, -256],
+    [Inputs.DOWN]: [0, 256],
+  } satisfies Record<Cardinal, [number, number]>)[player.direction];
+
+  player.scene.tweens.add({
+    targets: player,
+    duration: 100,
+    x: `+= ${dx}`,
+    y: `+= ${dy}`,
+    ease: 'Quad.out',
+  })
 }
 
 /** Catalogue des techniques. */

@@ -3,18 +3,14 @@ import { Inputs } from '../data/enums/Inputs';
 import { Cardinal, Diagonal } from '../utils/input';
 import { FRAME_MS, SCREEN_HEIGHT, SCREEN_WIDTH } from '../core/settings';
 
-export type Direction = Cardinal | Diagonal;
+export type Direction = Cardinal;
 
 /** Déplacement unitaire par direction. Attention : dans Phaser l'axe Y pointe vers le BAS (inverse d'Arcade). */
 const MOVES: Record<Direction, readonly [number, number]> = {
   [Inputs.RIGHT]: [1, 0],
   [Inputs.LEFT]: [-1, 0],
   [Inputs.UP]: [0, -1],
-  [Inputs.DOWN]: [0, 1],
-  RU: [1, -1],
-  LU: [-1, -1],
-  LD: [-1, 1],
-  RD: [1, 1],
+  [Inputs.DOWN]: [0, 1]
 };
 export class Entity extends GameObjects.Sprite {
   direction: Direction = Inputs.RIGHT;
@@ -27,7 +23,6 @@ export class Entity extends GameObjects.Sprite {
     scene.add.existing(this);
   }
 
-  /** Avance dans la direction courante. `delta` (ms) sert à normaliser la vitesse à 60 FPS. */
   forward(delta: number, boost = 0): void {
     const speed = (this.speed + boost) * (delta / FRAME_MS);
     const [dx, dy] = MOVES[this.direction];

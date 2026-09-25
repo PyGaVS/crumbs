@@ -5,6 +5,7 @@ import { getCharClass } from '../data/charClasses';
 import { Inputs } from '../data/enums/Inputs';
 import { Cardinal, InputHistory } from '../utils/input';
 import { Direction, Entity } from './Entity';
+import { BattleScene } from '../scenes/BattleScene';
 
 /** Animation jouée pour chaque direction (les diagonales utilisent la composante horizontale). */
 const ANIMATIONS: Record<Direction, string> = {
@@ -12,10 +13,6 @@ const ANIMATIONS: Record<Direction, string> = {
   [Inputs.LEFT]: 'ninja-left',
   [Inputs.UP]: 'ninja-up',
   [Inputs.DOWN]: 'ninja-down',
-  RU: 'ninja-right',
-  LU: 'ninja-left',
-  LD: 'ninja-left',
-  RD: 'ninja-right',
 };
 
 /** Frame de la feuille Idle par direction (mêmes colonnes que la feuille Walk). */
@@ -24,10 +21,6 @@ const IDLE_FRAMES: Record<Direction, number> = {
   [Inputs.LEFT]: 2,
   [Inputs.UP]: 1,
   [Inputs.DOWN]: 0,
-  RU: 3,
-  LU: 2,
-  LD: 2,
-  RD: 3,
 };
 
 /** Touches clavier (KeyboardEvent.code) → direction. */
@@ -49,8 +42,8 @@ export class Player extends Entity {
   name = 'player';
   speed = 6;
 
-  constructor(scene: Scene) {
-    super(scene, SCREEN_WIDTH / 10, SCREEN_HEIGHT - SCREEN_HEIGHT / 10, 'ninjaGreen', 3);
+  constructor(battleScene: BattleScene) {
+    super(battleScene, SCREEN_WIDTH / 10, SCREEN_HEIGHT - SCREEN_HEIGHT / 10, 'ninjaGreen', 3);
     this.setScale(SPRITE_SIZE / this.width);
     this.halt();
   }

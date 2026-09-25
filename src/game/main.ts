@@ -1,7 +1,7 @@
 import { AUTO, Game, Scale } from 'phaser';
 import { SCREEN_HEIGHT, SCREEN_TITLE, SCREEN_WIDTH } from './core/settings';
 import { Boot } from './scenes/Boot';
-import { Game as MainGame } from './scenes/Game';
+import { BattleScene as MainGame } from './scenes/BattleScene';
 import { GameOver } from './scenes/GameOver';
 import { MainMenu } from './scenes/MainMenu';
 import { Preloader } from './scenes/Preloader';
