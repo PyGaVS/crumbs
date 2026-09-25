@@ -12,7 +12,7 @@ export class Technique {
     readonly id: TechniqueId,
     readonly name: string,
     readonly sequence: Sequence,
-    readonly execute: (player: Player) => void,
+    readonly effect: (player: Player) => void,
   ) {
     this.paths = sequence.paths();
   }
@@ -24,6 +24,10 @@ export class Technique {
 
   matches(history: readonly Inputs[]): boolean {
     return this.paths.some((path) => pathMatches(path, history));
+  }
+
+  execute(player: Player): void {
+    this.effect(player);
   }
 }
 

@@ -1,10 +1,10 @@
-import { Scene } from 'phaser';
 import { SCREEN_HEIGHT, SCREEN_WIDTH, SPRITE_SIZE } from '../core/settings';
 import { CharClassId } from '../data/enums/CharClassId';
 import { getCharClass } from '../data/charClasses';
 import { Inputs } from '../data/enums/Inputs';
-import { Cardinal, InputHistory } from '../utils/input';
-import { Direction, Entity } from './Entity';
+import { InputHistory } from '../utils/input';
+import { Cardinal, Direction } from '../utils/types';
+import { Entity } from './Entity';
 import { BattleScene } from '../scenes/BattleScene';
 
 /** Animation jouée pour chaque direction (les diagonales utilisent la composante horizontale). */
@@ -36,11 +36,10 @@ export class Player extends Entity {
   inputHistory = new InputHistory();
   /** En attendant la Composition (roadmap 0.4), le joueur est la classe ninja. */
   private readonly techniques = getCharClass(CharClassId.NINJA).techniques;
-  private boostAmount = 0;
-  private boostTimer = 0;
   private moving = false;
+  ignoresWalls = false;
   name = 'player';
-  speed = 6;
+  speed = 360;
 
   constructor(battleScene: BattleScene) {
     super(battleScene, SCREEN_WIDTH / 10, SCREEN_HEIGHT - SCREEN_HEIGHT / 10, 'ninjaGreen', 3);
@@ -78,14 +77,8 @@ export class Player extends Entity {
     technique?.execute(this);
   }
 
-  /** Surcroît de vitesse temporaire, en px par frame pendant `duration` ms. */
-  applyBoost(amount: number, duration: number): void {
-    this.boostAmount = amount;
-    this.boostTimer = duration;
-  }
-
   override setDirection(direction: Direction): void {
-    this.direction = direction;
+    super.setDirection(direction);
     this.moving = true;
     this.play(ANIMATIONS[direction], true);
   }
@@ -93,17 +86,8 @@ export class Player extends Entity {
   /** Immobilise le perso : il garde sa direction mais passe sur sa frame d'attente. */
   halt(): void {
     this.moving = false;
+    this.setVelocity(0, 0);
     this.stop();
     this.setTexture('ninjaGreen-idle', IDLE_FRAMES[this.direction]);
-  }
-
-  move(delta: number): void {
-    if (!this.moving) {
-      return;
-    }
-
-    this.boostTimer = Math.max(0, this.boostTimer - delta);
-    this.checkBorder();
-    this.forward(delta, this.boostTimer > 0 ? this.boostAmount : 0);
   }
 }

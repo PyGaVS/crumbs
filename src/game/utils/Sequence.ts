@@ -1,5 +1,6 @@
 import { Inputs } from '../data/enums/Inputs';
-import { CARDINALS, getOpposite, getPerpendicularDirections } from './input';
+import { getOpposite, getPerpendicularDirections } from './input';
+import { CARDINALS } from './types';
 
 /**
  * L'input requis d'une technique : un arbre de possibilités construit en fluent

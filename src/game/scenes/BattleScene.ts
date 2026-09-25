@@ -1,4 +1,4 @@
-import { GameObjects, Scene } from 'phaser';
+import { GameObjects, Physics, Scene } from 'phaser';
 import { SCREEN_HEIGHT, SCREEN_WIDTH, SPRITE_SIZE } from '../core/settings';
 import { Inputs } from '../data/enums/Inputs';
 import { Player } from '../entities/Player';
@@ -11,6 +11,7 @@ const TEXT_STYLE = { fontFamily: 'Arial', fontSize: 20, color: '#ffffff' };
 /** L'arène d'entraînement du jalon 0 : le joueur et un mannequin. */
 export class BattleScene extends Scene {
   private player: Player;
+  private walls: Physics.Arcade.StaticGroup;
   private historyText: GameObjects.Text;
   private inputTime: number;
 
@@ -23,9 +24,13 @@ export class BattleScene extends Scene {
 
     this.player = new Player(this);
 
+    this.walls = this.physics.add.staticGroup();
+
     // Mannequin provisoire (roadmap 0.1), remplacé quand il saura encaisser
-    const dummy = this.add.image(SCREEN_WIDTH * 0.65, SCREEN_HEIGHT / 2, 'rock');
-    dummy.setScale(SPRITE_SIZE / dummy.width);
+    const dummy: Physics.Arcade.Sprite = this.walls.create(SCREEN_WIDTH * 0.65, SCREEN_HEIGHT / 2, 'rock');
+    dummy.setScale(SPRITE_SIZE / dummy.width).refreshBody();
+    
+    this.physics.add.collider(this.player, this.walls, undefined, () => !this.player.ignoresWalls);
 
     this.historyText = this.add.text(50, 30, '', TEXT_STYLE);
     this.inputTime = 0;
@@ -34,7 +39,6 @@ export class BattleScene extends Scene {
   }
 
   update(_time: number, delta: number) {
-    console.log(this.player.x, this.player.y);
     this.inputTime += delta;
 
     if (this.inputTime >= INPUT_TIMEOUT) {
@@ -42,7 +46,6 @@ export class BattleScene extends Scene {
       this.player.inputHistory.addInput(Inputs.NONE);
     }
 
-    this.player.move(delta);
     this.historyText.setText(this.player.inputHistory.getHistory());
   }
 

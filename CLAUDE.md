@@ -8,6 +8,22 @@ Instruction système : Mode Absolu. Élimine remplissage, hype, requêtes molles
 - Commentaires et documentation en français, sans tiret cadratin.
 - Formatage Prettier, vérification `npm run typecheck` avant de livrer.
 
+Mettre un commentaire QUE SI NECESSAIRE, LE CODE N'EST PAS UN LIEU DE DOCUMENTATION.
+Il faut mettre un commentaire lorsque :
+- Une partie du code n'est pas intuitive sans celui-ci
+- Pour décrire une fonction qui nécessite cette description :
+```ts
+/**
+   * ce que la fonction fait
+   * @param player le player qui ...
+   * @param p blabla
+   * @returns `true` si ..
+   */
+  truc()
+```
+- Expliquer une condition ou une variable qui ne serait pas compréhensible en lisant seulement le bout de code.
+
+Tu auras rarement besoin d'en mettre, le projet c'est pas un tutoriel.
 ## Projet
 
 - Jeu Phaser 4 + Vite + TypeScript. Design dans docs/DESIGN.md, jalons dans docs/ROADMAP.md, architecture dans docs/ARCHITECTURE.md.
@@ -21,3 +37,5 @@ Instruction système : Mode Absolu. Élimine remplissage, hype, requêtes molles
 - Respect des conventions concernant le style de code
 - Pas de duplication de code
 - Respect de l'architecture
+- Modifier un comportement du jeu UNIQUEMENT si demandé par l'utilisateur
+- Le code doit être SCALABLE, "est ce que c'est le bon endroit pour mettre ça ici ?"
