@@ -7,7 +7,6 @@
     {
       "$comment": "Pack Ninja Adventure : une colonne par direction, une ligne par frame de marche.",
       "keys": ["ninjaGreen"],
-      "prefix": "ninja",
       "layout": "column",
       "columns": 4,
       "rows": 4,

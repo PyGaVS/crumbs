@@ -1,27 +1,10 @@
 import { SCREEN_HEIGHT, SCREEN_WIDTH, SPRITE_SIZE } from '../core/settings';
-import { CharClassId } from '../data/enums/CharClassId';
-import { getCharClass } from '../data/charClasses';
 import { Inputs } from '../data/enums/Inputs';
 import { InputHistory } from '../utils/input';
 import { Cardinal, Direction } from '../utils/types';
+import { CharClass } from './CharClass';
 import { Entity } from './Entity';
 import { BattleScene } from '../scenes/BattleScene';
-
-/** Animation jouée pour chaque direction (les diagonales utilisent la composante horizontale). */
-const ANIMATIONS: Record<Direction, string> = {
-  [Inputs.RIGHT]: 'ninja-right',
-  [Inputs.LEFT]: 'ninja-left',
-  [Inputs.UP]: 'ninja-up',
-  [Inputs.DOWN]: 'ninja-down',
-};
-
-/** Frame de la feuille Idle par direction (mêmes colonnes que la feuille Walk). */
-const IDLE_FRAMES: Record<Direction, number> = {
-  [Inputs.RIGHT]: 3,
-  [Inputs.LEFT]: 2,
-  [Inputs.UP]: 1,
-  [Inputs.DOWN]: 0,
-};
 
 /** Touches clavier (KeyboardEvent.code) → direction. */
 const KEYS: Partial<Record<string, Cardinal>> = {
@@ -34,15 +17,16 @@ const KEYS: Partial<Record<string, Cardinal>> = {
 export class Player extends Entity {
   score = 0;
   inputHistory = new InputHistory();
-  /** En attendant la Composition (roadmap 0.4), le joueur est la classe ninja. */
-  private readonly techniques = getCharClass(CharClassId.NINJA).techniques;
   private moving = false;
   ignoresWalls = false;
   name = 'player';
   speed = 360;
 
-  constructor(battleScene: BattleScene) {
-    super(battleScene, SCREEN_WIDTH / 10, SCREEN_HEIGHT - SCREEN_HEIGHT / 10, 'ninjaGreen', 3);
+  constructor(
+    battleScene: BattleScene,
+    private readonly charClass: CharClass,
+  ) {
+    super(battleScene, SCREEN_WIDTH / 10, SCREEN_HEIGHT - SCREEN_HEIGHT / 10, charClass.skin.textureKey);
     this.setScale(SPRITE_SIZE / this.width);
     this.halt();
   }
@@ -72,7 +56,7 @@ export class Player extends Entity {
   }
 
   private detectTechnique(): void {
-    const technique = this.techniques.find((t) => t.matches(this.inputHistory.history));
+    const technique = this.charClass.techniques.find((t) => t.matches(this.inputHistory.history));
 
     technique?.execute(this);
   }
@@ -80,7 +64,7 @@ export class Player extends Entity {
   override setDirection(direction: Direction): void {
     super.setDirection(direction);
     this.moving = true;
-    this.play(ANIMATIONS[direction], true);
+    this.play(this.charClass.skin.walkAnimation(direction), true);
   }
 
   /** Immobilise le perso : il garde sa direction mais passe sur sa frame d'attente. */
@@ -88,6 +72,6 @@ export class Player extends Entity {
     this.moving = false;
     this.setVelocity(0, 0);
     this.stop();
-    this.setTexture('ninjaGreen-idle', IDLE_FRAMES[this.direction]);
+    this.setTexture(this.charClass.skin.idleTexture, this.charClass.skin.idleFrame(this.direction));
   }
 }

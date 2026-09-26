@@ -1,5 +1,7 @@
 import { GameObjects, Physics, Scene } from 'phaser';
 import { SCREEN_HEIGHT, SCREEN_WIDTH, SPRITE_SIZE } from '../core/settings';
+import { getCharClass } from '../data/charClasses';
+import { CharClassId } from '../data/enums/CharClassId';
 import { Inputs } from '../data/enums/Inputs';
 import { Player } from '../entities/Player';
 
@@ -22,7 +24,8 @@ export class BattleScene extends Scene {
   create() {
     this.add.image(0, 0, 'background').setOrigin(0).setDisplaySize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    this.player = new Player(this);
+    // En attendant la sélection de perso (roadmap 0.4), la classe ninja
+    this.player = new Player(this, getCharClass(CharClassId.NINJA));
     this.walls = this.physics.add.staticGroup();
 
     // Mannequin provisoire (roadmap 0.1), remplacé quand il saura encaisser
