@@ -1,6 +1,7 @@
 import { Player } from '../../entities/Player';
-import { Technique } from '../../entities/Technique';
+import { Technique, type TechniqueOptions } from '../../entities/Technique';
 import { DASH_MAX_EXTENSION, DASH_STEP } from '../../utils/consts';
+import { hasObstacle } from '../../utils/collision';
 import { Cardinal, Direction } from '../../utils/types';
 import Sequence from '../../utils/Sequence';
 import { Inputs } from '../enums/Inputs';
@@ -8,19 +9,31 @@ import { TechniqueId } from '../enums/TechniqueId';
 
 type DashTweenConfig = Omit<Phaser.Types.Tweens.TweenBuilderConfig, 'targets' | 'x' | 'y'>;
 
+type DashOptions = TechniqueOptions & {
+  range: number;
+  ignoreWalls?: boolean;
+  crossBody?: boolean;
+  direction?: Direction;
+  nextEffect?: (player: Player) => void;
+  tween: DashTweenConfig;
+};
+
 export default class DashTechnique extends Technique {
-  constructor(
-    readonly id: TechniqueId,
-    readonly name: string,
-    readonly sequence: Sequence,
-    readonly effect: (player: Player) => void,
-    readonly nextEffect: (player: Player) => void,
-    readonly distance: number,
-    readonly ignoreWalls: boolean,
-    readonly tweenConfig: DashTweenConfig,
-    readonly direction?: Direction,
-  ) {
-    super(id, name, sequence, effect);
+  private readonly range: number;
+  private readonly ignoreWalls: boolean;
+  private readonly crossBody: boolean;
+  private readonly direction?: Direction;
+  private readonly nextEffect: (player: Player) => void;
+  private readonly tweenConfig: DashTweenConfig;
+
+  constructor(id: TechniqueId, name: string, sequence: Sequence, options: DashOptions) {
+    super(id, name, sequence, options);
+    this.range = options.range;
+    this.ignoreWalls = options.ignoreWalls ?? false;
+    this.crossBody = options.crossBody ?? true;
+    this.direction = options.direction;
+    this.nextEffect = options.nextEffect ?? (() => {});
+    this.tweenConfig = options.tween;
   }
 
   override execute(player: Player): void {
@@ -29,7 +42,7 @@ export default class DashTechnique extends Technique {
     this.nextEffect(player);
   }
 
-  dash(player: Player): void {
+  private dash(player: Player): void {
     if (this.ignoreWalls) {
       player.ignoresWalls = true;
     }
@@ -41,7 +54,7 @@ export default class DashTechnique extends Technique {
         [Inputs.UP]: [0, -1],
         [Inputs.DOWN]: [0, 1],
       } satisfies Record<Cardinal, [number, number]>
-    )[player.direction];
+    )[this.direction ?? player.direction];
 
     const target = this.resolveDashTarget(player, ux, uy);
     const duration = this.resolveDashDuration(player, target);
@@ -59,19 +72,19 @@ export default class DashTechnique extends Technique {
     });
   }
 
-  resolveDashDuration(player: Player, target: { x: number; y: number }): number {
+  private resolveDashDuration(player: Player, target: { x: number; y: number }): number {
     const traveled = Math.abs(target.x - player.x) + Math.abs(target.y - player.y);
-    return (Number(this.tweenConfig.duration ?? 100) * traveled) / this.distance;
+    return (Number(this.tweenConfig.duration ?? 100) * traveled) / this.range;
   }
 
-  resolveDashTarget(player: Player, ux: number, uy: number): { x: number; y: number } {
+  private resolveDashTarget(player: Player, ux: number, uy: number): { x: number; y: number } {
     const reach = (d: number) => ({ x: player.x + ux * d, y: player.y + uy * d });
 
     return this.ignoreWalls ? this.throughTarget(player, reach) : this.blockedTarget(player, reach);
   }
 
   private throughTarget(player: Player, reach: (d: number) => { x: number; y: number }): { x: number; y: number } {
-    for (let d = this.distance; d <= this.distance + DASH_MAX_EXTENSION; d += DASH_STEP) {
+    for (let d = this.range; d <= this.range + DASH_MAX_EXTENSION; d += DASH_STEP) {
       const target = reach(d);
 
       if (this.isFree(player, target.x, target.y)) {
@@ -79,7 +92,7 @@ export default class DashTechnique extends Technique {
       }
     }
 
-    for (let d = this.distance - DASH_STEP; d >= 0; d -= DASH_STEP) {
+    for (let d = this.range - DASH_STEP; d >= 0; d -= DASH_STEP) {
       const target = reach(d);
 
       if (this.isFree(player, target.x, target.y)) {
@@ -92,7 +105,7 @@ export default class DashTechnique extends Technique {
 
   /** Se cogne : dernière position libre avant le premier obstacle du trajet. */
   private blockedTarget(player: Player, reach: (d: number) => { x: number; y: number }): { x: number; y: number } {
-    for (let d = DASH_STEP; d <= this.distance; d += DASH_STEP) {
+    for (let d = DASH_STEP; d <= this.range; d += DASH_STEP) {
       const target = reach(d);
 
       if (!this.isFree(player, target.x, target.y)) {
@@ -100,12 +113,12 @@ export default class DashTechnique extends Technique {
       }
     }
 
-    return reach(this.distance);
+    return reach(this.range);
   }
 
-  isFree(player: Player, cx: number, cy: number): boolean {
+  private isFree(player: Player, cx: number, cy: number): boolean {
     const { width, height } = player.body || { width: 0, height: 0 };
 
-    return player.scene.physics.overlapRect(cx - width / 2, cy - height / 2, width, height, false, true).length === 0;
+    return !hasObstacle(player.scene, cx, cy, width, height, { walls: true, mobs: !this.crossBody });
   }
 }

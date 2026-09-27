@@ -26,6 +26,16 @@
         "url": "items/rock.png"
       },
       {
+        "type": "image",
+        "key": "shuriken",
+        "url": "items/Shuriken.png"
+      },
+      {
+        "type": "image",
+        "key": "kunai",
+        "url": "items/Kunai.png"
+      },
+      {
         "type": "animation",
         "key": "animations",
         "url": "animations.json"

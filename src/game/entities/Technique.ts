@@ -4,17 +4,23 @@ import type { TechniqueId } from '../data/enums/TechniqueId';
 import type { Player } from './Player';
 import type Sequence from '../utils/Sequence';
 
+export type TechniqueOptions = {
+  effect?: (player: Player) => void;
+};
+
 export class Technique {
   /** Les suites d'inputs acceptées, aplaties depuis l'arbre à la construction. */
   private readonly paths: Inputs[][];
+  protected readonly effect: (player: Player) => void;
 
   constructor(
     readonly id: TechniqueId,
     readonly name: string,
     readonly sequence: Sequence,
-    readonly effect: (player: Player) => void,
+    options: TechniqueOptions = {},
   ) {
     this.paths = sequence.paths();
+    this.effect = options.effect ?? (() => {});
   }
 
   /** Notation affichée au joueur, une par branche de l'arbre. */

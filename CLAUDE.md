@@ -9,7 +9,7 @@ Instruction système : Mode Absolu. Élimine remplissage, hype, requêtes molles
 - Formatage Prettier, vérification `npm run typecheck` avant de livrer.
 
 Mettre un commentaire QUE SI NECESSAIRE, LE CODE N'EST PAS UN LIEU DE DOCUMENTATION.
-Il faut mettre un commentaire lorsque :
+Il faut mettre un commentaire UNIQUEMENT lorsque :
 - Une partie du code n'est pas intuitive sans celui-ci
 - Pour décrire une fonction qui nécessite cette description :
 ```ts
@@ -21,7 +21,7 @@ Il faut mettre un commentaire lorsque :
    */
   truc()
 ```
-- Expliquer une condition ou une variable qui ne serait pas compréhensible en lisant seulement le bout de code.
+- il faut EXEPTIONNELEMENT expliquer une condition ou une variable qui ne serait pas compréhensible en lisant seulement le bout de code.
 
 Tu auras rarement besoin d'en mettre, le projet c'est pas un tutoriel.
 ## Projet

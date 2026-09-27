@@ -2,19 +2,28 @@ import { TechniqueId } from '../enums/TechniqueId';
 import { Technique } from '../../entities/Technique';
 import Sequence from '../../utils/Sequence';
 import DashTechnique from './DashTechnique';
+import ProjectileTechnique from './ProjectileTechnique';
 
 /** Catalogue des techniques. */
 export const ALL_TECHNIQUES: readonly Technique[] = [
-  new DashTechnique(
-    TechniqueId.DASH,
-    'Dash',
-    new Sequence().same().same().opposite(),
-    () => {},
-    () => {},
-    256,
-    true,
-    { duration: 160, ease: 'Cubic.out' },
-  ),
+  new DashTechnique(TechniqueId.DASH, 'Dash', new Sequence().cardinals().same().opposite(), {
+    range: 256,
+    ignoreWalls: true,
+    tween: { duration: 160, ease: 'Cubic.out' },
+  }),
+  new ProjectileTechnique(TechniqueId.SHURIKENS, 'Shurikens', new Sequence().cardinals().opposite().perpendicular().halt(), {
+    texture: 'shuriken',
+    speed: 1300,
+    range: 512,
+    spreadAngles: [0, -Math.PI / 16, Math.PI / 16],
+    animation: { spin: 1440 },
+  }),
+  new ProjectileTechnique(TechniqueId.KUNAI, 'Kunai', new Sequence().cardinals().same().halt(), {
+    texture: 'kunai',
+    speed: 1600,
+    range: 704,
+    assetAngle: (-1 * Math.PI) / 4,
+  }),
 ];
 
 export function getTechnique(id: TechniqueId): Technique {
