@@ -1,5 +1,5 @@
 import { Inputs } from '../data/enums/Inputs';
-import { Cardinal, CARDINALS, Diagonal } from './types';
+import { Cardinal, CARDINALS } from './types';
 
 export const OPPOSITES: Record<Cardinal, Cardinal> = {
   [Inputs.RIGHT]: Inputs.LEFT,
@@ -54,23 +54,9 @@ export function getSymbol(input: Inputs): string {
 export class InputHistory {
   history: Inputs[] = [Inputs.NONE, Inputs.NONE, Inputs.NONE, Inputs.NONE];
 
-  addInput(input: Inputs, course?: Cardinal | Diagonal | Inputs.HALT): void {
-    // Amorce : au début d'un enchaînement, la direction de course compte comme la frappe précédente
-    if (
-      input !== Inputs.NONE &&
-      course !== undefined &&
-      this.isChainStart() &&
-      (isCardinal(course) || course === Inputs.HALT)
-    ) {
-      this.history.push(course);
-    }
-
+  addInput(input: Inputs): void {
     this.history.push(input);
     this.history = this.history.slice(-4);
-  }
-
-  private isChainStart(): boolean {
-    return this.history[this.history.length - 1] === Inputs.NONE;
   }
 
   getHistory(): string {

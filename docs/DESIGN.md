@@ -51,7 +51,6 @@ montée en statistiques qui remplace la maîtrise.
 | Halt               | Un input à part entière (Espace) : stoppe le déplacement jusqu'à la prochaine direction, s'écrit `H` |
 | Attaque            | Une attaque simple toujours disponible, plus des techniques spéciales via les combos                 |
 | Combos             | Enchaînements au clavier, lus dans l'historique des dernières touches                                |
-| Amorce des combos  | La direction de course compte comme premier input de l'historique                                    |
 | Ennemis            | Intelligents et variés : chacun sa stratégie, capables de coordination et de réagir au jeu du joueur |
 | Encaissement       | 100 PV qui ne se régénèrent pas, 30 d'armure qui se régénère. Un coup ennemi ôte 10 en moyenne       |
 | Ordre des dégâts   | L'armure encaisse tout. Les PV ne baissent qu'une fois l'armure tombée à 0                           |
@@ -115,15 +114,6 @@ de liste, menu de composition, aide en jeu.
 | Icône de bascule | À définir (changement d'arme)           |
 
 Exemple : `↓ ↓ ←/→` se lit « bas, bas, puis gauche ou droite ».
-
-La direction de course amorce l'historique : à la première frappe d'un enchaînement
-(celle qui suit une coupure `N`), la direction que le joueur tenait à cet instant est
-insérée juste avant dans l'historique (à l'arrêt, c'est `H` qui amorce). C'est bien la direction d'avant l'enchaînement qui
-compte, pas celle du moment où le combo se termine, puisque les frappes du combo la
-changent en route. Une technique alignée avec la course s'exécute donc avec une frappe de
-moins (en courant à droite, `→ → ←` se sort en tapant `→ ←`), et le même geste produit la
-version verticale en courant vers le haut. Un combo non aligné reste accessible en tapant
-la séquence entière. Course en diagonale : pas d'amorce pour le moment, on l'ignore.
 
 Cette notation n'est pas un détail d'interface. C'est le vocabulaire dans lequel le joueur
 mémorise ses techniques, donc il doit rester identique d'une classe et d'une arme à l'autre.
@@ -266,3 +256,4 @@ le fond spatial du prototype sont des placeholders, pas un choix.
 | 2026-09-22 | Notation unique pour écrire les techniques au joueur           | C'est le vocabulaire dans lequel il les mémorise, il doit être stable partout            |
 | 2026-09-23 | La direction de course amorce l'historique des combos          | Une technique alignée avec la course coûte une frappe de moins, sans changer la notation |
 | 2026-09-23 | Halt (Espace) : un input qui stoppe le déplacement, écrit `H`  | Ouvre des techniques depuis l'arrêt et enrichit le vocabulaire des combos                |
+| 2026-09-27 | Suppression de l'amorce : la course n'entre plus dans l'historique | Revient sur la décision du 2026-09-23, seules les frappes réelles comptent          |

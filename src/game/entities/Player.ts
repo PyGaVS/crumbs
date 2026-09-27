@@ -32,13 +32,11 @@ export class Player extends Entity {
   }
 
   onKeyPress(code: string): void {
-    const course = this.moving ? this.direction : Inputs.HALT;
-
     if (code === 'Space') {
       if (this.moving) {
         this.halt();
       }
-      this.inputHistory.addInput(Inputs.HALT, course);
+      this.inputHistory.addInput(Inputs.HALT);
       this.detectTechnique();
 
       return;
@@ -51,7 +49,7 @@ export class Player extends Entity {
     }
 
     this.setDirection(input);
-    this.inputHistory.addInput(input, course);
+    this.inputHistory.addInput(input);
     this.detectTechnique();
   }
 
