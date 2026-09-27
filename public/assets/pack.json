@@ -4,7 +4,7 @@
     "files": [
       {
         "type": "spritesheet",
-        "key": "ninjaGreen",
+        "key": "ninjaGreen-walk",
         "url": "characters/ninjaGreen/SeparateAnim/Walk.png",
         "frameConfig": {
           "frameWidth": 16,
@@ -15,6 +15,15 @@
         "type": "spritesheet",
         "key": "ninjaGreen-idle",
         "url": "characters/ninjaGreen/SeparateAnim/Idle.png",
+        "frameConfig": {
+          "frameWidth": 16,
+          "frameHeight": 16
+        }
+      },
+      {
+        "type": "spritesheet",
+        "key": "ninjaGreen-attack",
+        "url": "characters/ninjaGreen/SeparateAnim/Attack.png",
         "frameConfig": {
           "frameWidth": 16,
           "frameHeight": 16

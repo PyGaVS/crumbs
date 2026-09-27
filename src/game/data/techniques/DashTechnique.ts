@@ -14,7 +14,6 @@ type DashOptions = TechniqueOptions & {
   ignoreWalls?: boolean;
   crossBody?: boolean;
   direction?: Direction;
-  nextEffect?: (player: Player) => void;
   tween: DashTweenConfig;
 };
 
@@ -23,7 +22,6 @@ export default class DashTechnique extends Technique {
   private readonly ignoreWalls: boolean;
   private readonly crossBody: boolean;
   private readonly direction?: Direction;
-  private readonly nextEffect: (player: Player) => void;
   private readonly tweenConfig: DashTweenConfig;
 
   constructor(id: TechniqueId, name: string, sequence: Sequence, options: DashOptions) {
@@ -32,17 +30,10 @@ export default class DashTechnique extends Technique {
     this.ignoreWalls = options.ignoreWalls ?? false;
     this.crossBody = options.crossBody ?? true;
     this.direction = options.direction;
-    this.nextEffect = options.nextEffect ?? (() => {});
     this.tweenConfig = options.tween;
   }
 
-  override execute(player: Player): void {
-    this.effect(player);
-    this.dash(player);
-    this.nextEffect(player);
-  }
-
-  private dash(player: Player): void {
+  protected override action(player: Player): void {
     if (this.ignoreWalls) {
       player.ignoresWalls = true;
     }
@@ -68,6 +59,7 @@ export default class DashTechnique extends Technique {
       onComplete: (tween, targets, ...params) => {
         player.ignoresWalls = false;
         this.tweenConfig.onComplete?.(tween, targets, ...params);
+        this.afterEffect(player);
       },
     });
   }

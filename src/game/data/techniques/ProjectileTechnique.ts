@@ -31,9 +31,7 @@ export default class ProjectileTechnique extends Technique {
     super(id, name, sequence, options);
   }
 
-  override execute(player: Player): void {
-    this.effect(player);
-
+  protected override action(player: Player): void {
     const facing = FACING_ANGLES[player.direction];
 
     for (const spread of this.options.spreadAngles ?? [0]) {
@@ -42,5 +40,7 @@ export default class ProjectileTechnique extends Technique {
         angle: facing + spread,
       });
     }
+
+    this.afterEffect(player);
   }
 }

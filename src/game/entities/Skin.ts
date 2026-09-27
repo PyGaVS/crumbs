@@ -20,12 +20,21 @@ const ANIMATION_NAMES: Record<Direction, string> = {
 export class Skin {
   constructor(readonly textureKey: string) {}
 
+  get walkTexture(): string {
+    return `${this.textureKey}-walk`;
+  }
+
   get idleTexture(): string {
     return `${this.textureKey}-idle`;
   }
 
+  /** Clé d'animation d'une action directionnelle, ex. `ninjaGreen-attack-down`. */
+  animation(action: string, direction: Direction): string {
+    return `${this.textureKey}-${action}-${ANIMATION_NAMES[direction]}`;
+  }
+
   walkAnimation(direction: Direction): string {
-    return `${this.textureKey}-${ANIMATION_NAMES[direction]}`;
+    return this.animation('walk', direction);
   }
 
   idleFrame(direction: Direction): number {

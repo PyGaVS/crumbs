@@ -6,11 +6,20 @@
   "sheets": [
     {
       "$comment": "Pack Ninja Adventure : une colonne par direction, une ligne par frame de marche.",
-      "keys": ["ninjaGreen"],
+      "keys": ["ninjaGreen-walk"],
       "layout": "column",
       "columns": 4,
       "rows": 4,
       "animations": ["down", "up", "left", "right"]
+    },
+    {
+      "$comment": "Attaque : une frame par direction, jouée une fois. Passer rows à N si la feuille gagne des frames.",
+      "keys": ["ninjaGreen-attack"],
+      "layout": "column",
+      "columns": 4,
+      "rows": 1,
+      "animations": ["down", "up", "left", "right"],
+      "repeat": 0
     }
   ]
 }

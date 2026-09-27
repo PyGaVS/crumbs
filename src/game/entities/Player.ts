@@ -4,6 +4,7 @@ import { InputHistory } from '../utils/input';
 import { Cardinal, Direction } from '../utils/types';
 import { CharClass } from './CharClass';
 import { Entity } from './Entity';
+import type { Technique } from './Technique';
 import { BattleScene } from '../scenes/BattleScene';
 
 /** Touches clavier (KeyboardEvent.code) → direction. */
@@ -18,6 +19,9 @@ export class Player extends Entity {
   score = 0;
   inputHistory = new InputHistory();
   private moving = false;
+  /** Récupération après une technique : inputs mis en tampon puis rejoués. */
+  private locked = false;
+  private inputBuffer: string[] = [];
   ignoresWalls = false;
   name = 'player';
   speed = 360;
@@ -26,12 +30,20 @@ export class Player extends Entity {
     battleScene: BattleScene,
     private readonly charClass: CharClass,
   ) {
-    super(battleScene, SCREEN_WIDTH / 10, SCREEN_HEIGHT - SCREEN_HEIGHT / 10, charClass.skin.textureKey);
+    super(battleScene, SCREEN_WIDTH / 10, SCREEN_HEIGHT - SCREEN_HEIGHT / 10, charClass.skin.walkTexture);
     this.setScale(SPRITE_SIZE / this.width);
     this.halt();
   }
 
   onKeyPress(code: string): void {
+    if (this.locked) {
+      if (code === 'Space' || KEYS[code]) {
+        this.inputBuffer.push(code);
+      }
+
+      return;
+    }
+
     if (code === 'Space') {
       if (this.moving) {
         this.halt();
@@ -56,7 +68,39 @@ export class Player extends Entity {
   private detectTechnique(): void {
     const technique = this.charClass.techniques.find((t) => t.matches(this.inputHistory.history));
 
-    technique?.execute(this);
+    if (technique) {
+      this.castTechnique(technique);
+    }
+  }
+
+  private castTechnique(technique: Technique): void {
+    if (technique.playerAnimation) {
+      this.moving = false;
+      this.setVelocity(0, 0);
+      this.play(this.charClass.skin.animation(technique.playerAnimation, this.direction));
+    }
+
+    technique.execute(this);
+  }
+
+  /** Fige le perso pendant duration ms, les inputs sont mis en tampon puis rejoués. */
+  lock(duration: number, onEnd?: () => void): void {
+    this.locked = true;
+    this.scene.time.delayedCall(duration, () => this.endLag(onEnd));
+  }
+
+  /** Fin de récupération : rejoue les inputs tamponnés comme s'ils venaient d'être pressés. */
+  private endLag(onEnd?: () => void): void {
+    this.locked = false;
+    onEnd?.();
+
+    const buffered = this.inputBuffer;
+    this.inputBuffer = [];
+    buffered.forEach((code) => this.onKeyPress(code));
+
+    if (!this.locked && !this.moving) {
+      this.halt();
+    }
   }
 
   override setDirection(direction: Direction): void {

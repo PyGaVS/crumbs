@@ -5,13 +5,23 @@ import type { Player } from './Player';
 import type Sequence from '../utils/Sequence';
 
 export type TechniqueOptions = {
+  beforeEffect?: (player: Player) => void;
   effect?: (player: Player) => void;
+  afterEffect?: (player: Player) => void;
+  afterLagEffect?: (player: Player) => void;
+  playerAnimation?: string;
+  lag?: number;
 };
 
 export class Technique {
   /** Les suites d'inputs acceptées, aplaties depuis l'arbre à la construction. */
   private readonly paths: Inputs[][];
+  protected readonly beforeEffect: (player: Player) => void;
   protected readonly effect: (player: Player) => void;
+  protected readonly afterEffect: (player: Player) => void;
+  protected readonly afterLagEffect: (player: Player) => void;
+  readonly playerAnimation?: string;
+  readonly lag: number;
 
   constructor(
     readonly id: TechniqueId,
@@ -20,7 +30,12 @@ export class Technique {
     options: TechniqueOptions = {},
   ) {
     this.paths = sequence.paths();
+    this.beforeEffect = options.beforeEffect ?? (() => {});
     this.effect = options.effect ?? (() => {});
+    this.afterEffect = options.afterEffect ?? (() => {});
+    this.afterLagEffect = options.afterLagEffect ?? (() => {});
+    this.playerAnimation = options.playerAnimation;
+    this.lag = options.lag ?? 0;
   }
 
   /** Notation affichée au joueur, une par branche de l'arbre. */
@@ -33,7 +48,18 @@ export class Technique {
   }
 
   execute(player: Player): void {
+    this.beforeEffect(player);
     this.effect(player);
+    this.action(player);
+
+    if (this.lag > 0) {
+      player.lock(this.lag, () => this.afterLagEffect(player));
+    }
+  }
+
+  /** L'action principale ; la sous-classe déclenche afterEffect quand elle se termine. */
+  protected action(player: Player): void {
+    this.afterEffect(player);
   }
 }
 
