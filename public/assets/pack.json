@@ -45,6 +45,25 @@
         "url": "items/Kunai.png"
       },
       {
+        "type": "spritesheet",
+        "key": "snake-idle",
+        "url": "mobs/Snake.png",
+        "frameConfig": {
+          "frameWidth": 16,
+          "frameHeight": 16
+        }
+      },
+      {
+        "type": "image",
+        "key": "lifeBarMini-under",
+        "url": "ui/LifeBarMiniUnder.png"
+      },
+      {
+        "type": "image",
+        "key": "lifeBarMini-progress",
+        "url": "ui/LifeBarMiniProgress.png"
+      },
+      {
         "type": "animation",
         "key": "animations",
         "url": "animations.json"

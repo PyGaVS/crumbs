@@ -1,14 +1,13 @@
 import { Physics, Scene } from 'phaser';
-import { Entity } from '../entities/Entity';
-import { Player } from '../entities/Player';
-import { Projectile } from '../entities/Projectile';
+import { Mob } from '../entities/Mob';
 
 type ArcadeBody = Physics.Arcade.Body | Physics.Arcade.StaticBody;
 
-function isMob(body: ArcadeBody): boolean {
-  const gameObject = body.gameObject;
+/** Les mobs dont le corps chevauche le rectangle centré en (cx, cy). */
+export function overlappingMobs(scene: Scene, cx: number, cy: number, width: number, height: number): Mob[] {
+  const bodies = scene.physics.overlapRect(cx - width / 2, cy - height / 2, width, height, true, false) as ArcadeBody[];
 
-  return gameObject instanceof Entity && !(gameObject instanceof Player) && !(gameObject instanceof Projectile);
+  return bodies.map((body) => body.gameObject).filter((gameObject): gameObject is Mob => gameObject instanceof Mob);
 }
 
 /**
@@ -36,5 +35,5 @@ export function hasObstacle(
     blockers.walls,
   ) as ArcadeBody[];
 
-  return bodies.some((body) => body instanceof Physics.Arcade.StaticBody || isMob(body));
+  return bodies.some((body) => body instanceof Physics.Arcade.StaticBody || body.gameObject instanceof Mob);
 }

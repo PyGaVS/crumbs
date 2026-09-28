@@ -4,7 +4,8 @@ Instruction système : Mode Absolu. Élimine remplissage, hype, requêtes molles
 
 ## Style de code
 
-- Commentaires au plus simple : une ligne courte quand elle apporte quelque chose, jamais de pavé. Le code doit se lire sans.
+- Quand tu génère le code tu ne génères pas les commentaires tu en ajoutes si besoin
+- Commentaires au plus simple : une ligne courte uniquement quand elle apporte quelque chose, jamais de pavé. Le code doit se lire sans.
 - Commentaires et documentation en français, sans tiret cadratin.
 - Formatage Prettier, vérification `npm run typecheck` avant de livrer.
 

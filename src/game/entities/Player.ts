@@ -3,7 +3,7 @@ import { Inputs } from '../data/enums/Inputs';
 import { InputHistory } from '../utils/input';
 import { Cardinal, Direction } from '../utils/types';
 import { CharClass } from './CharClass';
-import { Entity } from './Entity';
+import { Fighter } from './Fighter';
 import type { Technique } from './Technique';
 import { BattleScene } from '../scenes/BattleScene';
 
@@ -15,7 +15,10 @@ const KEYS: Partial<Record<string, Cardinal>> = {
   ArrowDown: Inputs.DOWN,
 };
 
-export class Player extends Entity {
+const MAX_HEALTH = 100;
+const MAX_ARMOR = 30;
+
+export class Player extends Fighter {
   score = 0;
   inputHistory = new InputHistory();
   private moving = false;
@@ -30,7 +33,14 @@ export class Player extends Entity {
     battleScene: BattleScene,
     private readonly charClass: CharClass,
   ) {
-    super(battleScene, SCREEN_WIDTH / 10, SCREEN_HEIGHT - SCREEN_HEIGHT / 10, charClass.skin.walkTexture);
+    super(
+      battleScene,
+      SCREEN_WIDTH / 10,
+      SCREEN_HEIGHT - SCREEN_HEIGHT / 10,
+      charClass.skin.walkTexture,
+      MAX_HEALTH,
+      MAX_ARMOR,
+    );
     this.setScale(SPRITE_SIZE / this.width);
     this.halt();
   }

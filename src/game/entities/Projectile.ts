@@ -1,7 +1,8 @@
 import { Scene } from 'phaser';
 import { SPRITE_SIZE } from '../core/settings';
-import { hasObstacle } from '../utils/collision';
+import { hasObstacle, overlappingMobs } from '../utils/collision';
 import { Entity } from './Entity';
+import type { Mob } from './Mob';
 
 export type ProjectileAnimation = {
   /** Rotation du sprite en degrés par seconde. */
@@ -14,6 +15,7 @@ export type ProjectileConfig = {
   angle: number;
   speed: number;
   range: number;
+  damage: number;
   /** Angle (radians) vers lequel pointe l'asset dans son image source. */
   assetAngle?: number;
   ignoreWalls?: boolean;
@@ -27,6 +29,9 @@ export class Projectile extends Entity {
   private readonly range: number;
   private readonly ignoreWalls: boolean;
   private readonly crossBody: boolean;
+  private readonly damage: number;
+  /** Mobs déjà touchés : chacun ne prend les dégâts qu'une seule fois. */
+  private readonly mobsHit = new Set<Mob>();
 
   constructor(scene: Scene, x: number, y: number, texture: string, config: ProjectileConfig) {
     super(scene, x, y, texture);
@@ -34,6 +39,7 @@ export class Projectile extends Entity {
     this.startY = y;
     this.speed = config.speed;
     this.range = config.range;
+    this.damage = config.damage;
     this.ignoreWalls = config.ignoreWalls ?? false;
     this.crossBody = config.crossBody ?? true;
     this.assetAngle = config.assetAngle;
@@ -53,9 +59,32 @@ export class Projectile extends Entity {
 
   override preUpdate(time: number, delta: number): void {
     super.preUpdate(time, delta);
+    this.damageMobs();
+
+    if (!this.active) {
+      return;
+    }
 
     if (this.outOfRange() || !this.scene.physics.world.bounds.contains(this.x, this.y) || this.hitsObstacle()) {
       this.destroy();
+    }
+  }
+
+  private damageMobs(): void {
+    const { width, height } = this.body || { width: 0, height: 0 };
+
+    for (const mob of overlappingMobs(this.scene, this.x, this.y, width, height)) {
+      if (this.mobsHit.has(mob)) {
+        continue;
+      }
+
+      this.mobsHit.add(mob);
+      mob.takeDamage(this.damage);
+
+      if (!this.crossBody) {
+        this.destroy();
+        return;
+      }
     }
   }
 
@@ -66,9 +95,6 @@ export class Projectile extends Entity {
   private hitsObstacle(): boolean {
     const { width, height } = this.body || { width: 0, height: 0 };
 
-    return hasObstacle(this.scene, this.x, this.y, width, height, {
-      walls: !this.ignoreWalls,
-      mobs: !this.crossBody,
-    });
+    return hasObstacle(this.scene, this.x, this.y, width, height, { walls: !this.ignoreWalls, mobs: false });
   }
 }

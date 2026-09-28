@@ -69,48 +69,41 @@ export default class DashTechnique extends Technique {
     return (Number(this.tweenConfig.duration ?? 100) * traveled) / this.range;
   }
 
+  /** Le point d'arrêt le plus loin jusqu'à range, prolongé si range tombe dans un obstacle. */
   private resolveDashTarget(player: Player, ux: number, uy: number): { x: number; y: number } {
     const reach = (d: number) => ({ x: player.x + ux * d, y: player.y + uy * d });
+    let landing = 0;
 
-    return this.ignoreWalls ? this.throughTarget(player, reach) : this.blockedTarget(player, reach);
-  }
+    for (let d = DASH_STEP; d <= this.range + DASH_MAX_EXTENSION; d += DASH_STEP) {
+      const { x, y } = reach(d);
 
-  private throughTarget(player: Player, reach: (d: number) => { x: number; y: number }): { x: number; y: number } {
-    for (let d = this.range; d <= this.range + DASH_MAX_EXTENSION; d += DASH_STEP) {
-      const target = reach(d);
+      if (!this.canCross(player, x, y)) {
+        break;
+      }
 
-      if (this.isFree(player, target.x, target.y)) {
-        return target;
+      if (this.canLand(player, x, y)) {
+        landing = d;
+
+        if (d >= this.range) {
+          break;
+        }
       }
     }
 
-    for (let d = this.range - DASH_STEP; d >= 0; d -= DASH_STEP) {
-      const target = reach(d);
-
-      if (this.isFree(player, target.x, target.y)) {
-        return target;
-      }
-    }
-
-    return reach(0);
+    return reach(landing);
   }
 
-  /** Se cogne : dernière position libre avant le premier obstacle du trajet. */
-  private blockedTarget(player: Player, reach: (d: number) => { x: number; y: number }): { x: number; y: number } {
-    for (let d = DASH_STEP; d <= this.range; d += DASH_STEP) {
-      const target = reach(d);
-
-      if (!this.isFree(player, target.x, target.y)) {
-        return reach(d - DASH_STEP);
-      }
-    }
-
-    return reach(this.range);
+  private canCross(player: Player, cx: number, cy: number): boolean {
+    return this.isFree(player, cx, cy, { walls: !this.ignoreWalls, mobs: !this.crossBody });
   }
 
-  private isFree(player: Player, cx: number, cy: number): boolean {
+  private canLand(player: Player, cx: number, cy: number): boolean {
+    return this.isFree(player, cx, cy, { walls: true, mobs: true });
+  }
+
+  private isFree(player: Player, cx: number, cy: number, blockers: { walls: boolean; mobs: boolean }): boolean {
     const { width, height } = player.body || { width: 0, height: 0 };
 
-    return !hasObstacle(player.scene, cx, cy, width, height, { walls: true, mobs: !this.crossBody });
+    return !hasObstacle(player.scene, cx, cy, width, height, blockers);
   }
 }
