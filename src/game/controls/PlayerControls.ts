@@ -11,7 +11,7 @@ export const DEFAULT_KEY_BINDINGS: readonly KeyBinding[] = [
   [KeyCodes.LEFT, Inputs.LEFT],
   [KeyCodes.UP, Inputs.UP],
   [KeyCodes.DOWN, Inputs.DOWN],
-  [KeyCodes.S, Inputs.SPECIAL],
+  [KeyCodes.S, Inputs.SWITCH],
   [KeyCodes.A, Inputs.ATTACK],
 ];
 

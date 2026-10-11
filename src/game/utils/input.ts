@@ -38,7 +38,7 @@ const SYMBOLS: Record<Inputs, string> = {
   [Inputs.LEFT]: '←',
   [Inputs.UP]: '↑',
   [Inputs.DOWN]: '↓',
-  [Inputs.SPECIAL]: 'S',
+  [Inputs.SWITCH]: 'S',
   [Inputs.ATTACK]: 'x',
   [Inputs.NONE]: ' ',
 };

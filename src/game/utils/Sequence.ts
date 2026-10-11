@@ -50,8 +50,8 @@ export default class Sequence {
     return this.addLeaves(() => [Inputs.RIGHT]);
   }
 
-  special(): this {
-    return this.addLeaves(() => [Inputs.SPECIAL]);
+  switch(): this {
+    return this.addLeaves(() => [Inputs.SWITCH]);
   }
 
   attack(): this {

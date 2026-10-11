@@ -4,7 +4,7 @@ export enum Inputs {
   DOWN = 'D',
   LEFT = 'L',
   RIGHT = 'R',
-  SPECIAL = 'S',
+  SWITCH = 'S',
   ATTACK = 'A',
   NONE = 'N',
 }
