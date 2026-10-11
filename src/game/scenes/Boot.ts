@@ -1,7 +1,7 @@
 import { Scene } from 'phaser';
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../core/settings';
 
-const BACKGROUND_COLOR = 0x1c1c22;
+const BACKGROUND_COLOR = 0x72b562;
 const GRID_COLOR = 0x2a2a33;
 const GRID_STEP = 64;
 

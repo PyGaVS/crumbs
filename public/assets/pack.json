@@ -55,6 +55,11 @@
       },
       {
         "type": "image",
+        "key": "shadow",
+        "url": "FX/Shadow.png"
+      },
+      {
+        "type": "image",
         "key": "lifeBarMini-under",
         "url": "ui/LifeBarMiniUnder.png"
       },

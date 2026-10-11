@@ -79,10 +79,10 @@ Les sprites, qui vivent dans une scène :
   c'est `controls/PlayerControls` qui les appelle depuis le clavier. Il expose aussi les
   primitives que les techniques utilisent (`applyBoost`…) et recevra une `Composition`
   (roadmap 0.4).
+- `Shadow` : l'ombre portée que chaque `Entity` crée à sa construction, dessinée juste
+  sous elle.
 - `Mob` : un ennemi dans l'arène, instancié depuis son `EnemyKind` ; pour l'instant le
   mannequin d'entraînement du jalon 0.1.
-- `entities/deprecated/` : `Phantom`, ses quatre stratégies et `Dot`, hérités du
-  prototype et plus utilisés, gardés comme base pour les ennemis du jalon 0.5.
 
 Les entités métier, instanciées par les catalogues de `data/`, sans aucun Phaser :
 

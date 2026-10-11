@@ -1,6 +1,7 @@
 import { Physics, Scene } from 'phaser';
 import { Inputs } from '../data/enums/Inputs';
 import { Direction } from '../utils/types';
+import { Shadow } from './Shadow';
 
 /** Déplacement unitaire par direction. Attention : dans Phaser l'axe Y pointe vers le BAS (inverse d'Arcade). */
 const MOVES: Record<Direction, readonly [number, number]> = {
@@ -22,6 +23,7 @@ export class Entity extends Physics.Arcade.Sprite {
     scene.add.existing(this);
     scene.physics.add.existing(this);
     this.setCollideWorldBounds(true);
+    new Shadow(this);
   }
 
   setDirection(direction: Direction): void {
