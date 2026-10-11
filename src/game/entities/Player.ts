@@ -1,19 +1,10 @@
 import { SCREEN_HEIGHT, SCREEN_WIDTH, SPRITE_SIZE } from '../core/settings';
 import { Inputs } from '../data/enums/Inputs';
-import { InputHistory } from '../utils/input';
-import { Cardinal, Direction } from '../utils/types';
+import { InputHistory, isCardinal } from '../utils/input';
 import { CharClass } from './CharClass';
 import { Fighter } from './Fighter';
 import type { Technique } from './Technique';
 import { BattleScene } from '../scenes/BattleScene';
-
-/** Touches clavier (KeyboardEvent.code) → direction. */
-const KEYS: Partial<Record<string, Cardinal>> = {
-  ArrowRight: Inputs.RIGHT,
-  ArrowLeft: Inputs.LEFT,
-  ArrowUp: Inputs.UP,
-  ArrowDown: Inputs.DOWN,
-};
 
 const MAX_HEALTH = 100;
 const MAX_ARMOR = 30;
@@ -21,10 +12,9 @@ const MAX_ARMOR = 30;
 export class Player extends Fighter {
   score = 0;
   inputHistory = new InputHistory();
-  private moving = false;
-  /** Récupération après une technique : inputs mis en tampon puis rejoués. */
+  private idle = false;
   private locked = false;
-  private inputBuffer: string[] = [];
+  private inputBuffer: Inputs[] = [];
   ignoresWalls = false;
   name = 'player';
   speed = 360;
@@ -45,37 +35,19 @@ export class Player extends Fighter {
     this.halt();
   }
 
-  onKeyPress(code: string): void {
+  press(input: Inputs): void {
+    if (isCardinal(input)) {
+      this.direction = input;
+    }
+
     if (this.locked) {
-      if (code === 'Space' || KEYS[code]) {
-        this.inputBuffer.push(code);
-      }
+      this.inputBuffer.push(input);
 
       return;
     }
 
-    if (code === 'Space') {
-      if (this.moving) {
-        this.halt();
-      }
-      this.inputHistory.addInput(Inputs.HALT);
-      this.detectTechnique();
-
-      return;
-    }
-
-    const input = KEYS[code];
-
-    if (!input) {
-      return;
-    }
-
-    this.setDirection(input);
     this.inputHistory.addInput(input);
-    this.detectTechnique();
-  }
 
-  private detectTechnique(): void {
     const technique = this.charClass.techniques.find((t) => t.matches(this.inputHistory.history));
 
     if (technique) {
@@ -85,7 +57,7 @@ export class Player extends Fighter {
 
   private castTechnique(technique: Technique): void {
     if (technique.playerAnimation) {
-      this.moving = false;
+      this.idle = false;
       this.setVelocity(0, 0);
       this.play(this.charClass.skin.animation(technique.playerAnimation, this.direction));
     }
@@ -99,29 +71,33 @@ export class Player extends Fighter {
     this.scene.time.delayedCall(duration, () => this.endLag(onEnd));
   }
 
-  /** Fin de récupération : rejoue les inputs tamponnés comme s'ils venaient d'être pressés. */
   private endLag(onEnd?: () => void): void {
     this.locked = false;
     onEnd?.();
 
     const buffered = this.inputBuffer;
     this.inputBuffer = [];
-    buffered.forEach((code) => this.onKeyPress(code));
+    buffered.forEach((input) => this.press(input));
+  }
 
-    if (!this.locked && !this.moving) {
-      this.halt();
+  /** Avance vers sa direction, sans effet pendant le lag. */
+  walk(): void {
+    if (this.locked) {
+      return;
     }
+
+    this.idle = false;
+    this.setDirection(this.direction);
+    this.play(this.charClass.skin.walkAnimation(this.direction), true);
   }
 
-  override setDirection(direction: Direction): void {
-    super.setDirection(direction);
-    this.moving = true;
-    this.play(this.charClass.skin.walkAnimation(direction), true);
-  }
-
-  /** Immobilise le perso : il garde sa direction mais passe sur sa frame d'attente. */
+  /** Immobilise le perso sur sa frame d'attente en gardant sa direction, sans effet pendant le lag. */
   halt(): void {
-    this.moving = false;
+    if (this.locked || this.idle) {
+      return;
+    }
+
+    this.idle = true;
     this.setVelocity(0, 0);
     this.stop();
     this.setTexture(this.charClass.skin.idleTexture, this.charClass.skin.idleFrame(this.direction));

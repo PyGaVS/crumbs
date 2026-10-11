@@ -12,7 +12,9 @@ src/
     main.ts               Config Phaser (résolution, pixelArt, liste des scènes)
     core/settings.ts      Constantes globales (écran, SPRITE_SIZE, ASSET_PACK…)
     scenes/               Les écrans du jeu
-    ui/                   L'habillage en jeu : Gauge, LifeBar des mobs, Hud du joueur
+    controls/             Les sources d'inputs : PlayerControls pilote le joueur au clavier
+    ui/                   L'habillage en jeu : Gauge, LifeBar des mobs, Hud du joueur,
+                          InputHistoryText (historique d'inputs)
     entities/             Les entités : sprites Phaser (Player…) et entités métier
                           pures (Technique, CharClass, Weapon, EnemyKind, Composition)
     data/                 La donnée pure : catalogues d'instances et enums
@@ -72,8 +74,11 @@ Les sprites, qui vivent dans une scène :
   tester une collision en rectangle.
 - `Fighter` : une `Entity` avec PV et armure, l'ordre des dégâts et la mort à zéro PV. Il ne
   connaît pas l'UI : il émet `FighterEvent.DAMAGED`, que `ui/LifeBar` et `ui/Hud` écoutent.
-- `Player` : le ninja. Branché sur l'historique de touches, il expose les primitives que
-  les techniques utilisent (`applyBoost`…) et recevra une `Composition` (roadmap 0.4).
+- `Player` : le ninja. Il ignore d'où viennent ses ordres : `press(input)` inscrit un appui
+  dans l'historique de touches, `walk()` et `halt()` le font marcher ou l'arrêtent. Aujourd'hui
+  c'est `controls/PlayerControls` qui les appelle depuis le clavier. Il expose aussi les
+  primitives que les techniques utilisent (`applyBoost`…) et recevra une `Composition`
+  (roadmap 0.4).
 - `Mob` : un ennemi dans l'arène, instancié depuis son `EnemyKind` ; pour l'instant le
   mannequin d'entraînement du jalon 0.1.
 - `entities/deprecated/` : `Phantom`, ses quatre stratégies et `Dot`, hérités du

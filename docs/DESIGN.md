@@ -47,8 +47,8 @@ montée en statistiques qui remplace la maîtrise.
 | Biome              | A son propre jeu d'ennemis et son propre terrain                                                     |
 | Niveaux            | Générés aléatoirement. Rien ne s'apprend par cœur                                                    |
 | Combat             | Tient entièrement sur un écran : tous les ennemis sont visibles en permanence, aucun hors-champ      |
-| Déplacement        | Continu, on ne dirige que la direction, rebond sur les bords (hérité du proto)                       |
-| Halt               | Un input à part entière (Espace) : stoppe le déplacement jusqu'à la prochaine direction, s'écrit `H` |
+| Déplacement        | Maintenu : le perso avance tant qu'une flèche est enfoncée et s'arrête dès qu'on la relâche          |
+| Spécial            | Un input à part entière (touche S) sans effet propre, il ne sert que dans les séquences, s'écrit `S` |
 | Attaque            | Une attaque simple toujours disponible, plus des techniques spéciales via les combos                 |
 | Combos             | Enchaînements au clavier, lus dans l'historique des dernières touches                                |
 | Ennemis            | Intelligents et variés : chacun sa stratégie, capables de coordination et de réagir au jeu du joueur |
@@ -109,7 +109,7 @@ de liste, menu de composition, aide en jeu.
 | `←/→`            | L'une ou l'autre, au choix du joueur    |
 | `↕`              | Haut et bas, quel que soit l'ordre      |
 | `↔`              | Gauche et droite, quel que soit l'ordre |
-| `H`              | Halt : l'arrêt                          |
+| `S`              | Spécial                                 |
 | Icône d'attaque  | À définir                               |
 | Icône de bascule | À définir (changement d'arme)           |
 
@@ -257,3 +257,5 @@ le fond spatial du prototype sont des placeholders, pas un choix.
 | 2026-09-23 | La direction de course amorce l'historique des combos          | Une technique alignée avec la course coûte une frappe de moins, sans changer la notation |
 | 2026-09-23 | Halt (Espace) : un input qui stoppe le déplacement, écrit `H`  | Ouvre des techniques depuis l'arrêt et enrichit le vocabulaire des combos                |
 | 2026-09-27 | Suppression de l'amorce : la course n'entre plus dans l'historique | Revient sur la décision du 2026-09-23, seules les frappes réelles comptent          |
+| 2026-09-28 | Déplacement maintenu : relâcher les flèches arrête le perso   | Remplace le déplacement continu du prototype                                             |
+| 2026-09-28 | Spécial (touche S) remplace Halt, sans effet propre, écrit `S` | Relâcher les flèches suffit à s'arrêter ; la touche reste un mot du vocabulaire des combos |
