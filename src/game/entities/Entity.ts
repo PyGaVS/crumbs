@@ -36,9 +36,13 @@ export class Entity extends Physics.Arcade.Sprite {
   }
 
   orientTo(angle: number): void {
-    if (this.assetAngle !== undefined) {
-      this.setRotation(angle - this.assetAngle);
-    }
+    if (this.assetAngle === undefined) { return; }
+
+    const mirrored = Math.cos(angle) < 0;
+
+    this.setFlipX(mirrored);
+
+    this.setRotation(mirrored ? angle - Math.PI + this.assetAngle : angle - this.assetAngle);
   }
 
   isCloseTo(pos: { x: number; y: number }, range = 150): boolean {
