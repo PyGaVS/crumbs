@@ -1,5 +1,6 @@
 import { Scene } from 'phaser';
 import { ASSET_PACK, SCREEN_HEIGHT, SCREEN_WIDTH } from '../core/settings';
+import { ALL_FX } from '../data/fx';
 
 export class Preloader extends Scene {
   constructor() {
@@ -28,6 +29,13 @@ export class Preloader extends Scene {
   }
 
   create() {
+    //  Phaser ne fait qu'avertir, et une entaille sans animation ne serait jamais détruite
+    const missing = ALL_FX.find((fx) => !this.anims.exists(fx.animation));
+
+    if (missing) {
+      throw new Error(`Animation d'effet absente du pack : ${missing.animation}`);
+    }
+
     //  Texture de pac-gomme : dessinée, pas chargée, donc générée ici
     const graphics = this.add.graphics();
 

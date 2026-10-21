@@ -1,11 +1,11 @@
 import { CharClass } from '../entities/CharClass';
-import { Skin } from '../entities/Skin';
 import { CharClassId } from './enums/CharClassId';
+import { SkinId } from './enums/SkinId';
 import { TechniqueId } from './enums/TechniqueId';
 
 /** Catalogue des classes. Répartition des techniques et skin du robot provisoires (jalon 0.4). */
 export const ALL_CHAR_CLASSES: readonly CharClass[] = [
-  new CharClass(CharClassId.NINJA, 'Ninja', new Skin('ninjaGreen'), [
+  new CharClass(CharClassId.NINJA, 'Ninja', SkinId.NINJA_GREEN, [
     TechniqueId.DASH, TechniqueId.SHURIKENS, TechniqueId.KUNAI,
   ]),
 ];

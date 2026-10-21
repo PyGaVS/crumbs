@@ -20,6 +20,15 @@
       "rows": 1,
       "animations": ["down", "up", "left", "right"],
       "repeat": 0
+    },
+    {
+      "$comment": "Entaille : 6 frames jouées une fois, SlashStep peut en imposer la durée.",
+      "keys": ["slash02"],
+      "layout": "sequence",
+      "framesPerAnimation": 6,
+      "animations": ["strike"],
+      "frameRate": 24,
+      "repeat": 0
     }
   ]
 }

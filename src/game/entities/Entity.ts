@@ -1,6 +1,11 @@
-import { Physics, Scene } from 'phaser';
+import { GameObjects, Physics, Scene } from 'phaser';
 import { Inputs } from '../data/enums/Inputs';
+import type { SkinAction } from '../data/enums/SkinAction';
+import { FACING_ANGLES, Facing, orient } from '../utils/orientation';
 import { Direction } from '../utils/types';
+import type { Animation, PlayOptions } from './Animation';
+import type { HeldWeapon } from './HeldWeapon';
+import { Playback } from './Playback';
 import { Shadow } from './Shadow';
 
 /** Déplacement unitaire par direction. Attention : dans Phaser l'axe Y pointe vers le BAS (inverse d'Arcade). */
@@ -17,6 +22,8 @@ export class Entity extends Physics.Arcade.Sprite {
   speed = 300;
   /** Angle (radians) vers lequel pointe l'asset dans son image source. */
   assetAngle?: number;
+  readonly heldWeapon?: HeldWeapon;
+  private playback?: Playback;
 
   constructor(scene: Scene, x: number, y: number, texture: string, frame?: string | number) {
     super(scene, x, y, texture, frame);
@@ -24,6 +31,31 @@ export class Entity extends Physics.Arcade.Sprite {
     scene.physics.add.existing(this);
     this.setCollideWorldBounds(true);
     new Shadow(this);
+    this.once(GameObjects.Events.DESTROY, () => this.playback?.stop());
+  }
+
+  get facingAngle(): number {
+    return FACING_ANGLES[this.direction];
+  }
+
+  /** Joue une action du skin ; seules les entités au skin animé la définissent. */
+  playAction?(action: SkinAction, direction: Direction): void;
+
+  /** Joue animation en coupant la lecture en cours : passer par Animation.play. */
+  perform(animation: Animation, options: PlayOptions): Playback {
+    const playback = new Playback(this, new Facing(options.angle ?? this.facingAngle), animation, options);
+
+    this.playback?.stop();
+
+    this.playback = playback;
+    playback.start();
+
+    return playback;
+  }
+
+  override preUpdate(time: number, delta: number): void {
+    super.preUpdate(time, delta);
+    this.playback?.tick(delta);
   }
 
   setDirection(direction: Direction): void {
@@ -38,11 +70,7 @@ export class Entity extends Physics.Arcade.Sprite {
   orientTo(angle: number): void {
     if (this.assetAngle === undefined) { return; }
 
-    const mirrored = Math.cos(angle) < 0;
-
-    this.setFlipX(mirrored);
-
-    this.setRotation(mirrored ? angle - Math.PI + this.assetAngle : angle - this.assetAngle);
+    orient(this, angle, this.assetAngle);
   }
 
   isCloseTo(pos: { x: number; y: number }, range = 150): boolean {

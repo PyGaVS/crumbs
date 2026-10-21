@@ -60,6 +60,25 @@
       },
       {
         "type": "image",
+        "key": "falchion",
+        "url": "weapons/Sword2/Sprite.png"
+      },
+      {
+        "type": "image",
+        "key": "falchion-inHand",
+        "url": "weapons/Sword2/SpriteInHand.png"
+      },
+      {
+        "type": "spritesheet",
+        "key": "slash02",
+        "url": "FX/Slash/SpriteSheetSlash02.png",
+        "frameConfig": {
+          "frameWidth": 66,
+          "frameHeight": 50
+        }
+      },
+      {
+        "type": "image",
         "key": "lifeBarMini-under",
         "url": "ui/LifeBarMiniUnder.png"
       },

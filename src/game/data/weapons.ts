@@ -1,10 +1,14 @@
+import { AnimationId } from './enums/AnimationId';
 import { WeaponId } from './enums/WeaponId';
+import { WeaponSkinId } from './enums/WeaponSkinId';
 import { Weapon } from '../entities/Weapon';
 
-/** Catalogue des armes. La répartition des techniques est provisoire (jalon 0.3). */
+/** Catalogue des armes. */
 export const ALL_WEAPONS: readonly Weapon[] = [
-  new Weapon(WeaponId.HAMMER, 'Marteau', []),
-  new Weapon(WeaponId.KATANA, 'Katana', []),
+  new Weapon( WeaponId.FALCHION, 'Fauchon', WeaponSkinId.FALCHION,
+    { damage: 5, lag: 300, reach: 40, width: 96, depth: 72, animationId: AnimationId.FALCHION_ATTACK },
+    [],
+  ),
 ];
 
 export function getWeapon(id: WeaponId): Weapon {

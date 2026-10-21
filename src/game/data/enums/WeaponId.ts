@@ -1,4 +1,3 @@
 export enum WeaponId {
-  HAMMER,
-  KATANA,
+  FALCHION,
 }

@@ -1,11 +1,16 @@
 import { SCREEN_HEIGHT, SCREEN_WIDTH, SPRITE_SIZE } from '../core/settings';
 import { Inputs } from '../data/enums/Inputs';
+import type { SkinAction } from '../data/enums/SkinAction';
+import { strike } from '../utils/combat';
 import { InputHistory, isCardinal } from '../utils/input';
+import type { Direction } from '../utils/types';
 import { CharClass } from './CharClass';
 import { Fighter } from './Fighter';
-import type { Technique } from './Technique';
+import { HeldWeapon } from './HeldWeapon';
+import type { Weapon } from './Weapon';
 import { BattleScene } from '../scenes/BattleScene';
 
+// TODO: move to CharClass
 const MAX_HEALTH = 100;
 const MAX_ARMOR = 30;
 
@@ -15,6 +20,7 @@ export class Player extends Fighter {
   private idle = false;
   private locked = false;
   private inputBuffer: Inputs[] = [];
+  declare readonly heldWeapon: HeldWeapon;
   ignoresWalls = false;
   name = 'player';
   speed = 360;
@@ -22,16 +28,12 @@ export class Player extends Fighter {
   constructor(
     battleScene: BattleScene,
     private readonly charClass: CharClass,
+    private readonly weapon: Weapon,
   ) {
-    super(
-      battleScene,
-      SCREEN_WIDTH / 10,
-      SCREEN_HEIGHT - SCREEN_HEIGHT / 10,
-      charClass.skin.walkTexture,
-      MAX_HEALTH,
-      MAX_ARMOR,
-    );
+    super( battleScene, SCREEN_WIDTH / 10, SCREEN_HEIGHT - SCREEN_HEIGHT / 10, 
+      charClass.skin.walkTexture, MAX_HEALTH, MAX_ARMOR );
     this.setScale(SPRITE_SIZE / this.width);
+    this.heldWeapon = new HeldWeapon(this, charClass.skin, weapon.skin);
     this.halt();
   }
 
@@ -51,18 +53,21 @@ export class Player extends Fighter {
     const technique = this.charClass.techniques.find((t) => t.matches(this.inputHistory.history));
 
     if (technique) {
-      this.castTechnique(technique);
+      technique.execute(this);
+    } else if (input === Inputs.ATTACK) {
+      this.attack();
     }
   }
 
-  private castTechnique(technique: Technique): void {
-    if (technique.playerAnimation) {
-      this.idle = false;
-      this.setVelocity(0, 0);
-      this.play(this.charClass.skin.animation(technique.playerAnimation, this.direction));
-    }
+  private attack(): void {
+    this.weapon.attackAnimation.play(this, { onCue: ({ facing }) => strike(this, facing.angle, this.weapon.attack) });
+    this.lock(this.weapon.attack.lag);
+  }
 
-    technique.execute(this);
+  override playAction(action: SkinAction, direction: Direction = this.direction): void {
+    this.idle = false;
+    this.setVelocity(0, 0);
+    this.play(this.charClass.skin.animation(action, direction));
   }
 
   /** Fige le perso pendant duration ms, les inputs sont mis en tampon puis rejoués. */

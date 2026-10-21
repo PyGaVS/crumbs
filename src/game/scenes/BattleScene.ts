@@ -2,10 +2,12 @@ import { Scene } from 'phaser';
 import { SCREEN_HEIGHT, SCREEN_WIDTH } from '../core/settings';
 import { getCharClass } from '../data/charClasses';
 import { getEnemyKind } from '../data/enemies';
+import { getWeapon } from '../data/weapons';
 import { PlayerControls } from '../controls/PlayerControls';
 import { CharClassId } from '../data/enums/CharClassId';
 import { EnemyId } from '../data/enums/EnemyId';
 import { Inputs } from '../data/enums/Inputs';
+import { WeaponId } from '../data/enums/WeaponId';
 import { Mob } from '../entities/Mob';
 import { Player } from '../entities/Player';
 import { Hud } from '../ui/Hud';
@@ -22,8 +24,8 @@ export class BattleScene extends Scene {
   create() {
     this.add.image(0, 0, 'background').setOrigin(0).setDisplaySize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    // En attendant la sélection de perso (roadmap 0.4), la classe ninja
-    this.player = new Player(this, getCharClass(CharClassId.NINJA));
+    // En attendant la sélection de perso (roadmap 0.4), la classe ninja au fauchon
+    this.player = new Player(this, getCharClass(CharClassId.NINJA), getWeapon(WeaponId.FALCHION));
     new PlayerControls(this, this.player);
     new Hud(this, this.player);
     new InputHistoryText(this, this.player.inputHistory);
