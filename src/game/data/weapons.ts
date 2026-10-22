@@ -6,7 +6,7 @@ import { Weapon } from '../entities/Weapon';
 /** Catalogue des armes. */
 export const ALL_WEAPONS: readonly Weapon[] = [
   new Weapon( WeaponId.FALCHION, 'Fauchon', WeaponSkinId.FALCHION,
-    { damage: 5, lag: 300, reach: 40, width: 96, depth: 72, animationId: AnimationId.FALCHION_ATTACK },
+    { damage: 5, lag: 300, animationId: AnimationId.FALCHION_ATTACK },
     [],
   ),
 ];

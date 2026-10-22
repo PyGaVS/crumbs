@@ -60,7 +60,7 @@ export class Player extends Fighter {
   }
 
   private attack(): void {
-    this.weapon.attackAnimation.play(this, { onCue: ({ facing }) => strike(this, facing.angle, this.weapon.attack) });
+    this.weapon.attackAnimation.play(this, { onCue: (cue) => strike(this, cue, this.weapon.attack.damage) });
     this.lock(this.weapon.attack.lag);
   }
 

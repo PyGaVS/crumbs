@@ -13,31 +13,13 @@ const FALCHION_GUARD: WeaponPose = { angle: -Math.PI / 3, radius: 40, pivot: 0 }
 export const ALL_ANIMATIONS: readonly Animation[] = [
   new Animation(AnimationId.FALCHION_ATTACK, [
     new SkinStep({ action: SkinAction.ATTACK }),
-    new CueStep(),
+    new CueStep({
+      hitboxes: [
+        { x: 36, y: -50, radius: 30 }, { x: 60, y: 0, radius: 30 }, { x: 36, y: 50, radius: 30 },
+      ],
+    }),
     new SlashStep({ fx: FxId.SLASH_02, reach: 30, size: 150, mirrored: true }),
     new SwingStep({ from: FALCHION_GUARD, to: { angle: Math.PI / 3 }, duration: 250, ease: 'Cubic.out' }),
-  ]),
-  new Animation(AnimationId.DOUBLE_SLASH, [
-    new SkinStep({ action: SkinAction.ATTACK }),
-    new SwingStep({ from: FALCHION_GUARD, to: { angle: Math.PI / 3 }, duration: 160, ease: 'Cubic.out' }),
-    new SlashStep({ fx: FxId.SLASH_02, reach: 30, size: 150, duration: 160, mirrored: true }),
-    new CueStep({ at: 33 }),
-    new SwingStep({
-      at: 240,
-      to: { angle: -Math.PI / 2, radius: 46 },
-      duration: 180,
-      ease: 'Back.out',
-      clockwise: false,
-    }),
-    new SlashStep({
-      at: 240,
-      fx: FxId.SLASH_02,
-      reach: 36,
-      size: 170,
-      angle: -Math.PI / 12,
-      duration: 180,
-    }),
-    new CueStep({ at: 258 }),
   ]),
   new Animation(AnimationId.THROW, [new SkinStep({ action: SkinAction.ATTACK }), new CueStep()]),
 ];

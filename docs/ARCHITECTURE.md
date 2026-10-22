@@ -15,13 +15,15 @@ src/
     controls/             Les sources d'inputs : PlayerControls pilote le joueur au clavier
     ui/                   L'habillage en jeu : Gauge, LifeBar des mobs, Hud du joueur,
                           InputHistoryText (historique d'inputs)
+    debug/                Les outils de dev, créés seulement par `npm run dev` :
+                          HitboxOverlay (touche H)
     entities/             Les entités : sprites Phaser (Player…) et entités métier
                           pures (Technique, CharClass, Weapon, EnemyKind, Skin,
                           WeaponSkin, Fx, Animation, Composition)
     data/                 La donnée pure : catalogues d'instances et enums
     utils/input.ts        Historique de touches et détection des séquences
     utils/orientation.ts  Angles du regard, miroir, Facing
-    utils/combat.ts       strike : la frappe d'une zone de mêlée
+    utils/combat.ts       strike : la frappe des hitboxs d'un repère
 vite/
   config.dev.ts / config.prod.ts
   plugins/animations.ts   Génère les animations à chaque démarrage de Vite
@@ -84,7 +86,7 @@ Les sprites, qui vivent dans une scène :
 - `Player` : le ninja. Il ignore d'où viennent ses ordres : `press(input)` inscrit un appui
   dans l'historique de touches, `walk()` et `halt()` le font marcher ou l'arrêtent. Un appui
   sur l'attaque qui ne conclut aucune technique déclenche l'attaque de base de son arme : il
-  joue l'animation d'attaque de l'arme et frappe la zone de touche (`strike`) à chacun de ses
+  joue l'animation d'attaque de l'arme et frappe les hitboxs (`strike`) de chacun de ses
   repères. Aujourd'hui c'est `controls/PlayerControls` qui les appelle depuis le clavier. Il
   expose aussi les primitives que les techniques utilisent (`lock`, `playAction`…) et
   recevra une `Composition` (roadmap 0.4).
@@ -132,15 +134,21 @@ dans la lecture.
   - `SkinStep` : une action du skin (`SkinAction`).
 
   `CueStep`, dans `entities/Animation.ts`, est le repère où le gameplay agit : le seul step
-  que les techniques et les armes connaissent, via `onCue`.
+  que les techniques et les armes connaissent, via `onCue`. Il porte les hitboxs de la
+  frappe : des cercles décrits regard à droite (x vers l'avant, y vers le bas), que
+  `Facing.place` pose dans le monde. `strike` touche une seule fois chaque mob, quel que
+  soit le nombre de cercles qu'il chevauche, puis émet `CombatEvent.STRIKE` : en dev,
+  `debug/HitboxOverlay` affiche alors les cercles, pleins sur la frame où ils frappent puis en
+  contour jusqu'à `DISPLAY_TIME`, et les corps physiques (touche H).
 - `Playback` : une lecture, avancée par l'entité à chaque frame, sans import Phaser. C'est l'unique horloge des
   steps et des gestes, sans minuterie ni tween Phaser : `stop()` suffit à tout arrêter.
 - `Facing` : le regard figé au lancement, seul endroit qui décide du miroir. L'arme,
   l'entaille, le skin et le gameplay lisent le même. Les animations sont décrites vers la
   droite et symétriques : le `clockwise` d'un geste et le `mirrored` d'une entaille valent
   vers la droite, le haut et le bas, et s'inversent vers la gauche.
-- Validation au chargement : un premier geste sans pose de départ, ou un repère après la fin
-  du lag de la technique ou de l'arme, lèvent une erreur. Le Preloader vérifie que chaque
+- Validation au chargement : un premier geste sans pose de départ, un repère après la fin
+  du lag de la technique ou de l'arme,
+  lèvent une erreur. Le Preloader vérifie que chaque
   `Fx` a son animation.
 
 ## Les assets

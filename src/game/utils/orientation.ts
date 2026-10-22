@@ -43,6 +43,11 @@ export class Facing {
   mirror(mirrored: boolean): boolean {
     return this.mirrored !== mirrored;
   }
+
+  /** Point monde d'un point local décrit regard à droite (x vers l'avant, y vers le bas), inversé vers la gauche. */
+  place(originX: number, originY: number, x: number, y: number): [x: number, y: number] {
+    return polar(...polar(originX, originY, this.angle, x), this.toWorld(Math.PI / 2), y);
+  }
 }
 
 /**

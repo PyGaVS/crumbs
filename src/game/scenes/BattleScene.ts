@@ -4,6 +4,7 @@ import { getCharClass } from '../data/charClasses';
 import { getEnemyKind } from '../data/enemies';
 import { getWeapon } from '../data/weapons';
 import { PlayerControls } from '../controls/PlayerControls';
+import { HitboxOverlay } from '../debug/HitboxOverlay';
 import { CharClassId } from '../data/enums/CharClassId';
 import { EnemyId } from '../data/enums/EnemyId';
 import { Inputs } from '../data/enums/Inputs';
@@ -29,6 +30,10 @@ export class BattleScene extends Scene {
     new PlayerControls(this, this.player);
     new Hud(this, this.player);
     new InputHistoryText(this, this.player.inputHistory);
+
+    if (import.meta.env.DEV) {
+      new HitboxOverlay(this);
+    }
 
     const dummy = new Mob(this, SCREEN_WIDTH * 0.65, SCREEN_HEIGHT / 2, getEnemyKind(EnemyId.DUMMY), Inputs.LEFT);
 

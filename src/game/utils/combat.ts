@@ -1,17 +1,20 @@
+import { Geom } from 'phaser';
+import type { Cue } from '../entities/Animation';
 import type { Entity } from '../entities/Entity';
-import { mobsInFront } from './collision';
+import { mobsInCircle } from './collision';
 
-export type MeleeHit = {
-  damage: number;
-  /** Zone de touche devant l'attaquant, en px : distance de son centre, largeur et profondeur. */
-  reach: number;
-  width: number;
-  depth: number;
-};
+export enum CombatEvent {
+  STRIKE = 'strike',
+}
 
-/** Frappe les mobs de la zone posée devant l'attaquant et tournée vers angle (radians). */
-export function strike(attacker: Entity, angle: number, { damage, reach, width, depth }: MeleeHit): void {
-  mobsInFront(attacker.scene, attacker.x, attacker.y, angle, reach, width, depth).forEach((mob) =>
-    mob.takeDamage(damage),
+/** Inflige damage une seule fois à chaque mob touché par au moins une hitbox du repère. */
+export function strike(attacker: Entity, { facing, hitboxes }: Cue, damage: number): void {
+  const { scene } = attacker;
+  const circles = hitboxes.map(
+    ({ x, y, radius }) => new Geom.Circle(...facing.place(attacker.x, attacker.y, x, y), radius),
   );
+  const mobs = new Set(circles.flatMap(({ x, y, radius }) => mobsInCircle(scene, x, y, radius)));
+
+  mobs.forEach((mob) => mob.takeDamage(damage));
+  scene.events.emit(CombatEvent.STRIKE, circles);
 }

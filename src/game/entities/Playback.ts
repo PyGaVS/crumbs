@@ -1,5 +1,5 @@
 import type { Facing } from '../utils/orientation';
-import type { Animation, PlayOptions } from './Animation';
+import type { Animation, Hitbox, PlayOptions } from './Animation';
 import type { Entity } from './Entity';
 import type { WeaponGrip, WeaponPose } from './HeldWeapon';
 
@@ -40,10 +40,11 @@ export class Playback {
     }
   }
 
-  cue(): void {
+  cue(hitboxes: readonly Hitbox[]): void {
     const index = this.cues++;
+    const last = index === this.animation.cues.length - 1;
 
-    this.options.onCue?.({ facing: this.facing, index, last: index === this.animation.cueTimes.length - 1 });
+    this.options.onCue?.({ facing: this.facing, index, last, hitboxes });
   }
 
   /**

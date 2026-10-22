@@ -6,7 +6,14 @@ import type { Playback } from './Playback';
 /** Une faute de frappe dans un nom d'ease retomberait en silence sur Power0. */
 export type Ease = 'Cubic.out' | 'Back.out';
 
-export type Cue = { readonly facing: Facing; readonly index: number; readonly last: boolean };
+export type Hitbox = { readonly x: number; readonly y: number; readonly radius: number };
+
+export type Cue = {
+  readonly facing: Facing;
+  readonly index: number;
+  readonly last: boolean;
+  readonly hitboxes: readonly Hitbox[];
+};
 
 export type PlayOptions = {
   onCue?: (cue: Cue) => void;
@@ -37,17 +44,26 @@ export abstract class AnimationStep {
   abstract start(playback: Playback): void;
 }
 
+type CueOptions = StepOptions & { hitboxes?: readonly Hitbox[] };
+
 /** L'instant où le gameplay agit : le seul step que les techniques et les armes connaissent. */
 export class CueStep extends AnimationStep {
+  readonly hitboxes: readonly Hitbox[];
+
+  constructor(options: CueOptions = {}) {
+    super(options);
+    this.hitboxes = options.hitboxes ?? [];
+  }
+
   start(playback: Playback): void {
-    playback.cue();
+    playback.cue(this.hitboxes);
   }
 }
 
 /** Une animation : des steps datés, sans état, jouables par plusieurs entités à la fois. */
 export class Animation {
   readonly steps: readonly AnimationStep[];
-  readonly cueTimes: readonly number[];
+  readonly cues: readonly CueStep[];
   readonly duration: number;
 
   constructor(
@@ -56,7 +72,7 @@ export class Animation {
   ) {
     // Tri stable : à at égal, l'ordre du tableau fait foi
     this.steps = [...steps].sort((a, b) => a.at - b.at);
-    this.cueTimes = this.steps.filter((s) => s instanceof CueStep).map((s) => s.at);
+    this.cues = this.steps.filter((s): s is CueStep => s instanceof CueStep);
     this.duration = Math.max(0, ...this.steps.map((s) => s.at + s.duration));
 
     const state: StepCheck = { id, holdsWeapon: false };
@@ -74,7 +90,7 @@ export class Animation {
 
   /** L'input rejoué à la fin du lag couperait la lecture avant un repère tardif. */
   checkCuesBefore(lag: number, owner: string): void {
-    const last = this.cueTimes[this.cueTimes.length - 1];
+    const last = this.cues[this.cues.length - 1]?.at;
 
     if (last === undefined || (last > 0 && last >= lag)) {
       throw new Error(`${owner} : animation ${this.id} sans repère ou repère après le lag`);

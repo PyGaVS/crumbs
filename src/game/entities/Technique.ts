@@ -65,7 +65,7 @@ export class Technique {
     if (animation) {
       animation.play(player, { onCue: (cue) => this.action(player, cue) });
     } else {
-      this.action(player, { facing: new Facing(player.facingAngle), index: 0, last: true });
+      this.action(player, { facing: new Facing(player.facingAngle), index: 0, last: true, hitboxes: [] });
     }
 
     if (this.lag > 0) {
