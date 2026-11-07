@@ -60,8 +60,10 @@ export class Player extends Fighter {
   }
 
   private attack(): void {
-    this.weapon.attackAnimation.play(this, { onCue: (cue) => strike(this, cue, this.weapon.attack.damage) });
-    this.lock(this.weapon.attack.lag);
+    const animation = this.weapon.attackAnimation;
+
+    animation.play(this, { onCue: (cue) => strike(this, cue, this.weapon.attack.damage) });
+    this.lock(animation.duration);
   }
 
   override playAction(action: SkinAction, direction: Direction = this.direction): void {

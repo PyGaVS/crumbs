@@ -19,7 +19,7 @@ export const ALL_ANIMATIONS: readonly Animation[] = [
       ],
     }),
     new SlashStep({ fx: FxId.SLASH_02, reach: 30, size: 150, mirrored: true }),
-    new SwingStep({ from: FALCHION_GUARD, to: { angle: Math.PI / 3 }, duration: 250, ease: 'Cubic.out' }),
+    new SwingStep({ from: FALCHION_GUARD, to: { angle: Math.PI / 3 }, duration: 250, ease: 'Cubic.out', hold: 50 }),
   ]),
   new Animation(AnimationId.THROW, [new SkinStep({ action: SkinAction.ATTACK }), new CueStep()]),
 ];

@@ -40,7 +40,6 @@ export class Technique {
     this.afterLagEffect = options.afterLagEffect ?? (() => {});
     this.animationId = options.animationId;
     this.lag = options.lag ?? 0;
-    this.animation?.checkCuesBefore(this.lag, `Technique ${name}`);
   }
 
   get animation(): Animation | undefined {

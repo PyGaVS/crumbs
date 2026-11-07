@@ -10,8 +10,8 @@ type SwingOptions = StepOptions & {
   /** ms */
   duration: number;
   ease: Ease;
-  /** Sens du geste vers la droite, le haut et le bas, inversé vers la gauche. Horaire par défaut. */
   clockwise?: boolean;
+  hold?: number;
 };
 
 /** Un geste de l'arme tenue, d'une pose à une autre. */
@@ -24,7 +24,7 @@ export default class SwingStep extends AnimationStep {
   }
 
   override get duration(): number {
-    return this.options.duration;
+    return this.options.duration + (this.options.hold ?? 0);
   }
 
   override check(state: StepCheck): void {

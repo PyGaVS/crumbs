@@ -87,10 +87,10 @@ Les sprites, qui vivent dans une scène :
 - `Player` : le ninja. Il ignore d'où viennent ses ordres : `press(input)` inscrit un appui
   dans l'historique de touches, `walk()` et `halt()` le font marcher ou l'arrêtent. Un appui
   sur l'attaque qui ne conclut aucune technique déclenche l'attaque de base de son arme : il
-  joue l'animation d'attaque de l'arme et frappe les hitboxs (`strike`) de chacun de ses
-  repères. Aujourd'hui c'est `controls/PlayerControls` qui les appelle depuis le clavier. Il
-  expose aussi les primitives que les techniques utilisent (`lock`, `playAction`…) et
-  recevra une `Composition` (roadmap 0.4).
+  joue l'animation d'attaque de l'arme, figé jusqu'à sa fin, et frappe les hitboxs (`strike`)
+  de chacun de ses repères. Aujourd'hui c'est `controls/PlayerControls` qui les appelle
+  depuis le clavier. Il expose aussi les primitives que les techniques utilisent (`lock`,
+  `playAction`…) et recevra une `Composition` (roadmap 0.4).
 - `Attachment` : une image accrochée à un sprite, recalée sur lui après la physique à chaque
   frame et détruite avec lui. Deux déclinaisons :
   - `Shadow` : l'ombre portée que chaque `Entity` crée à sa construction, dessinée juste
@@ -130,7 +130,7 @@ dans la lecture.
 - `AnimationStep` : la classe de base des steps, comme `Technique` pour les techniques. Ses
   enfants, dans `data/animations/`, surchargent `start(playback)` :
   - `SwingStep` : un geste de l'arme tenue, d'une pose (angle local, rayon, pivot) à une autre,
-    horaire ou non (`clockwise`) ;
+    horaire ou non (`clockwise`), puis figée sur sa pose d'arrivée pendant `hold` ms ;
   - `SlashStep` : une entaille (`Fx`) posée devant l'entité ;
   - `SkinStep` : une action du skin (`SkinAction`).
 
@@ -148,10 +148,8 @@ dans la lecture.
   l'entaille, le skin et le gameplay lisent le même. Les animations sont décrites vers la
   droite et symétriques : le `clockwise` d'un geste et le `mirrored` d'une entaille valent
   vers la droite, le haut et le bas, et s'inversent vers la gauche.
-- Validation au chargement : un premier geste sans pose de départ, un repère après la fin
-  du lag de la technique ou de l'arme,
-  lèvent une erreur. Le Preloader vérifie que chaque
-  `Fx` a son animation.
+- Validation au chargement : un premier geste sans pose de départ lève une erreur. Le
+  Preloader vérifie que chaque `Fx` a son animation.
 
 ## Les assets
 

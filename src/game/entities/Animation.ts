@@ -87,13 +87,4 @@ export class Animation {
   play(entity: Entity, options: PlayOptions = {}): Playback {
     return entity.perform(this, options);
   }
-
-  /** L'input rejoué à la fin du lag couperait la lecture avant un repère tardif. */
-  checkCuesBefore(lag: number, owner: string): void {
-    const last = this.cues[this.cues.length - 1]?.at;
-
-    if (last === undefined || (last > 0 && last >= lag)) {
-      throw new Error(`${owner} : animation ${this.id} sans repère ou repère après le lag`);
-    }
-  }
 }

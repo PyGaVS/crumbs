@@ -11,7 +11,6 @@ import { getWeaponSkin } from '../data/weaponSkins';
 
 export type WeaponAttack = {
   damage: number;
-  lag: number;
   animationId: AnimationId;
 };
 
@@ -23,9 +22,7 @@ export class Weapon {
     readonly skinId: WeaponSkinId,
     readonly attack: WeaponAttack,
     readonly techniqueIds: readonly TechniqueId[],
-  ) {
-    this.attackAnimation.checkCuesBefore(attack.lag, `Arme ${name}`);
-  }
+  ) {}
 
   get skin(): WeaponSkin {
     return getWeaponSkin(this.skinId);
