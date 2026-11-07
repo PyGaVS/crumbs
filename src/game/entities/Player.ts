@@ -50,7 +50,9 @@ export class Player extends Fighter {
 
     this.inputHistory.addInput(input);
 
-    const technique = this.charClass.techniques.find((t) => t.matches(this.inputHistory.history));
+    const technique = [...this.charClass.techniques, ...this.weapon.techniques].find((t) =>
+      t.matches(this.inputHistory.history),
+    );
 
     if (technique) {
       technique.execute(this);

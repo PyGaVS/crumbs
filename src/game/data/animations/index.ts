@@ -19,12 +19,19 @@ export const ALL_ANIMATIONS: readonly Animation[] = [
     new SwingStep({
       from: { angle: -Math.PI / 3, radius: 40, pivot: 0 },
       to: { angle: Math.PI / 3 },
-      duration: 250,
-      ease: 'Cubic.out',
-      hold: 70,
+      duration: 250, ease: 'Cubic.out', hold: 70,
     }),
   ]),
   new Animation(AnimationId.THROW, [new SkinStep({ action: SkinAction.ATTACK }), new CueStep()]),
+  new Animation(AnimationId.SHOOT_SLASH, [
+    new SkinStep({ action: SkinAction.ATTACK }),
+    new SwingStep({
+      from: { angle: -Math.PI*2 / 5, radius: 40, pivot: 0 },
+      to: { angle: Math.PI*2 / 5 },
+      duration: 230, ease: 'Cubic.out', hold: 120,
+    }),
+    new CueStep({ at: 50 }),
+  ]),
 ];
 
 export function getAnimation(id: AnimationId): Animation {

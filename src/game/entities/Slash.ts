@@ -1,4 +1,5 @@
 import { Animations, GameObjects, Scene } from 'phaser';
+import { frameRateOver } from '../utils/animation';
 import { orient } from '../utils/orientation';
 import type { Fx } from './Fx';
 
@@ -18,8 +19,7 @@ export class Slash extends GameObjects.Sprite {
     scene.add.existing(this);
     this.setScale(size / this.width);
     orient(this, angle, fx.assetAngle, mirrored);
-    // Phaser ignore duration dès que l'animation a un frameRate
-    const frameRate = duration && (scene.anims.get(fx.animation).getTotalFrames() * 1000) / duration;
+    const frameRate = duration && frameRateOver(scene, fx.animation, duration);
     this.play(frameRate ? { key: fx.animation, frameRate } : fx.animation);
     this.once(Animations.Events.ANIMATION_COMPLETE, () => this.destroy());
   }

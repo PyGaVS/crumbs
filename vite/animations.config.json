@@ -29,6 +29,14 @@
       "animations": ["strike"],
       "frameRate": 24,
       "repeat": 0
+    },
+    {
+      "$comment": "Taillade projetée : 6 frames jouées une fois, étirées sur la course du projectile.",
+      "keys": ["slashArc"],
+      "layout": "sequence",
+      "framesPerAnimation": 6,
+      "animations": ["fly"],
+      "repeat": 0
     }
   ]
 }

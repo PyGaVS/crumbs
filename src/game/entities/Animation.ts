@@ -3,8 +3,7 @@ import type { Facing } from '../utils/orientation';
 import type { Entity } from './Entity';
 import type { Playback } from './Playback';
 
-/** Une faute de frappe dans un nom d'ease retomberait en silence sur Power0. */
-export type Ease = 'Cubic.out' | 'Back.out';
+export type Ease = 'Linear' | 'Cubic.out' | 'Back.out' | 'Quint.out';
 
 export type Hitbox = { readonly x: number; readonly y: number; readonly radius: number };
 

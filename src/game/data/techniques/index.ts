@@ -30,6 +30,16 @@ export const ALL_TECHNIQUES: readonly Technique[] = [
       lag: 200, crossBody: false
     }
   ),
+  new ProjectileTechnique(
+    TechniqueId.SHOOT_SLASH, 'Shoot Slash', new Sequence().cardinals().perpendicular().opposite(2).attack(), {
+      texture: 'slashArc', speed: 960, range: 400, damage: 8, size: 192,
+      hitboxes: [{ x: 36, y: 0, radius: 48 }, { x: 8, y: -60, radius: 36 }, { x: 8, y: 60, radius: 36 }],
+      assetAngle: Math.PI / 2, ease: 'Quint.out',
+      animation: { key: 'slashArc-fly', once: true }, animationId: AnimationId.SHOOT_SLASH,
+      lag: 320,
+    }
+  ),
+  // ^ TODO: lag a supprimer, utiliser l'animation
 ];
 
 export function getTechnique(id: TechniqueId): Technique {

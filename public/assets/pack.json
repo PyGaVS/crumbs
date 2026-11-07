@@ -78,6 +78,15 @@
         }
       },
       {
+        "type": "spritesheet",
+        "key": "slashArc",
+        "url": "FX/Slash/SpriteSheetArc.png",
+        "frameConfig": {
+          "frameWidth": 38,
+          "frameHeight": 34
+        }
+      },
+      {
         "type": "image",
         "key": "lifeBarMini-under",
         "url": "ui/LifeBarMiniUnder.png"

@@ -1,4 +1,5 @@
 import { AnimationId } from './enums/AnimationId';
+import { TechniqueId } from './enums/TechniqueId';
 import { WeaponId } from './enums/WeaponId';
 import { WeaponSkinId } from './enums/WeaponSkinId';
 import { Weapon } from '../entities/Weapon';
@@ -7,7 +8,7 @@ import { Weapon } from '../entities/Weapon';
 export const ALL_WEAPONS: readonly Weapon[] = [
   new Weapon( WeaponId.FALCHION, 'Fauchon', WeaponSkinId.FALCHION,
     { damage: 5, animationId: AnimationId.FALCHION_ATTACK },
-    [],
+    [TechniqueId.SHOOT_SLASH],
   ),
 ];
 

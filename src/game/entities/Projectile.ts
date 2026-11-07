@@ -1,26 +1,35 @@
-import { Scene } from 'phaser';
+import { Scene, Tweens } from 'phaser';
 import { SPRITE_SIZE } from '../core/settings';
+import { frameRateOver } from '../utils/animation';
 import { hasObstacle } from '../utils/collision';
 import { touchedMobs } from '../utils/combat';
-import { Facing } from '../utils/orientation';
-import type { Hitbox } from './Animation';
+import { Facing, polar } from '../utils/orientation';
+import type { Ease, Hitbox } from './Animation';
 import { Entity } from './Entity';
 import type { Mob } from './Mob';
+import type { EaseFunction } from './Playback';
 
 export type ProjectileAnimation = {
   /** Rotation du sprite en degrés par seconde. */
   spin?: number;
   /** Clé d'une animation Phaser jouée en boucle (texture spritesheet requise). */
   key?: string;
+  /** key jouée une seule fois, étirée sur toute la course. */
+  once?: boolean;
 };
 
 export type ProjectileConfig = {
   angle: number;
+  /** px par seconde, en moyenne sur la course. */
   speed: number;
   range: number;
   damage: number;
   /** Décrites regard à droite autour du projectile, tournées vers sa trajectoire. */
   hitboxes: readonly Hitbox[];
+  /** Largeur affichée en px. */
+  size?: number;
+  /** Progression le long de la course, linéaire par défaut. */
+  ease?: Ease;
   /** Angle (radians) vers lequel pointe l'asset dans son image source. */
   assetAngle?: number;
   ignoreWalls?: boolean;
@@ -32,6 +41,10 @@ export class Projectile extends Entity {
   private readonly startX: number;
   private readonly startY: number;
   private readonly range: number;
+  /** ms */
+  private readonly duration: number;
+  private readonly ease: EaseFunction;
+  private elapsed = 0;
   private readonly ignoreWalls: boolean;
   private readonly crossBody: boolean;
   private readonly damage: number;
@@ -44,39 +57,53 @@ export class Projectile extends Entity {
     super(scene, x, y, texture);
     this.startX = x;
     this.startY = y;
-    this.speed = config.speed;
     this.range = config.range;
+    this.duration = (config.range / config.speed) * 1000;
+    this.ease = Tweens.Builders.GetEaseFunction(config.ease ?? 'Linear') as EaseFunction;
     this.damage = config.damage;
     this.facing = new Facing(config.angle);
     this.hitboxes = config.hitboxes;
     this.ignoreWalls = config.ignoreWalls ?? false;
     this.crossBody = config.crossBody ?? true;
     this.assetAngle = config.assetAngle;
-    this.setScale(SPRITE_SIZE / 2 / this.width);
+    this.setScale((config.size ?? SPRITE_SIZE / 2) / this.width);
     this.setCollideWorldBounds(false);
-    this.setVelocity(Math.cos(config.angle) * this.speed, Math.sin(config.angle) * this.speed);
     this.orientTo(config.angle);
 
-    if (config.animation?.spin) {
-      this.setAngularVelocity(config.animation.spin);
+    const { spin, key, once } = config.animation ?? {};
+
+    if (spin) {
+      this.setAngularVelocity(spin);
     }
 
-    if (config.animation?.key) {
-      this.play(config.animation.key);
+    if (key) {
+      this.play(once ? { key, repeat: 0, frameRate: frameRateOver(scene, key, this.duration) } : key);
     }
   }
 
   override preUpdate(time: number, delta: number): void {
     super.preUpdate(time, delta);
+    this.advance(delta);
     this.damageMobs();
 
     if (!this.active) {
       return;
     }
 
-    if (this.outOfRange() || !this.scene.physics.world.bounds.contains(this.x, this.y) || this.hitsObstacle()) {
+    if (
+      this.elapsed >= this.duration ||
+      !this.scene.physics.world.bounds.contains(this.x, this.y) ||
+      this.hitsObstacle()
+    ) {
       this.destroy();
     }
+  }
+
+  private advance(delta: number): void {
+    this.elapsed = Math.min(this.duration, this.elapsed + delta);
+    const distance = this.range * this.ease(this.elapsed / this.duration);
+
+    this.setPosition(...polar(this.startX, this.startY, this.facing.angle, distance));
   }
 
   private damageMobs(): void {
@@ -93,10 +120,6 @@ export class Projectile extends Entity {
         return;
       }
     }
-  }
-
-  private outOfRange(): boolean {
-    return Math.hypot(this.x - this.startX, this.y - this.startY) >= this.range;
   }
 
   private hitsObstacle(): boolean {
