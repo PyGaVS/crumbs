@@ -82,8 +82,8 @@ Les sprites, qui vivent dans une scène :
 - `Entity` : un sprite qui avance dans une direction et qui sait
   tester une collision en rectangle. Il joue une animation à la fois (`perform`), qu'il
   avance dans son `preUpdate` et arrête à sa destruction.
-- `Fighter` : une `Entity` avec PV et armure, l'ordre des dégâts et la mort à zéro PV. Il ne
-  connaît pas l'UI : il émet `FighterEvent.DAMAGED`, que `ui/LifeBar` et `ui/Hud` écoutent.
+- `Fighter` : une `Entity` avec PV et armure, l'ordre des dégâts et la mort à zéro PV. Son
+  corps physique, sa hurtbox, est un cercle inscrit dans sa frame. Il ne connaît pas l'UI : il émet `FighterEvent.DAMAGED`, que `ui/LifeBar` et `ui/Hud` écoutent.
 - `Player` : le ninja. Il ignore d'où viennent ses ordres : `press(input)` inscrit un appui
   dans l'historique de touches, `walk()` et `halt()` le font marcher ou l'arrêtent. Un appui
   sur l'attaque qui ne conclut aucune technique déclenche l'attaque de base de son arme : il

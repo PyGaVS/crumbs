@@ -21,7 +21,7 @@ export const ALL_ANIMATIONS: readonly Animation[] = [
       to: { angle: Math.PI / 3 },
       duration: 250,
       ease: 'Cubic.out',
-      hold: 50,
+      hold: 70,
     }),
   ]),
   new Animation(AnimationId.THROW, [new SkinStep({ action: SkinAction.ATTACK }), new CueStep()]),

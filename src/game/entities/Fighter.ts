@@ -21,6 +21,10 @@ export class Fighter extends Entity {
     super(scene, x, y, texture, frame);
     this.health = maxHealth;
     this.armor = maxArmor;
+
+    const radius = Math.min(this.width, this.height) / 2;
+
+    this.setCircle(radius, this.width / 2 - radius, this.height / 2 - radius);
   }
 
   takeDamage(amount: number): void {
