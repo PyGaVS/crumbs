@@ -16,6 +16,7 @@ export const ALL_TECHNIQUES: readonly Technique[] = [
   new ProjectileTechnique(
     TechniqueId.SHURIKENS, 'Shurikens', new Sequence().cardinals().opposite().perpendicular().switch(), {
       texture: 'shuriken', speed: 1300, range: 512, damage: 7,
+      hitboxes: [{ x: 0, y: 0, radius: 14 }],
       spreadAngles: [0, -Math.PI / 16, Math.PI / 16],
       animation: { spin: 1440 }, animationId: AnimationId.THROW,
       lag: 250,
@@ -24,6 +25,7 @@ export const ALL_TECHNIQUES: readonly Technique[] = [
   new ProjectileTechnique(
     TechniqueId.KUNAI, 'Kunai', new Sequence().cardinals().same().switch(), {
       texture: 'kunai', speed: 2000, range: 704, damage: 10,
+      hitboxes: [{ x: 14, y: 0, radius: 6 }, { x: 0, y: 0, radius: 8 }],
       assetAngle: (-1 * Math.PI) / 4, animationId: AnimationId.THROW,
       lag: 200, crossBody: false
     }

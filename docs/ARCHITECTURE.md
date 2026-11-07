@@ -23,7 +23,8 @@ src/
     data/                 La donnée pure : catalogues d'instances et enums
     utils/input.ts        Historique de touches et détection des séquences
     utils/orientation.ts  Angles du regard, miroir, Facing
-    utils/combat.ts       strike : la frappe des hitboxs d'un repère
+    utils/combat.ts       touchedMobs : les mobs sous des hitboxs ; strike : la frappe
+                          d'un repère
 vite/
   config.dev.ts / config.prod.ts
   plugins/animations.ts   Génère les animations à chaque démarrage de Vite
@@ -136,8 +137,9 @@ dans la lecture.
   `CueStep`, dans `entities/Animation.ts`, est le repère où le gameplay agit : le seul step
   que les techniques et les armes connaissent, via `onCue`. Il porte les hitboxs de la
   frappe : des cercles décrits regard à droite (x vers l'avant, y vers le bas), que
-  `Facing.place` pose dans le monde. `strike` touche une seule fois chaque mob, quel que
-  soit le nombre de cercles qu'il chevauche, puis émet `CombatEvent.STRIKE` : en dev,
+  `Facing.place` pose dans le monde. Un `Projectile` porte aussi les siennes, tournées vers
+  sa trajectoire et testées à chaque frame. `touchedMobs` compte une seule fois chaque mob,
+  quel que soit le nombre de cercles qu'il chevauche, et émet `CombatEvent.STRIKE` : en dev,
   `debug/HitboxOverlay` affiche alors les cercles, pleins sur la frame où ils frappent puis en
   contour jusqu'à `DISPLAY_TIME`, et les corps physiques (touche H).
 - `Playback` : une lecture, avancée par l'entité à chaque frame, sans import Phaser. C'est l'unique horloge des

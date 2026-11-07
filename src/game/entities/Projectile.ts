@@ -1,6 +1,9 @@
 import { Scene } from 'phaser';
 import { SPRITE_SIZE } from '../core/settings';
-import { hasObstacle, overlappingMobs } from '../utils/collision';
+import { hasObstacle } from '../utils/collision';
+import { touchedMobs } from '../utils/combat';
+import { Facing } from '../utils/orientation';
+import type { Hitbox } from './Animation';
 import { Entity } from './Entity';
 import type { Mob } from './Mob';
 
@@ -16,6 +19,8 @@ export type ProjectileConfig = {
   speed: number;
   range: number;
   damage: number;
+  /** Décrites regard à droite autour du projectile, tournées vers sa trajectoire. */
+  hitboxes: readonly Hitbox[];
   /** Angle (radians) vers lequel pointe l'asset dans son image source. */
   assetAngle?: number;
   ignoreWalls?: boolean;
@@ -30,6 +35,8 @@ export class Projectile extends Entity {
   private readonly ignoreWalls: boolean;
   private readonly crossBody: boolean;
   private readonly damage: number;
+  private readonly facing: Facing;
+  private readonly hitboxes: readonly Hitbox[];
   /** Mobs déjà touchés : chacun ne prend les dégâts qu'une seule fois. */
   private readonly mobsHit = new Set<Mob>();
 
@@ -40,6 +47,8 @@ export class Projectile extends Entity {
     this.speed = config.speed;
     this.range = config.range;
     this.damage = config.damage;
+    this.facing = new Facing(config.angle);
+    this.hitboxes = config.hitboxes;
     this.ignoreWalls = config.ignoreWalls ?? false;
     this.crossBody = config.crossBody ?? true;
     this.assetAngle = config.assetAngle;
@@ -71,9 +80,7 @@ export class Projectile extends Entity {
   }
 
   private damageMobs(): void {
-    const { width, height } = this.body || { width: 0, height: 0 };
-
-    for (const mob of overlappingMobs(this.scene, this.x, this.y, width, height)) {
+    for (const mob of touchedMobs(this, this.facing, this.hitboxes)) {
       if (this.mobsHit.has(mob)) {
         continue;
       }
