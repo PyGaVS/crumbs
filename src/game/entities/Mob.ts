@@ -17,7 +17,7 @@ export class Mob extends Fighter {
     super(scene, x, y, kind.skin.idleTexture, kind.maxHealth, 0, kind.skin.idleFrame(direction));
     this.direction = direction;
     this.setScale(SPRITE_SIZE / this.width);
-    this.setImmovable(true);
+    this.setImmovable(true).setPushable(false);
     new LifeBar(scene, this);
   }
 }
