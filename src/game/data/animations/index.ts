@@ -1,13 +1,10 @@
 import { Animation, CueStep } from '../../entities/Animation';
-import type { WeaponPose } from '../../entities/HeldWeapon';
 import { AnimationId } from '../enums/AnimationId';
 import { FxId } from '../enums/FxId';
 import { SkinAction } from '../enums/SkinAction';
 import SkinStep from './SkinStep';
 import SlashStep from './SlashStep';
 import SwingStep from './SwingStep';
-
-const FALCHION_GUARD: WeaponPose = { angle: -Math.PI / 3, radius: 40, pivot: 0 };
 
 /** Catalogue des animations. */
 export const ALL_ANIMATIONS: readonly Animation[] = [
@@ -19,7 +16,13 @@ export const ALL_ANIMATIONS: readonly Animation[] = [
       ],
     }),
     new SlashStep({ fx: FxId.SLASH_02, reach: 30, size: 150, mirrored: true }),
-    new SwingStep({ from: FALCHION_GUARD, to: { angle: Math.PI / 3 }, duration: 250, ease: 'Cubic.out', hold: 50 }),
+    new SwingStep({
+      from: { angle: -Math.PI / 3, radius: 40, pivot: 0 },
+      to: { angle: Math.PI / 3 },
+      duration: 250,
+      ease: 'Cubic.out',
+      hold: 50,
+    }),
   ]),
   new Animation(AnimationId.THROW, [new SkinStep({ action: SkinAction.ATTACK }), new CueStep()]),
 ];

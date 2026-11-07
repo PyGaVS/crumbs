@@ -130,7 +130,8 @@ dans la lecture.
 - `AnimationStep` : la classe de base des steps, comme `Technique` pour les techniques. Ses
   enfants, dans `data/animations/`, surchargent `start(playback)` :
   - `SwingStep` : un geste de l'arme tenue, d'une pose (angle local, rayon, pivot) à une autre,
-    horaire ou non (`clockwise`), puis figée sur sa pose d'arrivée pendant `hold` ms ;
+    dans le sens de rotation `clockwise`, arme miroitée ou non (`mirror`), puis figée sur sa
+    pose d'arrivée pendant `hold` ms ;
   - `SlashStep` : une entaille (`Fx`) posée devant l'entité ;
   - `SkinStep` : une action du skin (`SkinAction`).
 
@@ -146,8 +147,8 @@ dans la lecture.
   steps et des gestes, sans minuterie ni tween Phaser : `stop()` suffit à tout arrêter.
 - `Facing` : le regard figé au lancement, seul endroit qui décide du miroir. L'arme,
   l'entaille, le skin et le gameplay lisent le même. Les animations sont décrites vers la
-  droite et symétriques : le `clockwise` d'un geste et le `mirrored` d'une entaille valent
-  vers la droite, le haut et le bas, et s'inversent vers la gauche.
+  droite et symétriques : le `clockwise` et le `mirror` d'un geste, comme le `mirrored` d'une
+  entaille, valent vers la droite, le haut et le bas, et s'inversent vers la gauche.
 - Validation au chargement : un premier geste sans pose de départ lève une erreur. Le
   Preloader vérifie que chaque `Fx` a son animation.
 

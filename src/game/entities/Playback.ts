@@ -52,7 +52,7 @@ export class Playback {
    * @param from pose de départ, obligatoire au premier geste
    * @returns la pose à animer
    */
-  holdWeapon(clockwise: boolean, from?: WeaponPose): WeaponPose {
+  holdWeapon(mirror: boolean, from?: WeaponPose): WeaponPose {
     const weapon = this.entity.heldWeapon;
 
     if (!weapon) {
@@ -64,11 +64,11 @@ export class Playback {
         throw new Error(`Animation ${this.animation.id} : premier geste sans pose`);
       }
 
-      this.grip = { facing: this.facing, pose: { ...from }, clockwise };
+      this.grip = { facing: this.facing, pose: { ...from }, mirror };
       weapon.hold(this.grip);
     }
 
-    this.grip.clockwise = clockwise;
+    this.grip.mirror = mirror;
 
     return this.grip.pose;
   }

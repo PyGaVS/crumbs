@@ -7,7 +7,7 @@ import type { WeaponSkin } from './WeaponSkin';
 /** Pose dans le repère du regard : angle local (radians), rayon et pivot en px. */
 export type WeaponPose = { angle: number; radius: number; pivot: number };
 
-export type WeaponGrip = { readonly facing: Facing; readonly pose: WeaponPose; clockwise: boolean };
+export type WeaponGrip = { readonly facing: Facing; readonly pose: WeaponPose; mirror: boolean };
 
 /** L'arme en main, recalée chaque frame sur la main que montre la frame du skin, sauf quand une animation la tient. */
 export class HeldWeapon extends Attachment {
@@ -34,8 +34,7 @@ export class HeldWeapon extends Attachment {
 
       this.setVisible(true);
       this.setPosition(...polar(pivotX, pivotY, angle, this.grip.pose.radius));
-      // Sans miroir, le tranchant des sprites en main mène un geste horaire
-      orient(this, angle, this.weaponSkin.assetAngle, this.grip.facing.mirror(!this.grip.clockwise));
+      orient(this, angle, this.weaponSkin.assetAngle, this.grip.facing.mirror(this.grip.mirror));
 
       return;
     }

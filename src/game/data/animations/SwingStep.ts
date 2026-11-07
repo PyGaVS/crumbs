@@ -11,6 +11,7 @@ type SwingOptions = StepOptions & {
   duration: number;
   ease: Ease;
   clockwise?: boolean;
+  mirror?: boolean;
   hold?: number;
 };
 
@@ -36,8 +37,21 @@ export default class SwingStep extends AnimationStep {
   }
 
   start(playback: Playback): void {
-    const { from, to, duration, clockwise = true } = this.options;
+    const { from, to, duration, clockwise = true, mirror = false } = this.options;
+    const pose = playback.holdWeapon(mirror, from);
+    const end = to.angle === undefined ? to : { ...to, angle: sweep(from?.angle ?? pose.angle, to.angle, clockwise) };
 
-    playback.animate(playback.holdWeapon(clockwise, from), to, duration, this.ease, from);
+    playback.animate(pose, end, duration, this.ease, from);
   }
+}
+
+/** to décalé de tours entiers pour être atteint depuis from dans le sens voulu, horaire étant l'angle croissant. */
+function sweep(from: number, to: number, clockwise: boolean): number {
+  const turn = 2 * Math.PI;
+
+  if (clockwise) {
+    return to >= from ? to : to + turn * Math.ceil((from - to) / turn);
+  }
+
+  return to <= from ? to : to - turn * Math.ceil((to - from) / turn);
 }
