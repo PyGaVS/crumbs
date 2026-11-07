@@ -1,8 +1,7 @@
 # Crumbs : principes du jeu
 
 > Document vivant : on y écrit les **décisions** et leur **pourquoi**, pas la description
-> exhaustive du code. Si une section devient fausse, on la corrige au lieu d'empiler
-> des paragraphes.
+> exhaustive du code.
 
 ## 1. Pitch
 
@@ -25,7 +24,7 @@ arme ne peut la fournir à sa place.
 
 **L'erreur coûte, mais ne condamne pas.** Un système de vie laisse une seconde chance, et
 une armure qui se régénère (là où la vie, elle, ne revient pas) rend chaque coup pris
-punitif sans transformer une petite faute en run perdu. Référence : _Soul Knight_.
+punitif sans transformer une petite faute en run perdu.
 
 Ce que ça exclut, et c'est l'arbitre en cas de doute : pas d'arme surpuissante, pas de
 montée en statistiques qui remplace la maîtrise.
