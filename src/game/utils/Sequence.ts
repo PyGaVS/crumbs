@@ -11,9 +11,9 @@ export default class Sequence {
   child: Sequence[] = [];
   input: Inputs = Inputs.NONE;
 
-  private addLeaves(inputs: (leaf: Sequence) => readonly Inputs[]): this {
+  private addLeaves(inputs: (path: readonly Inputs[]) => readonly Inputs[], path: readonly Inputs[] = []): this {
     if (this.child.length === 0) {
-      for (const input of inputs(this)) {
+      for (const input of inputs(path)) {
         const leaf = new Sequence();
 
         leaf.setInput(input);
@@ -21,11 +21,15 @@ export default class Sequence {
       }
     } else {
       for (const c of this.child) {
-        c.addLeaves(inputs);
+        c.addLeaves(inputs, [...path, c.input]);
       }
     }
 
     return this;
+  }
+
+  private addRelative(stepsBack: number, inputs: (reference: Inputs) => readonly Inputs[]): this {
+    return this.addLeaves((path) => inputs(path[path.length - stepsBack] ?? Inputs.NONE));
   }
 
   setInput(input: Inputs): this {
@@ -66,16 +70,16 @@ export default class Sequence {
     return this.addLeaves(() => CARDINALS);
   }
 
-  same(): this {
-    return this.addLeaves((leaf) => (leaf.input === Inputs.NONE ? CARDINALS : [leaf.input]));
+  same(stepsBack = 1): this {
+    return this.addRelative(stepsBack, (reference) => [reference]);
   }
 
-  opposite(): this {
-    return this.addLeaves((leaf) => [getOpposite(leaf.input)]);
+  opposite(stepsBack = 1): this {
+    return this.addRelative(stepsBack, (reference) => [getOpposite(reference)]);
   }
 
-  perpendicular(): this {
-    return this.addLeaves((leaf) => getPerpendicularDirections(leaf.input));
+  perpendicular(stepsBack = 1): this {
+    return this.addRelative(stepsBack, getPerpendicularDirections);
   }
 
   paths(): Inputs[][] {
