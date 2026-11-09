@@ -1,6 +1,6 @@
 import type { GameObjects } from 'phaser';
 import { Inputs } from '../data/enums/Inputs';
-import { CARDINALS, Cardinal } from './types';
+import type { Cardinal, Direction } from './types';
 
 /** Angle (radians) du regard du joueur. Rappel : l'axe Y de Phaser pointe vers le bas. */
 export const FACING_ANGLES: Record<Cardinal, number> = {
@@ -18,31 +18,14 @@ export function polar(x: number, y: number, angle: number, distance: number): [x
   return [x + Math.cos(angle) * distance, y + Math.sin(angle) * distance];
 }
 
-export function nearestCardinal(angle: number): Cardinal {
-  return CARDINALS.reduce((best, d) =>
-    Math.cos(angle - FACING_ANGLES[d]) > Math.cos(angle - FACING_ANGLES[best]) ? d : best,
-  );
-}
+const CLOCKWISE: readonly Direction[] = [Inputs.RIGHT, Inputs.DOWN, Inputs.LEFT, Inputs.UP];
 
-/** Le regard figé d'une animation : seul endroit qui décide du miroir. */
-export class Facing {
-  readonly mirrored: boolean;
-  readonly direction: Cardinal;
-
-  constructor(readonly angle: number) {
-    this.mirrored = isMirrored(angle);
-    this.direction = nearestCardinal(angle);
-  }
-
-  /**
-   * La direction à quarters quarts de tour du regard.
-   * @param clockwise horaire vers la droite, le haut et le bas, inversé vers la gauche
-   */
-  rotate(quarters: number, clockwise = true): Cardinal {
-    const sign = clockwise === this.mirrored ? -1 : 1;
-
-    return nearestCardinal(this.angle + (sign * quarters * Math.PI) / 2);
-  }
+/** Un regard figé : seul endroit qui décide du miroir. */
+export abstract class Facing {
+  protected constructor(
+    readonly angle: number,
+    readonly mirrored: boolean,
+  ) {}
 
   /** Angle monde d'un angle local, horaire vers la droite, le haut et le bas, inversé vers la gauche. */
   toWorld(local: number): number {
@@ -57,6 +40,31 @@ export class Facing {
   /** Point monde d'un point local décrit regard à droite (x vers l'avant, y vers le bas), inversé vers la gauche. */
   place(originX: number, originY: number, x: number, y: number): [x: number, y: number] {
     return polar(...polar(originX, originY, this.angle, x), this.toWorld(Math.PI / 2), y);
+  }
+}
+
+/** Un regard libre, celui d'un projectile. */
+export class AngleFacing extends Facing {
+  constructor(angle: number) {
+    super(angle, isMirrored(angle));
+  }
+}
+
+/** Un regard sur un cardinal, celui des animations : miroité vers la gauche seulement. */
+export class DirectionFacing extends Facing {
+  constructor(readonly direction: Direction) {
+    super(FACING_ANGLES[direction], direction === Inputs.LEFT);
+  }
+
+  /**
+   * La direction à quarters quarts de tour du regard.
+   * @param clockwise horaire vers la droite, le haut et le bas, inversé vers la gauche
+   */
+  rotate(quarters: number, clockwise = true): Direction {
+    const { length } = CLOCKWISE;
+    const index = CLOCKWISE.indexOf(this.direction) + (clockwise === this.mirrored ? -quarters : quarters);
+
+    return CLOCKWISE[((index % length) + length) % length];
   }
 }
 

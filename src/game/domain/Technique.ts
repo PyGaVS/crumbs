@@ -1,7 +1,7 @@
 import type { AnimationId } from '../data/enums/AnimationId';
 import type { Inputs } from '../data/enums/Inputs';
 import { getSymbol } from '../utils/input';
-import { Facing } from '../utils/orientation';
+import { DirectionFacing } from '../utils/orientation';
 import type { TechniqueId } from '../data/enums/TechniqueId';
 import type { Animation, Cue } from './Animation';
 import type { Player } from '../entities/Player';
@@ -58,7 +58,7 @@ export class Technique {
     if (animation) {
       animation.play(player, { onCue: (cue) => this.action(player, cue) });
     } else {
-      this.action(player, { facing: new Facing(player.facingAngle), index: 0, last: true, hitboxes: [] });
+      this.action(player, { facing: new DirectionFacing(player.direction), index: 0, last: true, hitboxes: [] });
     }
   }
 

@@ -130,7 +130,7 @@ La donnée est partagée et sans état, l'état vit
 dans la lecture.
 
 - `Animation` : une liste de steps datés (`at` en ms), dans `data/animations/index.ts`.
-  `animation.play(entity, { onCue, angle })` la joue sur n'importe quelle `Entity` et coupe
+  `animation.play(entity, { onCue, direction })` la joue sur n'importe quelle `Entity` et coupe
   sa lecture en cours. Ajouter une animation ne demande que de la donnée.
 - `AnimationStep` : la classe de base des steps, comme `Technique` pour les techniques. Ses
   enfants, dans `data/animations/`, surchargent `start(playback)` :
@@ -152,9 +152,14 @@ dans la lecture.
 - `Playback` : une lecture, avancée par l'entité à chaque frame, sans import Phaser. C'est l'unique horloge des
   steps et des gestes, sans minuterie ni tween Phaser : `stop()` suffit à tout arrêter.
 - `Facing` : le regard figé au lancement, seul endroit qui décide du miroir. L'arme,
-  l'entaille, le skin et le gameplay lisent le même. Les animations sont décrites vers la
-  droite et symétriques : le `clockwise` et le `mirror` d'un geste, comme le `mirrored` d'une
-  entaille, valent vers la droite, le haut et le bas, et s'inversent vers la gauche.
+  l'entaille, le skin et le gameplay lisent le même. Deux enfants :
+  - `DirectionFacing` : un cardinal, le regard des animations, miroité vers la gauche
+    seulement. `rotate` donne la direction à un nombre de quarts de tour ;
+  - `AngleFacing` : un angle libre, le regard d'un projectile.
+
+  Les animations sont décrites vers la droite et symétriques : le `clockwise` et le `mirror`
+  d'un geste, comme le `mirrored` d'une entaille ou le `clockwise` de `rotate`, valent vers
+  la droite, le haut et le bas, et s'inversent vers la gauche.
 - Validation au chargement : un premier geste sans pose de départ lève une erreur. Le
   Preloader vérifie que chaque `Fx` a son animation.
 

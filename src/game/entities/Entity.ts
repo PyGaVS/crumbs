@@ -1,7 +1,7 @@
 import { GameObjects, Physics, Scene } from 'phaser';
 import { Inputs } from '../data/enums/Inputs';
 import type { SkinAction } from '../data/enums/SkinAction';
-import { FACING_ANGLES, Facing, orient } from '../utils/orientation';
+import { DirectionFacing, orient } from '../utils/orientation';
 import { Direction } from '../utils/types';
 import type { Animation, PlayOptions } from '../domain/Animation';
 import type { HeldWeapon } from './HeldWeapon';
@@ -34,16 +34,12 @@ export class Entity extends Physics.Arcade.Sprite {
     this.once(GameObjects.Events.DESTROY, () => this.playback?.stop());
   }
 
-  get facingAngle(): number {
-    return FACING_ANGLES[this.direction];
-  }
-
   /** Joue une action du skin ; seules les entités au skin animé la définissent. */
   playAction?(action: SkinAction, direction: Direction): void;
 
   /** Joue animation en coupant la lecture en cours : passer par Animation.play. */
   perform(animation: Animation, options: PlayOptions): Playback {
-    const playback = new Playback(this, new Facing(options.angle ?? this.facingAngle), animation, options);
+    const playback = new Playback(this, new DirectionFacing(options.direction ?? this.direction), animation, options);
 
     this.playback?.stop();
 

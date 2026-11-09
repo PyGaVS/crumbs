@@ -1,4 +1,4 @@
-import type { Facing } from '../utils/orientation';
+import type { DirectionFacing } from '../utils/orientation';
 import type { Animation, Hitbox, PlayOptions } from '../domain/Animation';
 import type { Entity } from './Entity';
 import type { WeaponGrip, WeaponPose } from './HeldWeapon';
@@ -22,7 +22,7 @@ export class Playback {
 
   constructor(
     readonly entity: Entity,
-    readonly facing: Facing,
+    readonly facing: DirectionFacing,
     readonly animation: Animation,
     private readonly options: PlayOptions,
   ) {

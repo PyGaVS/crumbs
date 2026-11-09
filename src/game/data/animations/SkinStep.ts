@@ -1,13 +1,13 @@
 import { AnimationStep, type StepOptions } from '../../domain/Animation';
 import type { Playback } from '../../entities/Playback';
-import type { Facing } from '../../utils/orientation';
+import type { DirectionFacing } from '../../utils/orientation';
 import type { Direction } from '../../utils/types';
 import type { SkinAction } from '../enums/SkinAction';
 
 type SkinOptions = StepOptions & {
   action: SkinAction;
   /** Direction jouée, tirée du regard figé ; absente, le regard lui-même. */
-  direction?: (facing: Facing) => Direction;
+  direction?: (facing: DirectionFacing) => Direction;
   duration?: number;
 };
 

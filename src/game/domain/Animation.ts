@@ -1,5 +1,6 @@
 import type { AnimationId } from '../data/enums/AnimationId';
-import type { Facing } from '../utils/orientation';
+import type { DirectionFacing } from '../utils/orientation';
+import type { Direction } from '../utils/types';
 import type { Entity } from '../entities/Entity';
 import type { Playback } from '../entities/Playback';
 
@@ -8,7 +9,7 @@ export type Ease = 'Linear' | 'Cubic.out' | 'Back.out' | 'Quint.out';
 export type Hitbox = { readonly x: number; readonly y: number; readonly radius: number };
 
 export type Cue = {
-  readonly facing: Facing;
+  readonly facing: DirectionFacing;
   readonly index: number;
   readonly last: boolean;
   readonly hitboxes: readonly Hitbox[];
@@ -16,7 +17,7 @@ export type Cue = {
 
 export type PlayOptions = {
   onCue?: (cue: Cue) => void;
-  angle?: number;
+  direction?: Direction;
 };
 
 export type StepOptions = {

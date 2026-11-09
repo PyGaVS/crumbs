@@ -3,7 +3,7 @@ import { SPRITE_SIZE } from '../core/settings';
 import { frameRateOver } from '../utils/animation';
 import { hasObstacle } from '../utils/collision';
 import { touchedMobs } from '../utils/combat';
-import { Facing, polar } from '../utils/orientation';
+import { AngleFacing, polar } from '../utils/orientation';
 import { SpritePlayback } from '../data/enums/SpritePlayback';
 import type { Ease, Hitbox } from '../domain/Animation';
 import { Entity } from './Entity';
@@ -38,7 +38,7 @@ export class Projectile extends Entity {
   private readonly ignoreWalls: boolean;
   private readonly crossBody: boolean;
   private readonly damage: number;
-  private readonly facing: Facing;
+  private readonly facing: AngleFacing;
   private readonly hitboxes: readonly Hitbox[];
   /** Mobs déjà touchés : chacun ne prend les dégâts qu'une seule fois. */
   private readonly mobsHit = new Set<Mob>();
@@ -51,7 +51,7 @@ export class Projectile extends Entity {
     this.duration = (config.range / config.speed) * 1000;
     this.ease = Tweens.Builders.GetEaseFunction(config.ease ?? 'Linear') as EaseFunction;
     this.damage = config.damage;
-    this.facing = new Facing(config.angle);
+    this.facing = new AngleFacing(config.angle);
     this.hitboxes = config.hitboxes;
     this.ignoreWalls = config.ignoreWalls ?? false;
     this.crossBody = config.crossBody ?? true;
