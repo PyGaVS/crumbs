@@ -1,4 +1,4 @@
-import { Animation, CueStep } from '../../entities/Animation';
+import { Animation, CueStep } from '../../domain/Animation';
 import { AnimationId } from '../enums/AnimationId';
 import { FxId } from '../enums/FxId';
 import { SkinAction } from '../enums/SkinAction';

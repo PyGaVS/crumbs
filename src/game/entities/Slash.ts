@@ -1,7 +1,7 @@
 import { Animations, GameObjects, Scene } from 'phaser';
 import { frameRateOver } from '../utils/animation';
 import { orient } from '../utils/orientation';
-import type { Fx } from './Fx';
+import type { Fx } from '../domain/Fx';
 
 export type SlashConfig = {
   angle: number;

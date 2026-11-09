@@ -28,7 +28,7 @@ Tu auras rarement besoin d'en mettre, le projet c'est pas un tutoriel.
 ## Projet
 
 - Jeu Phaser 4 + Vite + TypeScript. Design dans docs/DESIGN.md, jalons dans docs/ROADMAP.md, architecture dans docs/ARCHITECTURE.md.
-- `src/game/data/` : la donnée pure, catalogues d'instances et enums. Les classes métier (Technique, CharClass, Weapon, EnemyKind, Composition) vivent dans `src/game/entities/` à côté des sprites mais n'importent jamais Phaser . Les effets des techniques sont des fonctions exportées par data/techniques.ts, qui reçoivent l'entité Player (import de type uniquement).
+- `src/game/data/` : la donnée pure, catalogues d'instances et enums. Les classes métier (Technique, CharClass, Weapon, EnemyKind, Composition…) vivent dans `src/game/domain/` et n'importent jamais Phaser. Les sprites Phaser vivent dans `src/game/entities/`. Chaque technique à effet propre est une sous-classe de `Technique` dans `data/techniques/` (DashTechnique, ProjectileTechnique), qui surcharge `action`.
 - Assets décrits dans public/assets/pack.json ; animations générées par vite/plugins/animations.ts depuis vite/animations.config.json.
 - `npm run dev` : serveur sur http://localhost:8080. Ne jamais arrêter un serveur lancé par l'utilisateur sans lui demander.
 

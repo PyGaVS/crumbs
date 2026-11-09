@@ -1,5 +1,5 @@
 import { Player } from '../../entities/Player';
-import { Technique, type TechniqueOptions } from '../../entities/Technique';
+import { Technique, type TechniqueOptions } from '../../domain/Technique';
 import { DASH_MAX_EXTENSION, DASH_STEP } from '../../utils/consts';
 import { hasObstacle } from '../../utils/collision';
 import { Cardinal, Direction } from '../../utils/types';

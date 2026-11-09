@@ -1,5 +1,5 @@
 import { Geom } from 'phaser';
-import type { Cue, Hitbox } from '../entities/Animation';
+import type { Cue, Hitbox } from '../domain/Animation';
 import type { Entity } from '../entities/Entity';
 import type { Mob } from '../entities/Mob';
 import { mobsInCircle } from './collision';

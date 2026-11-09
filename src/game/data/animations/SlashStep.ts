@@ -1,4 +1,4 @@
-import { AnimationStep, type StepOptions } from '../../entities/Animation';
+import { AnimationStep, type StepOptions } from '../../domain/Animation';
 import type { Playback } from '../../entities/Playback';
 import { Slash, type SlashConfig } from '../../entities/Slash';
 import { polar } from '../../utils/orientation';

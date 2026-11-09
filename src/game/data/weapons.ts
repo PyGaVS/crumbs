@@ -2,7 +2,7 @@ import { AnimationId } from './enums/AnimationId';
 import { TechniqueId } from './enums/TechniqueId';
 import { WeaponId } from './enums/WeaponId';
 import { WeaponSkinId } from './enums/WeaponSkinId';
-import { Weapon } from '../entities/Weapon';
+import { Weapon } from '../domain/Weapon';
 
 /** Catalogue des armes. */
 export const ALL_WEAPONS: readonly Weapon[] = [

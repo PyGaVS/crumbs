@@ -1,4 +1,4 @@
-import { CharClass } from '../entities/CharClass';
+import { CharClass } from '../domain/CharClass';
 import { CharClassId } from './enums/CharClassId';
 import { SkinId } from './enums/SkinId';
 import { TechniqueId } from './enums/TechniqueId';

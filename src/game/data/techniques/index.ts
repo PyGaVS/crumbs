@@ -1,7 +1,7 @@
 import { AnimationId } from '../enums/AnimationId';
 import { ProjectileSkinId } from '../enums/ProjectileSkinId';
 import { TechniqueId } from '../enums/TechniqueId';
-import { Technique } from '../../entities/Technique';
+import { Technique } from '../../domain/Technique';
 import Sequence from '../../utils/Sequence';
 import DashTechnique from './DashTechnique';
 import ProjectileTechnique from './ProjectileTechnique';

@@ -17,9 +17,10 @@ src/
                           InputHistoryText (historique d'inputs)
     debug/                Les outils de dev, créés seulement par `npm run dev` :
                           HitboxOverlay (touche H)
-    entities/             Les entités : sprites Phaser (Player…) et entités métier
-                          pures (Technique, CharClass, Weapon, EnemyKind, Skin,
-                          WeaponSkin, ProjectileSkin, Fx, Animation, Composition)
+    entities/             Les sprites Phaser qui vivent dans une scène (Entity, Player…)
+    domain/               Les classes métier, sans Phaser (Technique, CharClass, Weapon,
+                          EnemyKind, Skin, WeaponSkin, ProjectileSkin, Fx, Animation,
+                          Composition)
     data/                 La donnée pure : catalogues d'instances et enums
     utils/input.ts        Historique de touches et détection des séquences
     utils/orientation.ts  Angles du regard, miroir, Facing
@@ -75,8 +76,6 @@ Boot ──► Preloader ──► MainMenu ──► Game ⇄ GameOver
 
 ## Les entités (`entities/`)
 
-Deux natures cohabitent, et seule la première a le droit d'importer Phaser.
-
 Les sprites, qui vivent dans une scène :
 
 - `Entity` : un sprite qui avance dans une direction et qui sait
@@ -104,7 +103,9 @@ Les sprites, qui vivent dans une scène :
 - `Mob` : un ennemi dans l'arène, instancié depuis son `EnemyKind` ; pour l'instant le
   mannequin d'entraînement du jalon 0.1.
 
-Les entités métier, instanciées par les catalogues de `data/`, sans aucun Phaser :
+## Le domaine (`domain/`)
+
+Les classes métier, instanciées par les catalogues de `data/`. Aucune n'importe Phaser :
 
 - `Technique` : ses variantes de séquences (dont découle la notation affichée), la
   détection `matches(history)` et `execute(player)`, qui joue son animation et appelle
@@ -138,7 +139,7 @@ dans la lecture.
   - `SlashStep` : une entaille (`Fx`) posée devant l'entité ;
   - `SkinStep` : une action du skin (`SkinAction`).
 
-  `CueStep`, dans `entities/Animation.ts`, est le repère où le gameplay agit : le seul step
+  `CueStep`, dans `domain/Animation.ts`, est le repère où le gameplay agit : le seul step
   que les techniques et les armes connaissent, via `onCue`. Il porte les hitboxs de la
   frappe : des cercles décrits regard à droite (x vers l'avant, y vers le bas), que
   `Facing.place` pose dans le monde. Un `Projectile` porte aussi les siennes, tournées vers

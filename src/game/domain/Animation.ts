@@ -1,7 +1,7 @@
 import type { AnimationId } from '../data/enums/AnimationId';
 import type { Facing } from '../utils/orientation';
-import type { Entity } from './Entity';
-import type { Playback } from './Playback';
+import type { Entity } from '../entities/Entity';
+import type { Playback } from '../entities/Playback';
 
 export type Ease = 'Linear' | 'Cubic.out' | 'Back.out' | 'Quint.out';
 

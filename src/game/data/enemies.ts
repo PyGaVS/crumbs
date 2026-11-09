@@ -1,4 +1,4 @@
-import { EnemyKind } from '../entities/EnemyKind';
+import { EnemyKind } from '../domain/EnemyKind';
 import { EnemyId } from './enums/EnemyId';
 import { SkinId } from './enums/SkinId';
 

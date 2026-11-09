@@ -1,5 +1,5 @@
 import { Tweens } from 'phaser';
-import { AnimationStep, type Ease, type StepCheck, type StepOptions } from '../../entities/Animation';
+import { AnimationStep, type Ease, type StepCheck, type StepOptions } from '../../domain/Animation';
 import type { WeaponPose } from '../../entities/HeldWeapon';
 import type { EaseFunction, Playback } from '../../entities/Playback';
 

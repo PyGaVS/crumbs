@@ -5,11 +5,11 @@ import { hasObstacle } from '../utils/collision';
 import { touchedMobs } from '../utils/combat';
 import { Facing, polar } from '../utils/orientation';
 import { SpritePlayback } from '../data/enums/SpritePlayback';
-import type { Ease, Hitbox } from './Animation';
+import type { Ease, Hitbox } from '../domain/Animation';
 import { Entity } from './Entity';
 import type { Mob } from './Mob';
 import type { EaseFunction } from './Playback';
-import type { ProjectileSkin } from './ProjectileSkin';
+import type { ProjectileSkin } from '../domain/ProjectileSkin';
 
 export type ProjectileConfig = {
   angle: number;

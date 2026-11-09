@@ -4,7 +4,7 @@ import { getSymbol } from '../utils/input';
 import { Facing } from '../utils/orientation';
 import type { TechniqueId } from '../data/enums/TechniqueId';
 import type { Animation, Cue } from './Animation';
-import type { Player } from './Player';
+import type { Player } from '../entities/Player';
 import type Sequence from '../utils/Sequence';
 import { getAnimation } from '../data/animations';
 

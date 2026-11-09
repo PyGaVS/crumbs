@@ -4,10 +4,10 @@ import type { SkinAction } from '../data/enums/SkinAction';
 import { strike } from '../utils/combat';
 import { InputHistory, isCardinal } from '../utils/input';
 import type { Direction } from '../utils/types';
-import { CharClass } from './CharClass';
+import { CharClass } from '../domain/CharClass';
 import { Fighter } from './Fighter';
 import { HeldWeapon } from './HeldWeapon';
-import type { Weapon } from './Weapon';
+import type { Weapon } from '../domain/Weapon';
 import { BattleScene } from '../scenes/BattleScene';
 
 // TODO: move to CharClass

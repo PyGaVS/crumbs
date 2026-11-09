@@ -3,7 +3,7 @@ import { Inputs } from '../data/enums/Inputs';
 import type { SkinAction } from '../data/enums/SkinAction';
 import { FACING_ANGLES, Facing, orient } from '../utils/orientation';
 import { Direction } from '../utils/types';
-import type { Animation, PlayOptions } from './Animation';
+import type { Animation, PlayOptions } from '../domain/Animation';
 import type { HeldWeapon } from './HeldWeapon';
 import { Playback } from './Playback';
 import { Shadow } from './Shadow';

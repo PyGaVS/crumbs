@@ -1,4 +1,4 @@
-import { WeaponSkin } from '../entities/WeaponSkin';
+import { WeaponSkin } from '../domain/WeaponSkin';
 import { WeaponSkinId } from './enums/WeaponSkinId';
 
 /** Catalogue des apparences d'armes. Les SpriteInHand du pack se tiennent par le haut, lame vers le bas, tranchant à gauche. */

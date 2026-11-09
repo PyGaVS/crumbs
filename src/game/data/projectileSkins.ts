@@ -1,4 +1,4 @@
-import { ProjectileSkin } from '../entities/ProjectileSkin';
+import { ProjectileSkin } from '../domain/ProjectileSkin';
 import { ProjectileSkinId } from './enums/ProjectileSkinId';
 import { SpritePlayback } from './enums/SpritePlayback';
 

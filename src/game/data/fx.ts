@@ -1,4 +1,4 @@
-import { Fx } from '../entities/Fx';
+import { Fx } from '../domain/Fx';
 import { FxId } from './enums/FxId';
 
 /** Catalogue des effets visuels. */

@@ -1,4 +1,4 @@
-import { Skin } from '../entities/Skin';
+import { Skin } from '../domain/Skin';
 import { Inputs } from './enums/Inputs';
 import { SkinId } from './enums/SkinId';
 

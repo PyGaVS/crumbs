@@ -1,8 +1,8 @@
 import { GameObjects } from 'phaser';
 import { FACING_ANGLES, type Facing, orient, polar } from '../utils/orientation';
 import { Attachment } from './Attachment';
-import type { Skin } from './Skin';
-import type { WeaponSkin } from './WeaponSkin';
+import type { Skin } from '../domain/Skin';
+import type { WeaponSkin } from '../domain/WeaponSkin';
 
 /** Pose dans le repère du regard : angle local (radians), rayon et pivot en px. */
 export type WeaponPose = { angle: number; radius: number; pivot: number };

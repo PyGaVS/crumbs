@@ -1,8 +1,8 @@
 import type { Player } from '../../entities/Player';
 import { Projectile, type ProjectileConfig } from '../../entities/Projectile';
-import type { ProjectileSkin } from '../../entities/ProjectileSkin';
-import type { Cue } from '../../entities/Animation';
-import { Technique, type TechniqueOptions } from '../../entities/Technique';
+import type { ProjectileSkin } from '../../domain/ProjectileSkin';
+import type { Cue } from '../../domain/Animation';
+import { Technique, type TechniqueOptions } from '../../domain/Technique';
 import Sequence from '../../utils/Sequence';
 import type { ProjectileSkinId } from '../enums/ProjectileSkinId';
 import { TechniqueId } from '../enums/TechniqueId';

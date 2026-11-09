@@ -1,5 +1,5 @@
 import type { Facing } from '../utils/orientation';
-import type { Animation, Hitbox, PlayOptions } from './Animation';
+import type { Animation, Hitbox, PlayOptions } from '../domain/Animation';
 import type { Entity } from './Entity';
 import type { WeaponGrip, WeaponPose } from './HeldWeapon';
 
