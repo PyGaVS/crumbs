@@ -23,6 +23,7 @@ export class Entity extends Physics.Arcade.Sprite {
   /** Angle (radians) vers lequel pointe l'asset dans son image source. */
   assetAngle?: number;
   readonly heldWeapon?: HeldWeapon;
+  readonly shadow: Shadow;
   private playback?: Playback;
 
   constructor(scene: Scene, x: number, y: number, texture: string, frame?: string | number) {
@@ -30,7 +31,7 @@ export class Entity extends Physics.Arcade.Sprite {
     scene.add.existing(this);
     scene.physics.add.existing(this);
     this.setCollideWorldBounds(true);
-    new Shadow(this);
+    this.shadow = new Shadow(this);
     this.once(GameObjects.Events.DESTROY, () => this.playback?.stop());
   }
 

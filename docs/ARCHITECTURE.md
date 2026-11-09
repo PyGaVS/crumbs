@@ -117,8 +117,9 @@ Les classes métier, instanciées par les catalogues de `data/`. Aucune n'import
     classe ou un ennemi.
   - `WeaponSkin` : le sprite d'une arme et sa version en main (`<texture>-inHand` dans le
     pack), son point de prise et l'angle de sa lame.
-  - `ProjectileSkin` : le sprite d'un projectile, son orientation, sa rotation (`spin`) et
-    son animation en vol, en boucle ou étirée sur toute la course (`SpritePlayback`). Une
+  - `ProjectileSkin` : le sprite d'un projectile, son orientation, sa rotation (`spin`), son
+    animation en vol, en boucle ou étirée sur toute la course (`SpritePlayback`), et
+    l'opacité de son ombre (`shadowAlpha`, 0.15 par défaut). Une
     `ProjectileTechnique` le référence par id et garde l'usage : taille, course, hitboxs.
   - `Animation` : voir plus bas ; l'attaque de base d'une arme référence la sienne.
 - `Composition` : l'assemblage d'un run (1 classe + 2 armes). `techniquesWith(armeActive)`

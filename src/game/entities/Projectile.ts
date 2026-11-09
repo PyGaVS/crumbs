@@ -58,6 +58,7 @@ export class Projectile extends Entity {
     this.assetAngle = skin.assetAngle;
     this.setScale((config.size ?? SPRITE_SIZE / 2) / this.width);
     this.setCollideWorldBounds(false);
+    this.shadow.setAlpha(skin.shadowAlpha);
     this.orientTo(config.angle);
 
     if (skin.spin) {

@@ -7,7 +7,7 @@ export const ALL_PROJECTILE_SKINS: readonly ProjectileSkin[] = [
   new ProjectileSkin(ProjectileSkinId.SHURIKEN, 'shuriken', { spin: 1440 }),
   new ProjectileSkin(ProjectileSkinId.KUNAI, 'kunai', { assetAngle: -Math.PI / 4 }),
   new ProjectileSkin(ProjectileSkinId.SLASH_ARC, 'slashArc', {
-    assetAngle: Math.PI / 2, animation: 'slashArc-fly', playback: SpritePlayback.LIFETIME,
+    assetAngle: Math.PI / 2, animation: 'slashArc-fly', playback: SpritePlayback.LIFETIME, shadowAlpha: 0
   }),
 ];
 

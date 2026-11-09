@@ -7,6 +7,8 @@ export type ProjectileSkinOptions = {
   playback?: SpritePlayback;
   /** en degrés par seconde. */
   spin?: number;
+  /** Opacité de l'ombre, de 0 à 1. */
+  shadowAlpha?: number;
 };
 
 /** L'apparence d'un projectile : son sprite, son orientation et son animation en vol. */
@@ -15,6 +17,7 @@ export class ProjectileSkin {
   readonly animation?: string;
   readonly playback: SpritePlayback;
   readonly spin?: number;
+  readonly shadowAlpha: number;
 
   constructor(
     readonly id: ProjectileSkinId,
@@ -25,5 +28,6 @@ export class ProjectileSkin {
     this.animation = options.animation;
     this.playback = options.playback ?? SpritePlayback.LOOP;
     this.spin = options.spin;
+    this.shadowAlpha = options.shadowAlpha ?? 0.15;
   }
 }
