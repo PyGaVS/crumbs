@@ -1,5 +1,6 @@
 export enum AnimationId {
   FALCHION_ATTACK,
-  THROW,
+  SHURIKENS_THROW,
+  KUNAI_THROW,
   SHOOT_SLASH,
 }

@@ -1,12 +1,14 @@
 import { SCREEN_HEIGHT, SCREEN_WIDTH, SPRITE_SIZE } from '../core/settings';
 import { Inputs } from '../data/enums/Inputs';
 import type { SkinAction } from '../data/enums/SkinAction';
+import type { Animation, PlayOptions } from '../domain/Animation';
 import { strike } from '../utils/combat';
 import { InputHistory, isCardinal } from '../utils/input';
 import type { Direction } from '../utils/types';
 import { CharClass } from '../domain/CharClass';
 import { Fighter } from './Fighter';
 import { HeldWeapon } from './HeldWeapon';
+import type { Playback } from './Playback';
 import type { Weapon } from '../domain/Weapon';
 import { BattleScene } from '../scenes/BattleScene';
 
@@ -65,7 +67,17 @@ export class Player extends Fighter {
     const animation = this.weapon.attackAnimation;
 
     animation.play(this, { onCue: (cue) => strike(this, cue, this.weapon.attack.damage) });
-    this.lock(animation.duration);
+  }
+
+  override perform(animation: Animation, options: PlayOptions): Playback {
+    const playback = super.perform(animation, options);
+
+    if (animation.duration > 0) {
+      this.locked = true;
+      this.scene.time.delayedCall(animation.duration, () => this.unlock());
+    }
+
+    return playback;
   }
 
   override playAction(action: SkinAction, direction: Direction = this.direction): void {
@@ -74,22 +86,15 @@ export class Player extends Fighter {
     this.play(this.charClass.skin.animation(action, direction));
   }
 
-  /** Fige le perso pendant duration ms, les inputs sont mis en tampon puis rejoués. */
-  lock(duration: number, onEnd?: () => void): void {
-    this.locked = true;
-    this.scene.time.delayedCall(duration, () => this.endLag(onEnd));
-  }
-
-  private endLag(onEnd?: () => void): void {
+  private unlock(): void {
     this.locked = false;
-    onEnd?.();
 
     const buffered = this.inputBuffer;
     this.inputBuffer = [];
     buffered.forEach((input) => this.press(input));
   }
 
-  /** Avance vers sa direction, sans effet pendant le lag. */
+  /** Avance vers sa direction, sans effet pendant une animation. */
   walk(): void {
     if (this.locked) {
       return;
@@ -100,7 +105,7 @@ export class Player extends Fighter {
     this.play(this.charClass.skin.walkAnimation(this.direction), true);
   }
 
-  /** Immobilise le perso sur sa frame d'attente en gardant sa direction, sans effet pendant le lag. */
+  /** Immobilise le perso sur sa frame d'attente en gardant sa direction, sans effet pendant une animation. */
   halt(): void {
     if (this.locked || this.idle) {
       return;

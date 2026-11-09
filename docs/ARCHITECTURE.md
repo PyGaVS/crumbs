@@ -137,7 +137,7 @@ dans la lecture.
     dans le sens de rotation `clockwise`, arme miroitée ou non (`mirror`), puis figée sur sa
     pose d'arrivée pendant `hold` ms ;
   - `SlashStep` : une entaille (`Fx`) posée devant l'entité ;
-  - `SkinStep` : une action du skin (`SkinAction`).
+  - `SkinStep` : une action du skin (`SkinAction`), tenue `duration` ms.
 
   `CueStep`, dans `domain/Animation.ts`, est le repère où le gameplay agit : le seul step
   que les techniques et les armes connaissent, via `onCue`. Il porte les hitboxs de la

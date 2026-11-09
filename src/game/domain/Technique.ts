@@ -12,9 +12,7 @@ export type TechniqueOptions = {
   beforeEffect?: (player: Player) => void;
   effect?: (player: Player) => void;
   afterEffect?: (player: Player) => void;
-  afterLagEffect?: (player: Player) => void;
   animationId?: AnimationId;
-  lag?: number;
 };
 
 export class Technique {
@@ -23,9 +21,7 @@ export class Technique {
   protected readonly beforeEffect: (player: Player) => void;
   protected readonly effect: (player: Player) => void;
   protected readonly afterEffect: (player: Player) => void;
-  protected readonly afterLagEffect: (player: Player) => void;
   readonly animationId?: AnimationId;
-  readonly lag: number;
 
   constructor(
     readonly id: TechniqueId,
@@ -37,9 +33,7 @@ export class Technique {
     this.beforeEffect = options.beforeEffect ?? (() => {});
     this.effect = options.effect ?? (() => {});
     this.afterEffect = options.afterEffect ?? (() => {});
-    this.afterLagEffect = options.afterLagEffect ?? (() => {});
     this.animationId = options.animationId;
-    this.lag = options.lag ?? 0;
   }
 
   get animation(): Animation | undefined {
@@ -65,10 +59,6 @@ export class Technique {
       animation.play(player, { onCue: (cue) => this.action(player, cue) });
     } else {
       this.action(player, { facing: new Facing(player.facingAngle), index: 0, last: true, hitboxes: [] });
-    }
-
-    if (this.lag > 0) {
-      player.lock(this.lag, () => this.afterLagEffect(player));
     }
   }
 

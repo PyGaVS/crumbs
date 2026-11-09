@@ -22,13 +22,20 @@ export const ALL_ANIMATIONS: readonly Animation[] = [
       duration: 250, ease: 'Cubic.out', hold: 70,
     }),
   ]),
-  new Animation(AnimationId.THROW, [new SkinStep({ action: SkinAction.ATTACK }), new CueStep()]),
+  new Animation(AnimationId.SHURIKENS_THROW, [
+    new SkinStep({ action: SkinAction.ATTACK, duration: 250 }), 
+    new CueStep()
+  ]),
+  new Animation(AnimationId.KUNAI_THROW, [
+    new SkinStep({ action: SkinAction.ATTACK, duration: 200 }), 
+    new CueStep()
+  ]),
   new Animation(AnimationId.SHOOT_SLASH, [
     new SkinStep({ action: SkinAction.ATTACK }),
     new SwingStep({
       from: { angle: -Math.PI*2 / 5, radius: 40, pivot: 0 },
       to: { angle: Math.PI*2 / 5 },
-      duration: 230, ease: 'Cubic.out', hold: 120,
+      duration: 220, ease: 'Cubic.out', hold: 120,
     }),
     new CueStep({ at: 50 }),
   ]),
