@@ -4,19 +4,12 @@ import { frameRateOver } from '../utils/animation';
 import { hasObstacle } from '../utils/collision';
 import { touchedMobs } from '../utils/combat';
 import { Facing, polar } from '../utils/orientation';
+import { SpritePlayback } from '../data/enums/SpritePlayback';
 import type { Ease, Hitbox } from './Animation';
 import { Entity } from './Entity';
 import type { Mob } from './Mob';
 import type { EaseFunction } from './Playback';
-
-export type ProjectileAnimation = {
-  /** Rotation du sprite en degrés par seconde. */
-  spin?: number;
-  /** Clé d'une animation Phaser jouée en boucle (texture spritesheet requise). */
-  key?: string;
-  /** key jouée une seule fois, étirée sur toute la course. */
-  once?: boolean;
-};
+import type { ProjectileSkin } from './ProjectileSkin';
 
 export type ProjectileConfig = {
   angle: number;
@@ -30,11 +23,8 @@ export type ProjectileConfig = {
   size?: number;
   /** Progression le long de la course, linéaire par défaut. */
   ease?: Ease;
-  /** Angle (radians) vers lequel pointe l'asset dans son image source. */
-  assetAngle?: number;
   ignoreWalls?: boolean;
   crossBody?: boolean;
-  animation?: ProjectileAnimation;
 };
 
 export class Projectile extends Entity {
@@ -53,8 +43,8 @@ export class Projectile extends Entity {
   /** Mobs déjà touchés : chacun ne prend les dégâts qu'une seule fois. */
   private readonly mobsHit = new Set<Mob>();
 
-  constructor(scene: Scene, x: number, y: number, texture: string, config: ProjectileConfig) {
-    super(scene, x, y, texture);
+  constructor(scene: Scene, x: number, y: number, skin: ProjectileSkin, config: ProjectileConfig) {
+    super(scene, x, y, skin.textureKey);
     this.startX = x;
     this.startY = y;
     this.range = config.range;
@@ -65,19 +55,28 @@ export class Projectile extends Entity {
     this.hitboxes = config.hitboxes;
     this.ignoreWalls = config.ignoreWalls ?? false;
     this.crossBody = config.crossBody ?? true;
-    this.assetAngle = config.assetAngle;
+    this.assetAngle = skin.assetAngle;
     this.setScale((config.size ?? SPRITE_SIZE / 2) / this.width);
     this.setCollideWorldBounds(false);
     this.orientTo(config.angle);
 
-    const { spin, key, once } = config.animation ?? {};
-
-    if (spin) {
-      this.setAngularVelocity(spin);
+    if (skin.spin) {
+      this.setAngularVelocity(skin.spin);
     }
 
-    if (key) {
-      this.play(once ? { key, repeat: 0, frameRate: frameRateOver(scene, key, this.duration) } : key);
+    if (skin.animation) {
+      this.fly(skin.animation, skin.playback);
+    }
+  }
+
+  private fly(key: string, playback: SpritePlayback): void {
+    switch (playback) {
+      case SpritePlayback.LOOP:
+        this.play({ key, repeat: -1 });
+        break;
+      case SpritePlayback.LIFETIME:
+        this.play({ key, repeat: 0, frameRate: frameRateOver(this.scene, key, this.duration) });
+        break;
     }
   }
 

@@ -19,7 +19,7 @@ src/
                           HitboxOverlay (touche H)
     entities/             Les entités : sprites Phaser (Player…) et entités métier
                           pures (Technique, CharClass, Weapon, EnemyKind, Skin,
-                          WeaponSkin, Fx, Animation, Composition)
+                          WeaponSkin, ProjectileSkin, Fx, Animation, Composition)
     data/                 La donnée pure : catalogues d'instances et enums
     utils/input.ts        Historique de touches et détection des séquences
     utils/orientation.ts  Angles du regard, miroir, Facing
@@ -67,7 +67,7 @@ Boot ──► Preloader ──► MainMenu ──► Game ⇄ GameOver
 - `enums/` : un fichier par enum (`CharClassId.NINJA`…). Ce sont les identifiants uniques
   qui relient les catalogues entre eux.
 - Un catalogue par concept (`techniques/`, `animations/`, `charClasses.ts`, `weapons.ts`,
-  `enemies.ts`, `skins.ts`, `weaponSkins.ts`, `fx.ts`) :
+  `enemies.ts`, `skins.ts`, `weaponSkins.ts`, `projectileSkins.ts`, `fx.ts`) :
   un tableau constant d'instances plus un accesseur `getX(id)` qui échoue bruyamment sur un
   id inconnu.
 - Les liens entre concepts passent par les ids (`techniqueIds: TechniqueId[]`), jamais par
@@ -115,6 +115,9 @@ Les entités métier, instanciées par les catalogues de `data/`, sans aucun Pha
     classe ou un ennemi.
   - `WeaponSkin` : le sprite d'une arme et sa version en main (`<texture>-inHand` dans le
     pack), son point de prise et l'angle de sa lame.
+  - `ProjectileSkin` : le sprite d'un projectile, son orientation, sa rotation (`spin`) et
+    son animation en vol, en boucle ou étirée sur toute la course (`SpritePlayback`). Une
+    `ProjectileTechnique` le référence par id et garde l'usage : taille, course, hitboxs.
   - `Animation` : voir plus bas ; l'attaque de base d'une arme référence la sienne.
 - `Composition` : l'assemblage d'un run (1 classe + 2 armes). `techniquesWith(armeActive)`
   donne le répertoire du moment.

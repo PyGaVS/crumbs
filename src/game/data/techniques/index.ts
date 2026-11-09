@@ -1,4 +1,5 @@
 import { AnimationId } from '../enums/AnimationId';
+import { ProjectileSkinId } from '../enums/ProjectileSkinId';
 import { TechniqueId } from '../enums/TechniqueId';
 import { Technique } from '../../entities/Technique';
 import Sequence from '../../utils/Sequence';
@@ -15,27 +16,26 @@ export const ALL_TECHNIQUES: readonly Technique[] = [
   ),
   new ProjectileTechnique(
     TechniqueId.SHURIKENS, 'Shurikens', new Sequence().cardinals().opposite().perpendicular().switch(), {
-      texture: 'shuriken', speed: 1300, range: 512, damage: 7,
+      skinId: ProjectileSkinId.SHURIKEN, speed: 1300, range: 512, damage: 7,
       hitboxes: [{ x: 0, y: 0, radius: 14 }],
       spreadAngles: [0, -Math.PI / 16, Math.PI / 16],
-      animation: { spin: 1440 }, animationId: AnimationId.THROW,
+      animationId: AnimationId.THROW,
       lag: 250,
     },
   ),
   new ProjectileTechnique(
     TechniqueId.KUNAI, 'Kunai', new Sequence().cardinals().same().switch(), {
-      texture: 'kunai', speed: 2000, range: 704, damage: 10,
+      skinId: ProjectileSkinId.KUNAI, speed: 2000, range: 704, damage: 10,
       hitboxes: [{ x: 14, y: 0, radius: 6 }, { x: 0, y: 0, radius: 8 }],
-      assetAngle: (-1 * Math.PI) / 4, animationId: AnimationId.THROW,
+      animationId: AnimationId.THROW,
       lag: 200, crossBody: false
     }
   ),
   new ProjectileTechnique(
     TechniqueId.SHOOT_SLASH, 'Shoot Slash', new Sequence().cardinals().perpendicular().opposite(2).attack(), {
-      texture: 'slashArc', speed: 960, range: 400, damage: 8, size: 192,
+      skinId: ProjectileSkinId.SLASH_ARC, speed: 960, range: 400, damage: 8, size: 192,
       hitboxes: [{ x: 36, y: 0, radius: 48 }, { x: 8, y: -60, radius: 36 }, { x: 8, y: 60, radius: 36 }],
-      assetAngle: Math.PI / 2, ease: 'Quint.out',
-      animation: { key: 'slashArc-fly', once: true }, animationId: AnimationId.SHOOT_SLASH,
+      ease: 'Quint.out', animationId: AnimationId.SHOOT_SLASH,
       lag: 320,
     }
   ),
