@@ -26,6 +26,7 @@ src/
     utils/orientation.ts  Angles du regard, miroir, Facing
     utils/combat.ts       touchedMobs : les mobs sous des hitboxs ; strike : la frappe
                           d'un repère
+    utils/hitboxes.ts     Les formes de hitboxs toutes faites (hitboxRing…)
 vite/
   config.dev.ts / config.prod.ts
   plugins/animations.ts   Génère les animations à chaque démarrage de Vite
@@ -142,7 +143,8 @@ dans la lecture.
   `CueStep`, dans `domain/Animation.ts`, est le repère où le gameplay agit : le seul step
   que les techniques et les armes connaissent, via `onCue`. Il porte les hitboxs de la
   frappe : des cercles décrits regard à droite (x vers l'avant, y vers le bas), que
-  `Facing.place` pose dans le monde. Un `Projectile` porte aussi les siennes, tournées vers
+  `Facing.place` pose dans le monde ; `utils/hitboxes.ts` en fournit des formes toutes faites.
+  Une technique qui frappe ces hitboxs est une `StrikeTechnique`. Un `Projectile` porte aussi les siennes, tournées vers
   sa trajectoire et testées à chaque frame. `touchedMobs` compte une seule fois chaque mob,
   quel que soit le nombre de cercles qu'il chevauche, et émet `CombatEvent.STRIKE` : en dev,
   `debug/HitboxOverlay` affiche alors les cercles, pleins sur la frame où ils frappent puis en

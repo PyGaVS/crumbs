@@ -3,4 +3,5 @@ export enum AnimationId {
   SHURIKENS_THROW,
   KUNAI_THROW,
   SHOOT_SLASH,
+  SPIN_SLASH,
 }

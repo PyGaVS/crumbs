@@ -1,4 +1,5 @@
 import { Animation, CueStep } from '../../domain/Animation';
+import { hitboxRing } from '../../utils/hitboxes';
 import { AnimationId } from '../enums/AnimationId';
 import { FxId } from '../enums/FxId';
 import { SkinAction } from '../enums/SkinAction';
@@ -38,6 +39,14 @@ export const ALL_ANIMATIONS: readonly Animation[] = [
       duration: 220, ease: 'Cubic.out', hold: 120,
     }),
     new CueStep({ at: 50 }),
+  ]),
+  new Animation(AnimationId.SPIN_SLASH, [
+    new SkinStep({ action: SkinAction.ATTACK }),
+    new SkinStep({ at: 500, action: SkinAction.ATTACK, direction: (facing) => facing.rotate(1) }),
+    new SkinStep({ at: 1000, action: SkinAction.ATTACK, direction: (facing) => facing.rotate(2) }),
+    new SkinStep({ at: 1500, action: SkinAction.ATTACK, direction: (facing) => facing.rotate(3), duration: 100 }),
+    new SlashStep({ fx: FxId.SLASH_CIRCULAR, reach: 0, size: 192, mirrored: true, duration: 300 }),
+    new CueStep({ at: 100, hitboxes: hitboxRing(8, 64, 36) }),
   ]),
 ];
 

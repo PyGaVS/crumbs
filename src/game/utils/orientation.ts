@@ -34,6 +34,16 @@ export class Facing {
     this.direction = nearestCardinal(angle);
   }
 
+  /**
+   * La direction à quarters quarts de tour du regard.
+   * @param clockwise horaire vers la droite, le haut et le bas, inversé vers la gauche
+   */
+  rotate(quarters: number, clockwise = true): Cardinal {
+    const sign = clockwise === this.mirrored ? -1 : 1;
+
+    return nearestCardinal(this.angle + (sign * quarters * Math.PI) / 2);
+  }
+
   /** Angle monde d'un angle local, horaire vers la droite, le haut et le bas, inversé vers la gauche. */
   toWorld(local: number): number {
     return this.angle + (this.mirrored ? -local : local);

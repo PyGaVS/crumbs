@@ -23,7 +23,7 @@
     },
     {
       "$comment": "Entaille : 6 frames jouées une fois, SlashStep peut en imposer la durée.",
-      "keys": ["slash02"],
+      "keys": ["slash02", "slashCircular"],
       "layout": "sequence",
       "framesPerAnimation": 6,
       "animations": ["strike"],

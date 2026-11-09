@@ -3,7 +3,8 @@ import { FxId } from './enums/FxId';
 
 /** Catalogue des effets visuels. */
 export const ALL_FX: readonly Fx[] = [
-  new Fx(FxId.SLASH_02, 'slash02', 'slash02-strike', Math.PI / 2)
+  new Fx(FxId.SLASH_02, 'slash02', 'slash02-strike', Math.PI / 2),
+  new Fx(FxId.SLASH_CIRCULAR, 'slashCircular', 'slashCircular-strike', Math.PI),
 ];
 
 export function getFx(id: FxId): Fx {

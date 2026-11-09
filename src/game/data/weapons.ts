@@ -8,7 +8,7 @@ import { Weapon } from '../domain/Weapon';
 export const ALL_WEAPONS: readonly Weapon[] = [
   new Weapon( WeaponId.FALCHION, 'Fauchon', WeaponSkinId.FALCHION,
     { damage: 5, animationId: AnimationId.FALCHION_ATTACK },
-    [TechniqueId.SHOOT_SLASH],
+    [TechniqueId.SHOOT_SLASH, TechniqueId.SPIN_SLASH],
   ),
 ];
 

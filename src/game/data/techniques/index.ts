@@ -5,6 +5,7 @@ import { Technique } from '../../domain/Technique';
 import Sequence from '../../utils/Sequence';
 import DashTechnique from './DashTechnique';
 import ProjectileTechnique from './ProjectileTechnique';
+import StrikeTechnique from './StrikeTechnique';
 
 /** Catalogue des techniques. */
 export const ALL_TECHNIQUES: readonly Technique[] = [
@@ -35,6 +36,11 @@ export const ALL_TECHNIQUES: readonly Technique[] = [
       skinId: ProjectileSkinId.SLASH_ARC, speed: 960, range: 400, damage: 8, size: 192,
       hitboxes: [{ x: 36, y: 0, radius: 48 }, { x: 8, y: -60, radius: 36 }, { x: 8, y: 60, radius: 36 }],
       ease: 'Quint.out', animationId: AnimationId.SHOOT_SLASH,
+    }
+  ),
+  new StrikeTechnique(
+    TechniqueId.SPIN_SLASH, 'Spin Slash', new Sequence().cardinals().perpendicular().opposite(2).opposite(2), {
+      damage: 8, animationId: AnimationId.SPIN_SLASH,
     }
   ),
 ];

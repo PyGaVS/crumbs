@@ -3,4 +3,5 @@ export enum TechniqueId {
   SHURIKENS,
   KUNAI,
   SHOOT_SLASH,
+  SPIN_SLASH,
 }
