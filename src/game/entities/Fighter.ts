@@ -67,7 +67,7 @@ export class Fighter extends Entity {
     this.destroy();
   }
 
-  private get hurtboxRadius(): number {
+  protected get hurtboxRadius(): number {
     return Math.min(this.displayWidth, this.displayHeight) / 2;
   }
 }

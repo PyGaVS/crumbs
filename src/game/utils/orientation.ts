@@ -26,8 +26,12 @@ function clockwiseAt(index: number): Direction {
   return CLOCKWISE[((index % length) + length) % length];
 }
 
-export function nearestDirection(angle: number): Direction {
-  return clockwiseAt(Math.round(angle / (Math.PI / 2)));
+/** Les deux directions qui rapprochent d'un déplacement (dx, dy), l'axe dominant d'abord. */
+export function directionsTowards(dx: number, dy: number): [Direction, Direction] {
+  const horizontal = dx < 0 ? Inputs.LEFT : Inputs.RIGHT;
+  const vertical = dy < 0 ? Inputs.UP : Inputs.DOWN;
+
+  return Math.abs(dx) >= Math.abs(dy) ? [horizontal, vertical] : [vertical, horizontal];
 }
 
 /** Un regard figé : seul endroit qui décide du miroir. */

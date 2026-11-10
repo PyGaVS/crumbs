@@ -102,12 +102,8 @@ Les sprites, qui vivent dans une scène :
     (`handPosition`) sert de pivot au sprite.
 - `Slash` : une entaille purement visuelle, posée par un `SlashStep` et détruite à la fin de
   son animation.
-- `Mob` : un ennemi dans l'arène, instancié depuis son `EnemyKind`. Il exécute des ordres :
-  `walkTowards(x, y)` le fait marcher sur l'axe dominant vers le point, en 4 directions comme
-  le joueur, et `halt()` l'arrête. Si son `EnemyKind` a un `MobBehavior`, il crée à sa
-  construction les `controls/MobControls` qui les donnent : après la physique, à chaque frame,
-  il s'arrête si `shouldHalt` le demande, sinon il marche vers `destination`, redemandée
-  toutes les `interval` ms. Le mannequin n'a pas de comportement.
+- `Mob` : un ennemi instancié depuis son `EnemyKind`, piloté par `controls/MobControls` s'il
+  a un `MobBehavior`.
 
 ## Le domaine (`domain/`)
 
@@ -116,8 +112,7 @@ Les classes métier, instanciées par les catalogues de `data/`. Aucune n'import
 - `Technique` : ses variantes de séquences (dont découle la notation affichée), la
   détection `matches(history)` et `execute(player)`, qui joue son animation et appelle
   `action` à chaque repère. Les sous-classes de `data/techniques/` surchargent `action`.
-- `CharClass`, `Weapon`, `EnemyKind` : les concepts du design et leurs chiffres. Un
-  `EnemyKind` porte aussi son `MobBehavior`, ses décisions en fonctions de la scène. Leur rendu
+- `CharClass`, `Weapon`, `EnemyKind` : les concepts du design et leurs chiffres. Leur rendu
   vit à part et se référence par id :
   - `Skin` : textures, clés d'animation et position de la main sur chaque frame, pour une
     classe ou un ennemi.
@@ -128,6 +123,10 @@ Les classes métier, instanciées par les catalogues de `data/`. Aucune n'import
     l'opacité de son ombre (`shadowAlpha`, 0.15 par défaut). Une
     `ProjectileTechnique` le référence par id et garde l'usage : taille, course, hitboxs.
   - `Animation` : voir plus bas ; l'attaque de base d'une arme référence la sienne.
+- `MobBehavior` : le comportement d'un `EnemyKind`.
+  - `destination` : le point vers lequel il marche, calculé depuis la scène.
+  - `interval` : le délai en ms entre deux calculs de destination.
+  - `shouldHalt` : la condition qui l'arrête.
 - `Composition` : l'assemblage d'un run (1 classe + 2 armes). `techniquesWith(armeActive)`
   donne le répertoire du moment.
 

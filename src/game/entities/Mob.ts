@@ -1,7 +1,8 @@
 import { SPRITE_SIZE } from '../core/settings';
 import { MobControls } from '../controls/MobControls';
 import { LifeBar } from '../ui/LifeBar';
-import { nearestDirection } from '../utils/orientation';
+import { mobsInCircle } from '../utils/collision';
+import { directionsTowards, FACING_ANGLES, polar } from '../utils/orientation';
 import { Direction } from '../utils/types';
 import { EnemyKind } from '../domain/EnemyKind';
 import type { BattleScene } from '../scenes/BattleScene';
@@ -28,8 +29,16 @@ export class Mob extends Fighter {
     }
   }
 
-  walkTowards(x: number, y: number): void {
-    this.walk(this.kind.skin, nearestDirection(Math.atan2(y - this.y, x - this.x)));
+  walkTowards(x: number, y: number, lookahead: number): void {
+    const direction = directionsTowards(x - this.x, y - this.y).find(
+      (d) => !this.blocked(d) && !this.blocked(d, lookahead),
+    );
+
+    if (direction) {
+      this.walk(this.kind.skin, direction);
+    } else {
+      this.halt();
+    }
   }
 
   halt(): void {
@@ -37,6 +46,16 @@ export class Mob extends Fighter {
   }
 
   reaches(other: Fighter): boolean {
-    return this.touches(other, this.speed / this.scene.physics.world.fps);
+    return this.touches(other, this.stride);
+  }
+
+  blocked(direction = this.direction, distance = this.stride): boolean {
+    const [x, y] = polar(this.x, this.y, FACING_ANGLES[direction], distance);
+
+    return mobsInCircle(this.scene, x, y, this.hurtboxRadius).some((mob) => mob !== this);
+  }
+
+  private get stride(): number {
+    return this.speed / this.scene.physics.world.fps;
   }
 }

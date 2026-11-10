@@ -26,11 +26,11 @@ export class MobControls {
 
     this.cooldown -= delta;
 
-    if (this.cooldown <= 0) {
+    if (this.cooldown <= 0 || this.mob.blocked()) {
       const { x, y } = this.behavior.destination(this.mob, this.scene);
 
       this.cooldown = this.behavior.interval;
-      this.mob.walkTowards(x, y);
+      this.mob.walkTowards(x, y, (this.mob.speed * this.behavior.interval) / 1000);
     }
   }
 
