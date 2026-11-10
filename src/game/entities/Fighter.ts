@@ -1,4 +1,6 @@
 import { Scene } from 'phaser';
+import type { Skin } from '../domain/Skin';
+import type { Direction } from '../utils/types';
 import { Entity } from './Entity';
 
 export enum FighterEvent {
@@ -46,7 +48,26 @@ export class Fighter extends Entity {
     }
   }
 
+  touches(other: Fighter, margin = 0): boolean {
+    return Math.hypot(other.x - this.x, other.y - this.y) <= this.hurtboxRadius + other.hurtboxRadius + margin;
+  }
+
+  protected walk(skin: Skin, direction: Direction): void {
+    this.setDirection(direction);
+    this.play(skin.walkAnimation(direction), true);
+  }
+
+  protected rest(skin: Skin): void {
+    this.setVelocity(0, 0);
+    this.stop();
+    this.setTexture(skin.idleTexture, skin.idleFrame(this.direction));
+  }
+
   protected die(): void {
     this.destroy();
+  }
+
+  private get hurtboxRadius(): number {
+    return Math.min(this.displayWidth, this.displayHeight) / 2;
   }
 }

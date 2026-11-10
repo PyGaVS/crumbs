@@ -14,9 +14,9 @@ import { Player } from '../entities/Player';
 import { Hud } from '../ui/Hud';
 import { InputHistoryText } from '../ui/InputHistoryText';
 
-/** L'arène d'entraînement du jalon 0 : le joueur et un mannequin. */
+/** L'arène d'entraînement du jalon 0 : le joueur, un mannequin et un champignon qui le poursuit. */
 export class BattleScene extends Scene {
-  private player!: Player;
+  player!: Player;
 
   constructor() {
     super('BattleScene');
@@ -36,8 +36,9 @@ export class BattleScene extends Scene {
     }
 
     const dummy = new Mob(this, SCREEN_WIDTH * 0.65, SCREEN_HEIGHT / 2, getEnemyKind(EnemyId.DUMMY), Inputs.LEFT);
+    const mushroom = new Mob(this, SCREEN_WIDTH * 0.9, SCREEN_HEIGHT / 4, getEnemyKind(EnemyId.MUSHROOM), Inputs.LEFT);
 
-    this.physics.add.collider(this.player, dummy, undefined, () => !this.player.ignoresWalls);
+    this.physics.add.collider(this.player, [dummy, mushroom], undefined, () => !this.player.ignoresWalls);
   }
 
   update(_time: number, delta: number) {

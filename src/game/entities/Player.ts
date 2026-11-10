@@ -95,14 +95,13 @@ export class Player extends Fighter {
   }
 
   /** Avance vers sa direction, sans effet pendant une animation. */
-  walk(): void {
+  move(): void {
     if (this.locked) {
       return;
     }
 
     this.idle = false;
-    this.setDirection(this.direction);
-    this.play(this.charClass.skin.walkAnimation(this.direction), true);
+    this.walk(this.charClass.skin, this.direction);
   }
 
   /** Immobilise le perso sur sa frame d'attente en gardant sa direction, sans effet pendant une animation. */
@@ -112,8 +111,6 @@ export class Player extends Fighter {
     }
 
     this.idle = true;
-    this.setVelocity(0, 0);
-    this.stop();
-    this.setTexture(this.charClass.skin.idleTexture, this.charClass.skin.idleFrame(this.direction));
+    this.rest(this.charClass.skin);
   }
 }

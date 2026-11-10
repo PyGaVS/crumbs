@@ -12,15 +12,16 @@ src/
     main.ts               Config Phaser (résolution, pixelArt, liste des scènes)
     core/settings.ts      Constantes globales (écran, SPRITE_SIZE, ASSET_PACK…)
     scenes/               Les écrans du jeu
-    controls/             Les sources d'inputs : PlayerControls pilote le joueur au clavier
+    controls/             Les sources d'inputs : PlayerControls pilote le joueur au clavier,
+                          MobControls pilote un mob selon son MobBehavior
     ui/                   L'habillage en jeu : Gauge, LifeBar des mobs, Hud du joueur,
                           InputHistoryText (historique d'inputs)
     debug/                Les outils de dev, créés seulement par `npm run dev` :
                           HitboxOverlay (touche H)
     entities/             Les sprites Phaser qui vivent dans une scène (Entity, Player…)
     domain/               Les classes métier, sans Phaser (Technique, CharClass, Weapon,
-                          EnemyKind, Skin, WeaponSkin, ProjectileSkin, Fx, Animation,
-                          Composition)
+                          EnemyKind, MobBehavior, Skin, WeaponSkin, ProjectileSkin, Fx,
+                          Animation, Composition)
     data/                 La donnée pure : catalogues d'instances et enums
     utils/input.ts        Historique de touches et détection des séquences
     utils/orientation.ts  Angles du regard, miroir, Facing
@@ -85,7 +86,7 @@ Les sprites, qui vivent dans une scène :
 - `Fighter` : une `Entity` avec PV et armure, l'ordre des dégâts et la mort à zéro PV. Son
   corps physique, sa hurtbox, est un cercle inscrit dans sa frame. Il ne connaît pas l'UI : il émet `FighterEvent.DAMAGED`, que `ui/LifeBar` et `ui/Hud` écoutent.
 - `Player` : le ninja. Il ignore d'où viennent ses ordres : `press(input)` inscrit un appui
-  dans l'historique de touches, `walk()` et `halt()` le font marcher ou l'arrêtent. Un appui
+  dans l'historique de touches, `move()` et `halt()` le font marcher ou l'arrêtent. Un appui
   sur l'attaque qui ne conclut aucune technique déclenche l'attaque de base de son arme : il
   joue l'animation d'attaque de l'arme, figé jusqu'à sa fin, et frappe les hitboxs (`strike`)
   de chacun de ses repères. Aujourd'hui c'est `controls/PlayerControls` qui les appelle
@@ -101,8 +102,12 @@ Les sprites, qui vivent dans une scène :
     (`handPosition`) sert de pivot au sprite.
 - `Slash` : une entaille purement visuelle, posée par un `SlashStep` et détruite à la fin de
   son animation.
-- `Mob` : un ennemi dans l'arène, instancié depuis son `EnemyKind` ; pour l'instant le
-  mannequin d'entraînement du jalon 0.1.
+- `Mob` : un ennemi dans l'arène, instancié depuis son `EnemyKind`. Il exécute des ordres :
+  `walkTowards(x, y)` le fait marcher sur l'axe dominant vers le point, en 4 directions comme
+  le joueur, et `halt()` l'arrête. Si son `EnemyKind` a un `MobBehavior`, il crée à sa
+  construction les `controls/MobControls` qui les donnent : après la physique, à chaque frame,
+  il s'arrête si `shouldHalt` le demande, sinon il marche vers `destination`, redemandée
+  toutes les `interval` ms. Le mannequin n'a pas de comportement.
 
 ## Le domaine (`domain/`)
 
@@ -111,7 +116,8 @@ Les classes métier, instanciées par les catalogues de `data/`. Aucune n'import
 - `Technique` : ses variantes de séquences (dont découle la notation affichée), la
   détection `matches(history)` et `execute(player)`, qui joue son animation et appelle
   `action` à chaque repère. Les sous-classes de `data/techniques/` surchargent `action`.
-- `CharClass`, `Weapon`, `EnemyKind` : les concepts du design et leurs chiffres. Leur rendu
+- `CharClass`, `Weapon`, `EnemyKind` : les concepts du design et leurs chiffres. Un
+  `EnemyKind` porte aussi son `MobBehavior`, ses décisions en fonctions de la scène. Leur rendu
   vit à part et se référence par id :
   - `Skin` : textures, clés d'animation et position de la main sur chaque frame, pour une
     classe ou un ennemi.

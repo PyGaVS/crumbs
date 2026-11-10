@@ -20,6 +20,16 @@ export function polar(x: number, y: number, angle: number, distance: number): [x
 
 const CLOCKWISE: readonly Direction[] = [Inputs.RIGHT, Inputs.DOWN, Inputs.LEFT, Inputs.UP];
 
+function clockwiseAt(index: number): Direction {
+  const { length } = CLOCKWISE;
+
+  return CLOCKWISE[((index % length) + length) % length];
+}
+
+export function nearestDirection(angle: number): Direction {
+  return clockwiseAt(Math.round(angle / (Math.PI / 2)));
+}
+
 /** Un regard figé : seul endroit qui décide du miroir. */
 export abstract class Facing {
   protected constructor(
@@ -61,10 +71,7 @@ export class DirectionFacing extends Facing {
    * @param clockwise horaire vers la droite, le haut et le bas, inversé vers la gauche
    */
   rotate(quarters: number, clockwise = true): Direction {
-    const { length } = CLOCKWISE;
-    const index = CLOCKWISE.indexOf(this.direction) + (clockwise === this.mirrored ? -quarters : quarters);
-
-    return CLOCKWISE[((index % length) + length) % length];
+    return clockwiseAt(CLOCKWISE.indexOf(this.direction) + (clockwise === this.mirrored ? -quarters : quarters));
   }
 }
 

@@ -39,7 +39,7 @@ export class PlayerControls {
 
   private update(): void {
     if (this.keys.get(this.player.direction)?.isDown) {
-      this.player.walk();
+      this.player.move();
     } else {
       this.player.halt();
     }

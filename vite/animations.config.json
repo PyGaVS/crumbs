@@ -6,7 +6,7 @@
   "sheets": [
     {
       "$comment": "Pack Ninja Adventure : une colonne par direction, une ligne par frame de marche.",
-      "keys": ["ninjaGreen-walk"],
+      "keys": ["ninjaGreen-walk", "mushroom-walk"],
       "layout": "column",
       "columns": 4,
       "rows": 4,

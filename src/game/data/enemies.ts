@@ -2,8 +2,15 @@ import { EnemyKind } from '../domain/EnemyKind';
 import { EnemyId } from './enums/EnemyId';
 import { SkinId } from './enums/SkinId';
 
-/** Catalogue des ennemis. Le mannequin d'entraînement seulement, les vrais arrivent au jalon 0.5. */
-export const ALL_ENEMY_KINDS: readonly EnemyKind[] = [new EnemyKind(EnemyId.DUMMY, 'Mannequin', SkinId.SNAKE, 30, 0)];
+/** Catalogue des ennemis. */
+export const ALL_ENEMY_KINDS: readonly EnemyKind[] = [
+  new EnemyKind(EnemyId.DUMMY, 'Mannequin', SkinId.SNAKE, 30, 0, 0),
+  new EnemyKind(EnemyId.MUSHROOM, 'Champignon', SkinId.MUSHROOM, 30, 10, 120, {
+    destination: (_mob, scene) => scene.player,
+    interval: 250,
+    shouldHalt: (mob, scene) => mob.reaches(scene.player),
+  }),
+];
 
 export function getEnemyKind(id: EnemyId): EnemyKind {
   const kind = ALL_ENEMY_KINDS.find((e) => e.id === id);
