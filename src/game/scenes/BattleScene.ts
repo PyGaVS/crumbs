@@ -38,7 +38,10 @@ export class BattleScene extends Scene {
     const dummy = new Mob(this, SCREEN_WIDTH * 0.65, SCREEN_HEIGHT / 2, getEnemyKind(EnemyId.DUMMY), Inputs.LEFT);
     const mushroom = new Mob(this, SCREEN_WIDTH * 0.9, SCREEN_HEIGHT / 4, getEnemyKind(EnemyId.MUSHROOM), Inputs.LEFT);
 
+    const mobs = this.add.group([dummy, mushroom]);
+    
     this.physics.add.collider(this.player, [dummy, mushroom], undefined, () => !this.player.ignoresWalls);
+    this.physics.add.collider(mobs, mobs, undefined, (a, b) => a !== b);
   }
 
   update(_time: number, delta: number) {

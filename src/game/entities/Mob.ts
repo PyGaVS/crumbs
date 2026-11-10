@@ -20,7 +20,7 @@ export class Mob extends Fighter {
     this.direction = direction;
     this.speed = kind.speed;
     this.setScale(SPRITE_SIZE / this.width);
-    this.setImmovable(true).setPushable(false);
+    this.setPushable(false);
     new LifeBar(scene, this);
 
     if (kind.behavior) {
