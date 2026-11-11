@@ -9,13 +9,16 @@ export enum CombatEvent {
   STRIKE = 'strike',
 }
 
-/** Les fighters de la classe target touchés par au moins une des hitboxs posées autour d'attacker, chacun une seule fois. */
+/**
+ * Les fighters de la classe target touchés par au moins une des hitboxs posées autour d'attacker.
+ * @returns chaque fighter une seule fois, avec le multiplicateur de la hitbox qui l'emporte
+ */
 export function touchedFighters<T extends Fighter>(
   attacker: Entity,
   facing: Facing,
   hitboxes: readonly Hitbox[],
   target: FighterClass<T>,
-): Set<T> {
+): Map<T, number> {
   const { scene } = attacker;
   const circles = hitboxes.map(
     ({ x, y, radius }) => new Geom.Circle(...facing.place(attacker.x, attacker.y, x, y), radius),
@@ -23,10 +26,30 @@ export function touchedFighters<T extends Fighter>(
 
   scene.events.emit(CombatEvent.STRIKE, circles);
 
-  return new Set(circles.flatMap(({ x, y, radius }) => fightersInCircle(scene, x, y, radius, target)));
+  const winners = new Map<T, Hitbox>();
+
+  circles.forEach(({ x, y, radius }, i) => {
+    for (const fighter of fightersInCircle(scene, x, y, radius, target)) {
+      const current = winners.get(fighter);
+
+      if (!current || outranks(hitboxes[i], current)) {
+        winners.set(fighter, hitboxes[i]);
+      }
+    }
+  });
+
+  return new Map([...winners].map(([fighter, hitbox]) => [fighter, hitbox.multiplier ?? 1]));
 }
 
-/** Inflige damage une seule fois à chaque fighter de la classe target touché par au moins une hitbox du repère. */
+function outranks(a: Hitbox, b: Hitbox): boolean {
+  const priority = (a.priority ?? 0) - (b.priority ?? 0);
+
+  return priority !== 0 ? priority > 0 : (a.multiplier ?? 1) > (b.multiplier ?? 1);
+}
+
+/** Inflige damage, pondéré par la hitbox retenue, une seule fois à chaque fighter de la classe target touché. */
 export function strike(attacker: Entity, { facing, hitboxes }: Cue, damage: number, target: FighterClass): void {
-  touchedFighters(attacker, facing, hitboxes, target).forEach((fighter) => fighter.takeDamage(damage));
+  touchedFighters(attacker, facing, hitboxes, target).forEach((multiplier, fighter) =>
+    fighter.takeDamage(damage * multiplier),
+  );
 }

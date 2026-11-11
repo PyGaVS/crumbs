@@ -7,7 +7,13 @@ type EaseFamily = 'Quad' | 'Cubic' | 'Quart' | 'Quint' | 'Sine' | 'Expo' | 'Circ
 
 export type Ease = 'Linear' | `${EaseFamily}.${'in' | 'out' | 'inOut'}`;
 
-export type Hitbox = { readonly x: number; readonly y: number; readonly radius: number };
+export type Hitbox = {
+  readonly x: number;
+  readonly y: number;
+  readonly radius: number;
+  readonly multiplier?: number;
+  readonly priority?: number;
+};
 
 export type Cue = {
   readonly facing: DirectionFacing;

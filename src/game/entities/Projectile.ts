@@ -107,13 +107,13 @@ export class Projectile extends Entity {
   }
 
   private damageMobs(): void {
-    for (const mob of touchedFighters(this, this.facing, this.hitboxes, Enemy)) {
+    for (const [mob, multiplier] of touchedFighters(this, this.facing, this.hitboxes, Enemy)) {
       if (this.mobsHit.has(mob)) {
         continue;
       }
 
       this.mobsHit.add(mob);
-      mob.takeDamage(this.damage);
+      mob.takeDamage(this.damage * multiplier);
 
       if (!this.crossBody) {
         this.destroy();
