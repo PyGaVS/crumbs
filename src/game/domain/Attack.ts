@@ -8,5 +8,5 @@ export type Attack = {
 };
 
 export type MobAttack = Attack & {
-  trigger: (mob: Enemy, scene: BattleScene) => boolean;
+  triggers: readonly ((mob: Enemy, scene: BattleScene) => boolean)[];
 };

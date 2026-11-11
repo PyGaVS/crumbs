@@ -128,8 +128,8 @@ Les classes métier, instanciées par les catalogues de `data/`. Aucune n'import
     `ProjectileTechnique` le référence par id et garde l'usage : taille, course, hitboxs.
   - `Animation` : voir plus bas ; l'attaque de base d'une arme référence la sienne.
 - `Attack` : des dégâts et l'id d'une animation. L'attaque de base d'une `Weapon` en est une ;
-  un `EnemyKind` en liste plusieurs (`MobAttack`), chacune lancée par son `trigger`, la
-  première vraie de la liste l'emportant.
+  un `EnemyKind` en liste plusieurs (`MobAttack`), chacune lancée dès qu'un de ses `triggers` est
+  vrai, la première de la liste l'emportant.
 - `MobBehavior` : le comportement d'un `EnemyKind`.
   - `destination` : le point vers lequel il marche, calculé depuis la scène.
   - `interval` : le délai en ms entre deux calculs de destination.

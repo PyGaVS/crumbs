@@ -80,6 +80,24 @@ export class Enemy extends Fighter {
     return this.isWithin(this.stride, other);
   }
 
+  /**
+   * Atteinte à un pas d'intervalle près, la destination étant recalculée à chaque intervalle.
+   * @param distance px tolérés en plus de ce pas, 0 pour l'atteindre
+   */
+  reachesDestination(scene: BattleScene, distance = 0): boolean {
+    const destination = this.kind.behavior?.destination(this, scene);
+
+    return (
+      destination !== undefined &&
+      Math.hypot(destination.x - this.x, destination.y - this.y) <= this.lookahead + distance
+    );
+  }
+
+  /** px parcourus entre deux calculs de destination. */
+  get lookahead(): number {
+    return (this.speed * (this.kind.behavior?.interval ?? 0)) / 1000;
+  }
+
   blocked(direction = this.direction, distance = this.stride): boolean {
     const [x, y] = polar(this.x, this.y, FACING_ANGLES[direction], distance);
 

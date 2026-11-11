@@ -16,11 +16,11 @@ export const ALL_ENEMY_KINDS: readonly EnemyKind[] = [
       {
         damage: 10,
         animationId: AnimationId.POISON_CLOUD,
-        trigger: (mob, scene) => mob.isWithin(110, scene.player),
+        triggers: [(mob, scene) => mob.isWithin(110, scene.player), (mob, scene) => mob.reachesDestination(scene)],
       },
     ],
     {
-      destination: (mob, scene) => mob.ambush(scene.player, 200, 0.8),
+      destination: (mob, scene) => mob.ambush(scene.player, 200, 1),
       interval: 250,
       shouldHalt: (mob, scene) => mob.reaches(scene.player),
       disableUTurn: false,

@@ -22,7 +22,7 @@ export class MobControls {
     }
 
     const attack = this.scene.player.active
-      ? this.mob.kind.attacks.find((a) => a.trigger(this.mob, this.scene))
+      ? this.mob.kind.attacks.find((a) => a.triggers.some((trigger) => trigger(this.mob, this.scene)))
       : undefined;
 
     if (attack) {
@@ -45,7 +45,7 @@ export class MobControls {
       const { x, y } = this.behavior.destination(this.mob, this.scene);
 
       this.cooldown = this.behavior.interval;
-      this.mob.walkTowards(x, y, (this.mob.speed * this.behavior.interval) / 1000, this.behavior.disableUTurn);
+      this.mob.walkTowards(x, y, this.mob.lookahead, this.behavior.disableUTurn);
     }
   }
 
