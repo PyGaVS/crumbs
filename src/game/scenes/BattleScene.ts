@@ -35,13 +35,12 @@ export class BattleScene extends Scene {
       new HitboxOverlay(this);
     }
 
-    const dummy = new Enemy(this, SCREEN_WIDTH * 0.65, SCREEN_HEIGHT / 2, getEnemyKind(EnemyId.DUMMY), Inputs.LEFT);
     const mushroom = new Enemy(this, SCREEN_WIDTH * 0.9, SCREEN_HEIGHT / 4, getEnemyKind(EnemyId.MUSHROOM), Inputs.LEFT);
     const reptile = new Enemy(this, SCREEN_WIDTH * 0.9, SCREEN_HEIGHT * 0.75, getEnemyKind(EnemyId.REPTILE), Inputs.LEFT);
 
-    const mobs = this.add.group([dummy, mushroom, reptile]);
-    
-    this.physics.add.collider(this.player, [dummy, mushroom, reptile], undefined, () => !this.player.ignoresWalls);
+    const mobs = this.add.group([mushroom, reptile]);
+
+    this.physics.add.collider(this.player, [mushroom, reptile], undefined, () => !this.player.ignoresWalls);
     this.physics.add.collider(mobs, mobs, undefined, (a, b) => a !== b);
   }
 

@@ -5,7 +5,6 @@ import { SkinId } from './enums/SkinId';
 
 /** Catalogue des ennemis. */
 export const ALL_ENEMY_KINDS: readonly EnemyKind[] = [
-  new EnemyKind(EnemyId.DUMMY, 'Mannequin', SkinId.SNAKE, 30, 10, []),
   new EnemyKind(
     EnemyId.MUSHROOM,
     'Champignon',
