@@ -5,7 +5,7 @@ import type { Animation, PlayOptions } from '../domain/Animation';
 import { strike } from '../utils/combat';
 import { InputHistory, isCardinal } from '../utils/input';
 import type { Direction } from '../utils/orientation';
-import { CharClass } from '../domain/CharClass';
+import type { Composition } from '../domain/Composition';
 import { Fighter } from './Fighter';
 import { HeldWeapon } from './HeldWeapon';
 import { Enemy } from './Enemy';
@@ -23,6 +23,7 @@ export class Player extends Fighter {
   private idle = false;
   private locked = false;
   private inputBuffer: Inputs[] = [];
+  private activeWeapon: 0 | 1 = 0;
   declare readonly heldWeapon: HeldWeapon;
   ignoresWalls = false;
   name = 'player';
@@ -30,14 +31,17 @@ export class Player extends Fighter {
 
   constructor(
     battleScene: BattleScene,
-    private readonly charClass: CharClass,
-    private readonly weapon: Weapon,
+    private readonly composition: Composition,
   ) {
-    super( battleScene, SCREEN_WIDTH / 10, SCREEN_HEIGHT - SCREEN_HEIGHT / 10, 
-      charClass.skin.walkTexture, MAX_HEALTH, MAX_ARMOR );
+    super( battleScene, SCREEN_WIDTH / 10, SCREEN_HEIGHT - SCREEN_HEIGHT / 10,
+      composition.charClass.skin.walkTexture, MAX_HEALTH, MAX_ARMOR );
     this.setScale(SPRITE_SIZE / this.width);
-    this.heldWeapon = new HeldWeapon(this, charClass.skin, weapon.skin);
+    this.heldWeapon = new HeldWeapon(this, composition.charClass.skin, this.weapon.skin);
     this.halt();
+  }
+
+  private get weapon(): Weapon {
+    return this.composition.weapons[this.activeWeapon];
   }
 
   press(input: Inputs): void {
@@ -53,14 +57,29 @@ export class Player extends Fighter {
 
     this.inputHistory.addInput(input);
 
-    const technique = [...this.charClass.techniques, ...this.weapon.techniques].find((t) =>
-      t.matches(this.inputHistory.history),
-    );
+    const technique = this.composition
+      .techniquesWith(this.activeWeapon)
+      .find((t) => t.matches(this.inputHistory.history));
 
     if (technique) {
       technique.execute(this);
     } else if (input === Inputs.ATTACK) {
       this.attack();
+    }
+
+    if (input === Inputs.SWITCH) {
+      this.switchWeapon();
+    }
+  }
+
+  /** Passe à l'autre arme, prise en main à la fin de l'animation en cours. */
+  private switchWeapon(): void {
+    this.activeWeapon = this.activeWeapon === 0 ? 1 : 0;
+
+    if (this.locked) {
+      this.heldWeapon.sheathe();
+    } else {
+      this.heldWeapon.wield(this.weapon.skin);
     }
   }
 
@@ -84,7 +103,7 @@ export class Player extends Fighter {
   override playAction(action: SkinAction, direction: Direction = this.direction): void {
     this.idle = false;
     this.setVelocity(0, 0);
-    this.act(this.charClass.skin, action, direction);
+    this.act(this.composition.charClass.skin, action, direction);
   }
 
   private unlock(): void {
@@ -94,6 +113,10 @@ export class Player extends Fighter {
     }
 
     this.locked = false;
+
+    if (this.heldWeapon.sheathed) {
+      this.heldWeapon.wield(this.weapon.skin);
+    }
 
     const buffered = this.inputBuffer;
     this.inputBuffer = [];
@@ -107,7 +130,7 @@ export class Player extends Fighter {
     }
 
     this.idle = false;
-    this.walk(this.charClass.skin, this.direction);
+    this.walk(this.composition.charClass.skin, this.direction);
   }
 
   /** Immobilise le perso sur sa frame d'attente en gardant sa direction, sans effet pendant une animation. */
@@ -117,6 +140,6 @@ export class Player extends Fighter {
     }
 
     this.idle = true;
-    this.rest(this.charClass.skin);
+    this.rest(this.composition.charClass.skin);
   }
 }

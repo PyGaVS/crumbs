@@ -91,7 +91,9 @@ Les sprites, qui vivent dans une scène :
   joue l'animation d'attaque de l'arme, figé jusqu'à sa fin, et frappe les hitboxs (`strike`)
   de chacun de ses repères. Aujourd'hui c'est `controls/PlayerControls` qui les appelle
   depuis le clavier. Il expose aussi les primitives que les techniques utilisent (`lock`,
-  `playAction`…) et recevra une `Composition` (roadmap 0.4).
+  `playAction`…). Il reçoit une `Composition` et ne reconnaît que les techniques de sa classe
+  et de son arme active. Un appui sur le switch passe à l'autre arme, après la technique
+  qu'il conclut éventuellement : il ne fige pas le joueur.
 - `Attachment` : une image accrochée à un sprite, recalée sur lui après la physique à chaque
   frame et détruite avec lui. Deux déclinaisons :
   - `Shadow` : l'ombre portée que chaque `Entity` crée à sa construction, dessinée juste
@@ -99,7 +101,10 @@ Les sprites, qui vivent dans une scène :
   - `HeldWeapon` : l'arme en main du joueur, placée sur la main que montre la frame en cours
     (positions décrites par le `Skin`) et tournée vers son regard. Quand une animation la
     tient (`hold`), elle suit la pose que la lecture anime. Le point de prise de l'arme
-    (`handPosition`) sert de pivot au sprite.
+    (`handPosition`) sert de pivot au sprite. `wield` prend une arme en main : son sprite
+    entier tourne jusqu'à la pose de la main puis laisse place à sa version en main, sur
+    l'horloge de la scène et sans verrou. `sheathe` la cache jusqu'à la prochaine prise en
+    main, le temps de la technique conclue par le switch.
 - `FxSprite` : un effet purement visuel (`Fx`), posé par un `FxStep` et détruit à la fin de
   son animation. Orienté ou droit, teinté ou non.
 - `Enemy` : un ennemi instancié depuis son `EnemyKind`, piloté par `controls/MobControls` s'il
@@ -121,7 +126,7 @@ Les classes métier, instanciées par les catalogues de `data/`. Aucune n'import
   - `Skin` : textures, clés d'animation et position de la main sur chaque frame, pour une
     classe ou un ennemi.
   - `WeaponSkin` : le sprite d'une arme et sa version en main (`<texture>-inHand` dans le
-    pack), son point de prise et l'angle de sa lame.
+    pack), avec pour chacun son point de prise et l'angle de sa lame.
   - `ProjectileSkin` : le sprite d'un projectile, son orientation, sa rotation (`spin`), son
     animation en vol, en boucle ou étirée sur toute la course (`SpritePlayback`), et
     l'opacité de son ombre (`shadowAlpha`, 0.15 par défaut). Une

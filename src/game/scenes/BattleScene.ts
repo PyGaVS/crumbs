@@ -9,6 +9,7 @@ import { CharClassId } from '../data/enums/CharClassId';
 import { EnemyId } from '../data/enums/EnemyId';
 import { Inputs } from '../data/enums/Inputs';
 import { WeaponId } from '../data/enums/WeaponId';
+import { Composition } from '../domain/Composition';
 import { Enemy } from '../entities/Enemy';
 import { Player } from '../entities/Player';
 import { Hud } from '../ui/Hud';
@@ -25,8 +26,10 @@ export class BattleScene extends Scene {
   create() {
     this.add.image(0, 0, 'background').setOrigin(0).setDisplaySize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    // En attendant la sélection de perso (roadmap 0.4), la classe ninja au fauchon
-    this.player = new Player(this, getCharClass(CharClassId.NINJA), getWeapon(WeaponId.FALCHION));
+    // En attendant la sélection de perso (roadmap 0.4), la classe ninja et deux fauchons
+    const falchion = getWeapon(WeaponId.FALCHION);
+
+    this.player = new Player(this, new Composition(getCharClass(CharClassId.NINJA), [falchion, falchion]));
     new PlayerControls(this, this.player);
     new Hud(this, this.player);
     new InputHistoryText(this, this.player.inputHistory);

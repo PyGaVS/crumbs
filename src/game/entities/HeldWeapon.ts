@@ -1,6 +1,7 @@
-import { GameObjects } from 'phaser';
-import { FACING_ANGLES, type Facing, orient, polar } from '../utils/orientation';
+import { GameObjects, Tweens } from 'phaser';
+import { DirectionFacing, FACING_ANGLES, type Facing, orient, polar } from '../utils/orientation';
 import { Attachment } from './Attachment';
+import type { EaseFunction } from './Playback';
 import type { Skin } from '../domain/Skin';
 import type { WeaponSkin } from '../domain/WeaponSkin';
 
@@ -9,24 +10,63 @@ export type WeaponPose = { angle: number; radius: number; pivot: number };
 
 export type WeaponGrip = { readonly facing: Facing; readonly pose: WeaponPose; mirror: boolean };
 
+const WIELD_DURATION = 200;
+const WIELD_ANGLE = -Math.PI / 2;
+const WIELD_EASE = Tweens.Builders.GetEaseFunction('Back.out') as EaseFunction;
+
 /** L'arme en main, recalée chaque frame sur la main que montre la frame du skin, sauf quand une animation la tient. */
 export class HeldWeapon extends Attachment {
   private grip?: WeaponGrip;
+  private _sheathed = false;
+  /** Instant de la prise en main. */
+  private wieldedAt?: number;
 
   constructor(
     holder: GameObjects.Sprite,
     private readonly skin: Skin,
-    private readonly weaponSkin: WeaponSkin,
+    private weaponSkin: WeaponSkin,
   ) {
     super(holder, weaponSkin.getHandSprite());
-    this.setOrigin(...weaponSkin.handPosition);
+    this.showInHand();
+  }
+
+  get sheathed(): boolean {
+    return this._sheathed;
   }
 
   hold(grip?: WeaponGrip): void {
     this.grip = grip;
+
+    if (grip) {
+      this.showInHand();
+    }
+  }
+
+  /** Cache l'arme jusqu'à la prochaine prise en main. */
+  sheathe(): void {
+    this._sheathed = true;
+  }
+
+  /** Prend weaponSkin en main : son sprite entier tourne jusqu'à sa pose, puis laisse place à sa version en main. */
+  wield(weaponSkin: WeaponSkin): void {
+    this.weaponSkin = weaponSkin;
+    this._sheathed = false;
+    // L'animation qui tenait l'arme peut finir une frame après la fin du verrou du joueur
+    this.grip = undefined;
+    this.wieldedAt = this.scene.time.now;
+    this.setTexture(weaponSkin.textureKey).setOrigin(...weaponSkin.spriteHandPosition);
   }
 
   protected follow(): void {
+    if (this.wieldedAt !== undefined && this.scene.time.now - this.wieldedAt >= WIELD_DURATION) {
+      this.showInHand();
+    }
+
+    if (this._sheathed) {
+      this.setVisible(false);
+
+      return;
+    }
 
     if (this.grip) {
       const angle = this.grip.facing.toWorld(this.grip.pose.angle);
@@ -51,6 +91,21 @@ export class HeldWeapon extends Attachment {
       this.target.x + (hand.x - this.target.displayOriginX) * this.target.scaleX,
       this.target.y + (hand.y - this.target.displayOriginY) * this.target.scaleY,
     );
-    orient(this, FACING_ANGLES[hand.direction], this.weaponSkin.assetAngle);
+
+    if (this.wieldedAt === undefined) {
+      orient(this, FACING_ANGLES[hand.direction], this.weaponSkin.assetAngle);
+
+      return;
+    }
+
+    const facing = new DirectionFacing(hand.direction);
+    const progress = WIELD_EASE((this.scene.time.now - this.wieldedAt) / WIELD_DURATION);
+
+    orient(this, facing.toWorld(WIELD_ANGLE * (1 - progress)), this.weaponSkin.spriteAssetAngle, facing.mirrored);
+  }
+
+  private showInHand(): void {
+    this.wieldedAt = undefined;
+    this.setTexture(this.weaponSkin.getHandSprite()).setOrigin(...this.weaponSkin.handPosition);
   }
 }
