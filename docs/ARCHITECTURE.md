@@ -127,6 +127,7 @@ Les classes métier, instanciées par les catalogues de `data/`. Aucune n'import
   - `destination` : le point vers lequel il marche, calculé depuis la scène.
   - `interval` : le délai en ms entre deux calculs de destination.
   - `shouldHalt` : la condition qui l'arrête.
+  - `disableUTurn` : en marche, il ne fait demi-tour qu'en cul-de-sac.
 - `Composition` : l'assemblage d'un run (1 classe + 2 armes). `techniquesWith(armeActive)`
   donne le répertoire du moment.
 

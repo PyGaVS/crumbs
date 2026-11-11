@@ -47,7 +47,9 @@ assumé.
       d'interface).
 - [ ] **0.5 Les ennemis.** 2 ou 3 ennemis avec des rôles distincts et des attaques
       télégraphiées (animation ou marqueur avant le coup). Ils se placent, attaquent,
-      laissent des ouvertures. Premier test des situations de groupe.
+      laissent des ouvertures. Premier test des situations de groupe. Les mobs trouvent
+      leur chemin par A* sur une grille en 4 directions, à la place de l'heuristique
+      actuelle qui peut les laisser bloqués ou osciller derrière un autre mob.
 - [ ] **0.6 Les sensations.** Réglage fin : vitesses, portées, délais des télégraphes,
       retours de coup (recul, flash, micro-pause à l'impact). C'est l'étape qui décide de
       la réponse à la question du jalon.

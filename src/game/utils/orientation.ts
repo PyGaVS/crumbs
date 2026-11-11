@@ -26,12 +26,17 @@ function clockwiseAt(index: number): Direction {
   return CLOCKWISE[((index % length) + length) % length];
 }
 
-/** Les deux directions qui rapprochent d'un déplacement (dx, dy), l'axe dominant d'abord. */
-export function directionsTowards(dx: number, dy: number): [Direction, Direction] {
-  const horizontal = dx < 0 ? Inputs.LEFT : Inputs.RIGHT;
-  const vertical = dy < 0 ? Inputs.UP : Inputs.DOWN;
+export function opposite(direction: Direction): Direction {
+  return clockwiseAt(CLOCKWISE.indexOf(direction) + 2);
+}
 
-  return Math.abs(dx) >= Math.abs(dy) ? [horizontal, vertical] : [vertical, horizontal];
+/** Les 4 directions vers un déplacement (dx, dy), de celle qui en rapproche le plus à celle qui en éloigne le plus. */
+export function directionsTowards(dx: number, dy: number): Direction[] {
+  const horizontal: Direction = dx < 0 ? Inputs.LEFT : Inputs.RIGHT;
+  const vertical: Direction = dy < 0 ? Inputs.UP : Inputs.DOWN;
+  const [dominant, other] = Math.abs(dx) >= Math.abs(dy) ? [horizontal, vertical] : [vertical, horizontal];
+
+  return [dominant, other, opposite(other), opposite(dominant)];
 }
 
 /** Un regard figé : seul endroit qui décide du miroir. */

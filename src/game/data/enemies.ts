@@ -9,6 +9,7 @@ export const ALL_ENEMY_KINDS: readonly EnemyKind[] = [
     destination: (_mob, scene) => scene.player,
     interval: 250,
     shouldHalt: (mob, scene) => mob.reaches(scene.player),
+    disableUTurn: false,
   }),
 ];
 

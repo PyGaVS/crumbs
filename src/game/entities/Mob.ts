@@ -1,8 +1,9 @@
+import type { Physics } from 'phaser';
 import { SPRITE_SIZE } from '../core/settings';
 import { MobControls } from '../controls/MobControls';
 import { LifeBar } from '../ui/LifeBar';
 import { mobsInCircle } from '../utils/collision';
-import { directionsTowards, FACING_ANGLES, polar } from '../utils/orientation';
+import { directionsTowards, FACING_ANGLES, opposite, polar } from '../utils/orientation';
 import { Direction } from '../utils/types';
 import { EnemyKind } from '../domain/EnemyKind';
 import type { BattleScene } from '../scenes/BattleScene';
@@ -29,10 +30,16 @@ export class Mob extends Fighter {
     }
   }
 
-  walkTowards(x: number, y: number, lookahead: number): void {
-    const direction = directionsTowards(x - this.x, y - this.y).find(
-      (d) => !this.blocked(d) && !this.blocked(d, lookahead),
-    );
+  walkTowards(x: number, y: number, lookahead: number, disableUTurn = false): void {
+    let directions = directionsTowards(x - this.x, y - this.y);
+
+    if (disableUTurn && this.walking) {
+      const back = opposite(this.direction);
+
+      directions = [...directions.filter((d) => d !== back), back];
+    }
+
+    const direction = directions.find((d) => !this.blocked(d) && !this.blocked(d, lookahead));
 
     if (direction) {
       this.walk(this.kind.skin, direction);
@@ -53,6 +60,10 @@ export class Mob extends Fighter {
     const [x, y] = polar(this.x, this.y, FACING_ANGLES[direction], distance);
 
     return mobsInCircle(this.scene, x, y, this.hurtboxRadius).some((mob) => mob !== this);
+  }
+
+  private get walking(): boolean {
+    return (this.body as Physics.Arcade.Body).speed > 0;
   }
 
   private get stride(): number {

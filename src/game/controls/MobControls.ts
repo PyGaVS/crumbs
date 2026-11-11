@@ -30,7 +30,7 @@ export class MobControls {
       const { x, y } = this.behavior.destination(this.mob, this.scene);
 
       this.cooldown = this.behavior.interval;
-      this.mob.walkTowards(x, y, (this.mob.speed * this.behavior.interval) / 1000);
+      this.mob.walkTowards(x, y, (this.mob.speed * this.behavior.interval) / 1000, this.behavior.disableUTurn);
     }
   }
 
