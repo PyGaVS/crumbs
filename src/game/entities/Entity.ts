@@ -24,6 +24,7 @@ export class Entity extends Physics.Arcade.Sprite {
   readonly heldWeapon?: HeldWeapon;
   readonly shadow: Shadow;
   private playback?: Playback;
+  private _altitude = 0;
 
   constructor(scene: Scene, x: number, y: number, texture: string, frame?: string | number) {
     super(scene, x, y, texture, frame);
@@ -32,6 +33,20 @@ export class Entity extends Physics.Arcade.Sprite {
     this.setCollideWorldBounds(true);
     this.shadow = new Shadow(this);
     this.once(GameObjects.Events.DESTROY, () => this.playback?.stop());
+  }
+
+  /** px au-dessus du sol. */
+  get altitude(): number {
+    return this._altitude;
+  }
+
+  /** Ne décale que le rendu : position, corps et hurtbox restent au sol. */
+  set altitude(value: number) {
+    const shift = (value - this._altitude) / this.scaleY;
+
+    this._altitude = value;
+    this.setDisplayOrigin(this.displayOriginX, this.displayOriginY + shift);
+    (this.body as Physics.Arcade.Body).offset.y += shift;
   }
 
   get performing(): boolean {

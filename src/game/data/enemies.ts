@@ -10,13 +10,14 @@ export const ALL_ENEMY_KINDS: readonly EnemyKind[] = [
     EnemyId.MUSHROOM,
     'Champignon',
     SkinId.MUSHROOM,
-    30,
-    50,
+    30, 50,
     [
       {
         damage: 10,
         animationId: AnimationId.POISON_CLOUD,
-        triggers: [(mob, scene) => mob.isWithin(110, scene.player), (mob, scene) => mob.reachesDestination(scene)],
+        triggers: [
+          (mob, scene) => mob.isWithin(110, scene.player), 
+          (mob, scene) => mob.reachesDestination(scene)],
       },
     ],
     {
@@ -24,6 +25,21 @@ export const ALL_ENEMY_KINDS: readonly EnemyKind[] = [
       interval: 250,
       shouldHalt: (mob, scene) => mob.reaches(scene.player),
       disableUTurn: false,
+    },
+  ),
+  new EnemyKind(
+    EnemyId.REPTILE,
+    'Reptile',
+    SkinId.REPTILE,
+    50, 150,
+    [{ damage: 10, animationId: AnimationId.REPTILE_LEAP, 
+      triggers: [
+        (mob, scene) => mob.isWithin(80, scene.player)
+      ] }],
+    {
+      destination: (_mob, scene) => scene.player,
+      interval: 250,
+      shouldHalt: (mob, scene) => mob.reaches(scene.player),
     },
   ),
 ];

@@ -2,4 +2,6 @@ export enum FxId {
   SLASH_02,
   SLASH_CIRCULAR,
   SMOKE,
+  ROCK_BURST,
+  SMOKE_CIRCULAR,
 }

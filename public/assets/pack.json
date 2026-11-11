@@ -72,6 +72,24 @@
         }
       },
       {
+        "type": "spritesheet",
+        "key": "reptile-walk",
+        "url": "mobs/Reptile.png",
+        "frameConfig": {
+          "frameWidth": 16,
+          "frameHeight": 16
+        }
+      },
+      {
+        "type": "spritesheet",
+        "key": "reptile-idle",
+        "url": "mobs/Reptile.png",
+        "frameConfig": {
+          "frameWidth": 16,
+          "frameHeight": 16
+        }
+      },
+      {
         "type": "image",
         "key": "shadow",
         "url": "FX/Shadow.png"
@@ -120,6 +138,24 @@
         "frameConfig": {
           "frameWidth": 32,
           "frameHeight": 32
+        }
+      },
+      {
+        "type": "spritesheet",
+        "key": "rockBurst",
+        "url": "FX/Elemental/Rock/SpriteSheet.png",
+        "frameConfig": {
+          "frameWidth": 30,
+          "frameHeight": 30
+        }
+      },
+      {
+        "type": "spritesheet",
+        "key": "smokeCircular",
+        "url": "FX/Smoke/SmokeCircular/SpriteSheet.png",
+        "frameConfig": {
+          "frameWidth": 30,
+          "frameHeight": 14
         }
       },
       {

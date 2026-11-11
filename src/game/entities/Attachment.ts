@@ -1,9 +1,9 @@
 import { GameObjects, Scenes } from 'phaser';
 
 /** Une image accrochée à un sprite : recalée après la physique à chaque frame, détruite avec lui. */
-export abstract class Attachment extends GameObjects.Image {
+export abstract class Attachment<T extends GameObjects.Sprite = GameObjects.Sprite> extends GameObjects.Image {
   constructor(
-    protected readonly target: GameObjects.Sprite,
+    protected readonly target: T,
     texture: string,
   ) {
     super(target.scene, target.x, target.y, texture);

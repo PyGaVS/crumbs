@@ -6,7 +6,7 @@
   "sheets": [
     {
       "$comment": "Pack Ninja Adventure : une colonne par direction, une ligne par frame de marche.",
-      "keys": ["ninjaGreen-walk", "mushroom-walk"],
+      "keys": ["ninjaGreen-walk", "mushroom-walk", "reptile-walk"],
       "layout": "column",
       "columns": 4,
       "rows": 4,
@@ -70,6 +70,23 @@
       "framesPerAnimation": 6,
       "animations": ["puff"],
       "frameRate": 12,
+      "repeat": 0
+    },
+    {
+      "$comment": "Éclats de roche du reptile, à partir de l'impact.",
+      "keys": ["rockBurst"],
+      "layout": "frames",
+      "animations": { "burst": [7, 8, 9, 10, 11, 12, 13] },
+      "frameRate": 14,
+      "repeat": 0
+    },
+    {
+      "$comment": "Anneau de poussière au sol, 8 frames jouées une fois.",
+      "keys": ["smokeCircular"],
+      "layout": "sequence",
+      "framesPerAnimation": 8,
+      "animations": ["puff"],
+      "frameRate": 14,
       "repeat": 0
     }
   ]

@@ -4,6 +4,7 @@ import { AnimationId } from '../enums/AnimationId';
 import { FxId } from '../enums/FxId';
 import { SkinAction } from '../enums/SkinAction';
 import FxStep from './FxStep';
+import MoveStep from './MoveStep';
 import SkinStep from './SkinStep';
 import SwingStep from './SwingStep';
 
@@ -50,6 +51,15 @@ export const ALL_ANIMATIONS: readonly Animation[] = [
     new SkinStep({ at: 600, action: SkinAction.MUSHROOM_RELEASE, duration: 500 }),
     new FxStep({ at: 600, fx: FxId.SMOKE, reach: 96, count: 8, upright: true, size: 160, tint: 0xba56f5 }),
     new CueStep({ at: 600, hitboxes: hitboxRing(8, 96, 64) }),
+  ]),
+  new Animation(AnimationId.REPTILE_LEAP, [
+    new SkinStep({ action: SkinAction.WALK, reverse: true }),
+    new MoveStep({ distance: -96, duration: 2000, ease: 'Cubic.out' }),
+    new SkinStep({ at: 450, action: SkinAction.WALK }),
+    new MoveStep({ at: 450, distance: 144, height: 240, duration: 500, ease: 'Linear' }),
+    new FxStep({ at: 950, fx: FxId.ROCK_BURST, reach: 0, upright: true, size: 96 }),
+    new FxStep({ at: 950, fx: FxId.SMOKE_CIRCULAR, reach: 0, upright: true, size: 160 }),
+    new CueStep({ at: 950, hitboxes: [{ x: 0, y: 0, radius: 64 }] }),
   ]),
 ];
 

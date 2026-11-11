@@ -8,6 +8,7 @@ type SkinOptions = StepOptions & {
   /** Direction jouée, tirée du regard figé ; absente, le regard lui-même. */
   direction?: (facing: DirectionFacing) => Direction;
   duration?: number;
+  reverse?: boolean;
 };
 
 /** Une action du skin de l'entité, jouée vers le regard figé. */
@@ -26,5 +27,9 @@ export default class SkinStep extends AnimationStep {
     }
 
     entity.playAction(this.options.action, this.options.direction?.(facing) ?? facing.direction);
+
+    if (this.options.reverse) {
+      entity.anims.reverse();
+    }
   }
 }
