@@ -39,23 +39,28 @@
       "repeat": 0
     },
     {
-      "$comment": "Charge du champignon : lignes 2 et 3 de sa feuille, alternées vite.",
+      "$comment": "Tourbillon : les 4 directions de l'attaque, dans le sens horaire depuis le regard, inversé vers la gauche.",
+      "keys": ["ninjaGreen-attack"],
+      "prefix": "ninjaGreen-spin",
+      "layout": "frames",
+      "animations": { "down": [0, 2, 1, 3], "up": [1, 3, 0, 2], "left": [2, 0, 3, 1], "right": [3, 0, 2, 1] },
+      "frameRate": 20,
+      "repeat": 0
+    },
+    {
+      "$comment": "Charge du champignon, de face, alternée vite.",
       "keys": ["mushroom-walk"],
-      "prefix": "mushroom-charge",
-      "layout": "column",
-      "columns": 4,
-      "rows": [1, 2],
-      "animations": ["down", "up", "left", "right"],
+      "prefix": "mushroom",
+      "layout": "frames",
+      "animations": { "charge": [4, 8] },
       "frameRate": 20
     },
     {
-      "$comment": "Lâcher du champignon : ligne 4 de sa feuille, chapeau écrasé.",
+      "$comment": "Lâcher du champignon, de face, chapeau écrasé.",
       "keys": ["mushroom-walk"],
-      "prefix": "mushroom-release",
-      "layout": "column",
-      "columns": 4,
-      "rows": [3],
-      "animations": ["down", "up", "left", "right"],
+      "prefix": "mushroom",
+      "layout": "frames",
+      "animations": { "release": [12] },
       "repeat": 0
     },
     {

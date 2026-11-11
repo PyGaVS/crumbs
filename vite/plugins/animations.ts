@@ -6,10 +6,10 @@ import type { Plugin } from 'vite';
  * Génère public/assets/animations.json (format Phaser `load.animation`) à partir de
  * vite/animations.config.json, pour ne pas écrire chaque frame à la main.
  *
- * Deux dispositions de spritesheet sont supportées :
- *   - "column"   : une colonne par animation, une ligne par frame (frame = row * columns + column),
- *                  sur toutes les lignes ou sur une liste de lignes
+ * Trois dispositions de spritesheet sont supportées :
+ *   - "column"   : une colonne par animation, une ligne par frame (frame = row * columns + column)
  *   - "sequence" : les animations se suivent, `framesPerAnimation` frames chacune
+ *   - "frames"   : les frames de chaque animation listées une à une
  */
 
 interface SheetBase {
@@ -17,8 +17,6 @@ interface SheetBase {
   keys: string[];
   /** Préfixe des clés d'animation (`<prefix>-<name>`) ; par défaut la clé de la texture. */
   prefix?: string;
-  /** Noms des animations, dans l'ordre de la feuille. */
-  animations: string[];
   frameRate?: number;
   repeat?: number;
 }
@@ -26,15 +24,25 @@ interface SheetBase {
 interface ColumnSheet extends SheetBase {
   layout: 'column';
   columns: number;
-  rows: number | number[];
+  rows: number;
+  /** Noms des animations, dans l'ordre des colonnes. */
+  animations: string[];
 }
 
 interface SequenceSheet extends SheetBase {
   layout: 'sequence';
   framesPerAnimation: number;
+  /** Noms des animations, dans l'ordre de la feuille. */
+  animations: string[];
 }
 
-type Sheet = ColumnSheet | SequenceSheet;
+interface FramesSheet extends SheetBase {
+  layout: 'frames';
+  /** Frames de chaque animation, dans l'ordre de lecture. */
+  animations: Record<string, number[]>;
+}
+
+type Sheet = ColumnSheet | SequenceSheet | FramesSheet;
 
 interface AnimationsConfig {
   output: string;
@@ -51,17 +59,22 @@ interface PhaserAnimation {
   repeat: number;
 }
 
-function frameIndexes(sheet: Sheet, index: number): number[] {
+function animationFrames(sheet: Sheet): [name: string, frames: number[]][] {
   switch (sheet.layout) {
-    case 'column': {
-      const rows = typeof sheet.rows === 'number' ? Array.from({ length: sheet.rows }, (_, row) => row) : sheet.rows;
-
-      return rows.map((row) => row * sheet.columns + index);
-    }
+    case 'column':
+      return sheet.animations.map((name, column) => [
+        name,
+        Array.from({ length: sheet.rows }, (_, row) => row * sheet.columns + column),
+      ]);
     case 'sequence':
-      return Array.from({ length: sheet.framesPerAnimation }, (_, i) => index * sheet.framesPerAnimation + i);
+      return sheet.animations.map((name, index) => [
+        name,
+        Array.from({ length: sheet.framesPerAnimation }, (_, i) => index * sheet.framesPerAnimation + i),
+      ]);
+    case 'frames':
+      return Object.entries(sheet.animations);
     default:
-      throw new Error(`Disposition inconnue "${(sheet as Sheet).layout}" (attendu : column, sequence)`);
+      throw new Error(`Disposition inconnue "${(sheet as Sheet).layout}" (attendu : column, sequence, frames)`);
   }
 }
 
@@ -72,14 +85,14 @@ export function buildAnimations(config: AnimationsConfig): PhaserAnimation[] {
     for (const key of sheet.keys) {
       const prefix = sheet.prefix ?? key;
 
-      sheet.animations.forEach((name, index) => {
+      for (const [name, frames] of animationFrames(sheet)) {
         anims.push({
           key: `${prefix}-${name}`,
-          frames: frameIndexes(sheet, index).map((frame) => ({ key, frame })),
+          frames: frames.map((frame) => ({ key, frame })),
           frameRate: sheet.frameRate ?? config.frameRate,
           repeat: sheet.repeat ?? config.repeat,
         });
-      });
+      }
     }
   }
 

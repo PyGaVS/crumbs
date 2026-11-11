@@ -84,7 +84,7 @@ export class Player extends Fighter {
   override playAction(action: SkinAction, direction: Direction = this.direction): void {
     this.idle = false;
     this.setVelocity(0, 0);
-    this.play(this.charClass.skin.animation(action, direction));
+    this.act(this.charClass.skin, action, direction);
   }
 
   private unlock(): void {

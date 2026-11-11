@@ -1,4 +1,5 @@
 import { Scene } from 'phaser';
+import type { SkinAction } from '../data/enums/SkinAction';
 import type { Skin } from '../domain/Skin';
 import type { Direction } from '../utils/orientation';
 import { Entity } from './Entity';
@@ -57,6 +58,18 @@ export class Fighter extends Entity {
   protected walk(skin: Skin, direction: Direction): void {
     this.setDirection(direction);
     this.play(skin.walkAnimation(direction), true);
+  }
+
+  /** Joue l'action du skin vers direction, ou sans direction si la config ne la décline pas. */
+  protected act(skin: Skin, action: SkinAction, direction: Direction): void {
+    const keys = [skin.animation(action, direction), skin.animation(action)];
+    const key = keys.find((k) => this.scene.anims.exists(k));
+
+    if (!key) {
+      throw new Error(`Animation de skin absente : ${keys.join(' ou ')}`);
+    }
+
+    this.play(key);
   }
 
   protected rest(skin: Skin): void {

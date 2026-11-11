@@ -2,7 +2,6 @@ import { Animation, CueStep } from '../../domain/Animation';
 import { hitboxRing } from '../../utils/hitboxes';
 import { AnimationId } from '../enums/AnimationId';
 import { FxId } from '../enums/FxId';
-import { Inputs } from '../enums/Inputs';
 import { SkinAction } from '../enums/SkinAction';
 import FxStep from './FxStep';
 import SkinStep from './SkinStep';
@@ -42,16 +41,13 @@ export const ALL_ANIMATIONS: readonly Animation[] = [
     new CueStep({ at: 50 }),
   ]),
   new Animation(AnimationId.SPIN_SLASH, [
-    new SkinStep({ action: SkinAction.ATTACK }),
-    new SkinStep({ at: 50, action: SkinAction.ATTACK, direction: (facing) => facing.rotate(1) }),
-    new SkinStep({ at: 100, action: SkinAction.ATTACK, direction: (facing) => facing.rotate(2) }),
-    new SkinStep({ at: 150, action: SkinAction.ATTACK, direction: (facing) => facing.rotate(3), duration: 100 }),
+    new SkinStep({ action: SkinAction.SPIN, duration: 250 }),
     new FxStep({ fx: FxId.SLASH_CIRCULAR, reach: 0, size: 192, mirrored: true, duration: 300 }),
     new CueStep({ at: 100, hitboxes: hitboxRing(8, 64, 36) }),
   ]),
   new Animation(AnimationId.POISON_CLOUD, [
-    new SkinStep({ action: SkinAction.MUSHROOM_CHARGE, direction: () => Inputs.DOWN }),
-    new SkinStep({ at: 600, action: SkinAction.MUSHROOM_RELEASE, direction: () => Inputs.DOWN, duration: 500 }),
+    new SkinStep({ action: SkinAction.MUSHROOM_CHARGE }),
+    new SkinStep({ at: 600, action: SkinAction.MUSHROOM_RELEASE, duration: 500 }),
     new FxStep({ at: 600, fx: FxId.SMOKE, reach: 96, count: 8, upright: true, size: 160, tint: 0xba56f5 }),
     new CueStep({ at: 600, hitboxes: hitboxRing(8, 96, 64) }),
   ]),

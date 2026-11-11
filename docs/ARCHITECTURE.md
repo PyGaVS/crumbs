@@ -150,7 +150,9 @@ dans la lecture.
     pose d'arrivée pendant `hold` ms ;
   - `FxStep` : des effets (`Fx`) posés à `reach` px de l'entité, un seul devant elle ou
     `count` en cercle, tournés vers le regard ou droits (`upright`), teintés ou non ;
-  - `SkinStep` : une action du skin (`SkinAction`), tenue `duration` ms.
+  - `SkinStep` : une action du skin (`SkinAction`), tenue `duration` ms. Elle suit le regard
+    si la config la décline par direction (`<skin>-<action>-<direction>`), sinon elle est
+    jouée telle quelle (`<skin>-<action>`).
 
   `CueStep`, dans `domain/Animation.ts`, est le repère où le gameplay agit : le seul step
   que les techniques et les armes connaissent, via `onCue`. Il porte les hitboxs de la
@@ -180,8 +182,8 @@ dans la lecture.
 - Tout ce qui se charge est décrit dans `public/assets/pack.json`, jamais en dur dans les
   scènes. Ajouter un sprite = une entrée dans le JSON.
 - Les animations sont générées : `vite/animations.config.json` décrit les spritesheets
-  (disposition en colonnes, sur toutes les lignes ou une liste de lignes, ou en séquence), le
-  plugin `vite/plugins/animations.ts` produit
+  (disposition en colonnes, en séquence, ou frames listées une à une), le plugin
+  `vite/plugins/animations.ts` produit
   `public/assets/animations.json` à chaque démarrage de Vite, et `pack.json` le référence.
   Le fichier généré est gitignoré.
 

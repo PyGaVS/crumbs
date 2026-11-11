@@ -57,7 +57,7 @@ export class Mob extends Fighter {
   }
 
   override playAction(action: SkinAction, direction: Direction): void {
-    this.play(this.kind.skin.animation(action, direction));
+    this.act(this.kind.skin, action, direction);
   }
 
   attack(attack: Attack, target: Fighter): void {

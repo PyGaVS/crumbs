@@ -41,9 +41,11 @@ export class Skin {
     return `${this.textureKey}-idle`;
   }
 
-  /** Clé d'animation d'une action directionnelle, ex. `ninjaGreen-attack-down`. */
-  animation(action: SkinAction, direction: Direction): string {
-    return `${this.textureKey}-${action}-${ANIMATION_NAMES[direction]}`;
+  /** Clé d'animation d'une action, ex. `ninjaGreen-attack-down`, ou `mushroom-charge` sans direction. */
+  animation(action: SkinAction, direction?: Direction): string {
+    const key = `${this.textureKey}-${action}`;
+
+    return direction === undefined ? key : `${key}-${ANIMATION_NAMES[direction]}`;
   }
 
   walkAnimation(direction: Direction): string {
