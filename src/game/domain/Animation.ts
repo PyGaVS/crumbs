@@ -3,7 +3,9 @@ import type { Direction, DirectionFacing } from '../utils/orientation';
 import type { Entity } from '../entities/Entity';
 import type { Playback } from '../entities/Playback';
 
-export type Ease = 'Linear' | 'Cubic.out' | 'Back.out' | 'Quint.out';
+type EaseFamily = 'Quad' | 'Cubic' | 'Quart' | 'Quint' | 'Sine' | 'Expo' | 'Circ' | 'Elastic' | 'Back' | 'Bounce';
+
+export type Ease = 'Linear' | `${EaseFamily}.${'in' | 'out' | 'inOut'}`;
 
 export type Hitbox = { readonly x: number; readonly y: number; readonly radius: number };
 
