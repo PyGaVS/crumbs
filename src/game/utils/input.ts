@@ -1,5 +1,5 @@
 import { Inputs } from '../data/enums/Inputs';
-import { Cardinal, CARDINALS } from './types';
+import { Cardinal, CARDINALS } from './orientation';
 
 export const OPPOSITES: Record<Cardinal, Cardinal> = {
   [Inputs.RIGHT]: Inputs.LEFT,

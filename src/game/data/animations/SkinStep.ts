@@ -1,7 +1,6 @@
 import { AnimationStep, type StepOptions } from '../../domain/Animation';
 import type { Playback } from '../../entities/Playback';
-import type { DirectionFacing } from '../../utils/orientation';
-import type { Direction } from '../../utils/types';
+import type { Direction, DirectionFacing } from '../../utils/orientation';
 import type { SkinAction } from '../enums/SkinAction';
 
 type SkinOptions = StepOptions & {

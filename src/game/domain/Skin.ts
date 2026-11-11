@@ -1,7 +1,7 @@
 import { Inputs } from '../data/enums/Inputs';
 import { SkinAction } from '../data/enums/SkinAction';
 import type { SkinId } from '../data/enums/SkinId';
-import { CARDINALS, type Direction } from '../utils/types';
+import { CARDINALS, type Direction } from '../utils/orientation';
 
 type Point = readonly [x: number, y: number];
 

@@ -1,6 +1,5 @@
 import type { AnimationId } from '../data/enums/AnimationId';
-import type { DirectionFacing } from '../utils/orientation';
-import type { Direction } from '../utils/types';
+import type { Direction, DirectionFacing } from '../utils/orientation';
 import type { Entity } from '../entities/Entity';
 import type { Playback } from '../entities/Playback';
 

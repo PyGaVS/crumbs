@@ -1,6 +1,10 @@
 import type { GameObjects } from 'phaser';
 import { Inputs } from '../data/enums/Inputs';
-import type { Cardinal, Direction } from './types';
+
+export const CARDINALS = [Inputs.RIGHT, Inputs.LEFT, Inputs.UP, Inputs.DOWN] as const;
+
+export type Cardinal = (typeof CARDINALS)[number];
+export type Direction = Cardinal;
 
 /** Angle (radians) du regard du joueur. Rappel : l'axe Y de Phaser pointe vers le bas. */
 export const FACING_ANGLES: Record<Cardinal, number> = {

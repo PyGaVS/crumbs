@@ -1,6 +1,6 @@
 import { Scene } from 'phaser';
 import type { Skin } from '../domain/Skin';
-import type { Direction } from '../utils/types';
+import type { Direction } from '../utils/orientation';
 import { Entity } from './Entity';
 
 export enum FighterEvent {

@@ -2,7 +2,7 @@ import { Player } from '../../entities/Player';
 import { Technique, type TechniqueOptions } from '../../domain/Technique';
 import { DASH_MAX_EXTENSION, DASH_STEP } from '../../utils/consts';
 import { hasObstacle } from '../../utils/collision';
-import { Cardinal, Direction } from '../../utils/types';
+import { Cardinal, Direction } from '../../utils/orientation';
 import Sequence from '../../utils/Sequence';
 import { Inputs } from '../enums/Inputs';
 import { TechniqueId } from '../enums/TechniqueId';

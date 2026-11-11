@@ -4,7 +4,7 @@ import type { SkinAction } from '../data/enums/SkinAction';
 import type { Animation, PlayOptions } from '../domain/Animation';
 import { strike } from '../utils/combat';
 import { InputHistory, isCardinal } from '../utils/input';
-import type { Direction } from '../utils/types';
+import type { Direction } from '../utils/orientation';
 import { CharClass } from '../domain/CharClass';
 import { Fighter } from './Fighter';
 import { HeldWeapon } from './HeldWeapon';

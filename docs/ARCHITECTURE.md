@@ -24,7 +24,7 @@ src/
                           Fx, Animation, Composition)
     data/                 La donnée pure : catalogues d'instances et enums
     utils/input.ts        Historique de touches et détection des séquences
-    utils/orientation.ts  Angles du regard, miroir, Facing
+    utils/orientation.ts  Directions (Cardinal, Direction), angles du regard, miroir, Facing
     utils/combat.ts       touchedFighters : les fighters d'une classe sous des hitboxs ;
                           strike : la frappe d'un repère
     utils/hitboxes.ts     Les formes de hitboxs toutes faites (hitboxRing…)

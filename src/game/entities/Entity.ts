@@ -1,8 +1,7 @@
 import { GameObjects, Physics, Scene } from 'phaser';
 import { Inputs } from '../data/enums/Inputs';
 import type { SkinAction } from '../data/enums/SkinAction';
-import { DirectionFacing, orient } from '../utils/orientation';
-import { Direction } from '../utils/types';
+import { Direction, DirectionFacing, orient } from '../utils/orientation';
 import type { Animation, PlayOptions } from '../domain/Animation';
 import type { HeldWeapon } from './HeldWeapon';
 import { Playback } from './Playback';
