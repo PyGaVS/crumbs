@@ -29,7 +29,7 @@ export class Preloader extends Scene {
   }
 
   create() {
-    //  Phaser ne fait qu'avertir, et une entaille sans animation ne serait jamais détruite
+    //  Phaser ne fait qu'avertir, et un effet sans animation ne serait jamais détruit
     const missing = ALL_FX.find((fx) => !this.anims.exists(fx.animation));
 
     if (missing) {

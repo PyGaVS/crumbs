@@ -3,7 +3,7 @@ import { frameRateOver } from '../utils/animation';
 import { orient } from '../utils/orientation';
 import type { Fx } from '../domain/Fx';
 
-export type SlashConfig = {
+export type FxSpriteConfig = {
   /** Absent, l'effet reste droit. */
   angle?: number;
   /** Largeur affichée en px. */
@@ -15,9 +15,9 @@ export type SlashConfig = {
   tint?: number;
 };
 
-/** Un effet visuel, l'entaille par exemple : disparaît avec son animation. */
-export class Slash extends GameObjects.Sprite {
-  constructor(scene: Scene, x: number, y: number, fx: Fx, { angle, size, mirrored, duration, tint }: SlashConfig) {
+/** Un effet visuel joué une fois : disparaît avec son animation. */
+export class FxSprite extends GameObjects.Sprite {
+  constructor(scene: Scene, x: number, y: number, fx: Fx, { angle, size, mirrored, duration, tint }: FxSpriteConfig) {
     super(scene, x, y, fx.textureKey);
     scene.add.existing(this);
     this.setScale(size / this.width);

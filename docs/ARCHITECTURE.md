@@ -40,7 +40,7 @@ docs/                     DESIGN.md, ROADMAP.md, ce fichier
 ## La règle de dépendance
 
 ```
-scenes ──► sprites (Player, Slash…) ──► entités métier ◄──► data (catalogues, getX)
+scenes ──► sprites (Player, FxSprite…) ──► entités métier ◄──► data (catalogues, getX)
                   ▲                                              │
                   └───────────── sous-classes de data/<concept>/ ◄┘
 ```
@@ -48,7 +48,7 @@ scenes ──► sprites (Player, Slash…) ──► entités métier ◄──
 La règle n'est pas portée par les dossiers mais par la nature des fichiers : les entités
 métier et les catalogues de `data/` n'importent Phaser qu'en type. Les sous-classes rangées
 dans `data/<concept>/` pilotent le moteur : `ProjectileTechnique` crée des `Projectile`,
-`SlashStep` des `Slash`. Elles reçoivent l'entité (`Player`, `Playback`) en import de type
+`FxStep` des `FxSprite`. Elles reçoivent l'entité (`Player`, `Playback`) en import de type
 et passent par ses méthodes publiques. Les accesseurs `getX(id)` relient les concepts et
 chargent donc ces sous-classes.
 
@@ -100,8 +100,8 @@ Les sprites, qui vivent dans une scène :
     (positions décrites par le `Skin`) et tournée vers son regard. Quand une animation la
     tient (`hold`), elle suit la pose que la lecture anime. Le point de prise de l'arme
     (`handPosition`) sert de pivot au sprite.
-- `Slash` : un effet purement visuel (`Fx`), détruit à la fin de son animation. Orienté ou
-  droit, teinté ou non : l'entaille d'un `SlashStep`, la bouffée d'un `CloudStep`.
+- `FxSprite` : un effet purement visuel (`Fx`), posé par un `FxStep` et détruit à la fin de
+  son animation. Orienté ou droit, teinté ou non.
 - `Mob` : un ennemi instancié depuis son `EnemyKind`, piloté par `controls/MobControls` s'il
   a un `MobBehavior`. Ses attaques passent avant ses déplacements, et il ne décide rien tant
   que son animation joue. Il joue les actions de son skin (`playAction`), donc les `SkinStep`.
@@ -148,9 +148,8 @@ dans la lecture.
   - `SwingStep` : un geste de l'arme tenue, d'une pose (angle local, rayon, pivot) à une autre,
     dans le sens de rotation `clockwise`, arme miroitée ou non (`mirror`), puis figée sur sa
     pose d'arrivée pendant `hold` ms ;
-  - `SlashStep` : une entaille (`Fx`) posée devant l'entité ;
-  - `CloudStep` : un nuage, des bouffées (`Fx`) droites et teintées posées en cercle autour de
-    l'entité ;
+  - `FxStep` : des effets (`Fx`) posés à `reach` px de l'entité, un seul devant elle ou
+    `count` en cercle, tournés vers le regard ou droits (`upright`), teintés ou non ;
   - `SkinStep` : une action du skin (`SkinAction`), tenue `duration` ms.
 
   `CueStep`, dans `domain/Animation.ts`, est le repère où le gameplay agit : le seul step

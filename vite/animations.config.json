@@ -22,7 +22,7 @@
       "repeat": 0
     },
     {
-      "$comment": "Entaille : 6 frames jouées une fois, SlashStep peut en imposer la durée.",
+      "$comment": "Entaille : 6 frames jouées une fois, FxStep peut en imposer la durée.",
       "keys": ["slash02", "slashCircular"],
       "layout": "sequence",
       "framesPerAnimation": 6,
@@ -59,7 +59,7 @@
       "repeat": 0
     },
     {
-      "$comment": "Bouffée de fumée : 6 frames jouées une fois, CloudStep peut en imposer la durée.",
+      "$comment": "Bouffée de fumée : 6 frames jouées une fois, FxStep peut en imposer la durée.",
       "keys": ["smoke"],
       "layout": "sequence",
       "framesPerAnimation": 6,
