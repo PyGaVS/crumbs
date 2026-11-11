@@ -100,11 +100,11 @@ Les sprites, qui vivent dans une scène :
     (positions décrites par le `Skin`) et tournée vers son regard. Quand une animation la
     tient (`hold`), elle suit la pose que la lecture anime. Le point de prise de l'arme
     (`handPosition`) sert de pivot au sprite.
-- `Slash` : une entaille purement visuelle, posée par un `SlashStep` et détruite à la fin de
-  son animation.
+- `Slash` : un effet purement visuel (`Fx`), détruit à la fin de son animation. Orienté ou
+  droit, teinté ou non : l'entaille d'un `SlashStep`, la bouffée d'un `CloudStep`.
 - `Mob` : un ennemi instancié depuis son `EnemyKind`, piloté par `controls/MobControls` s'il
   a un `MobBehavior`. Ses attaques passent avant ses déplacements, et il ne décide rien tant
-  que son animation joue.
+  que son animation joue. Il joue les actions de son skin (`playAction`), donc les `SkinStep`.
 
 ## Le domaine (`domain/`)
 
@@ -149,6 +149,8 @@ dans la lecture.
     dans le sens de rotation `clockwise`, arme miroitée ou non (`mirror`), puis figée sur sa
     pose d'arrivée pendant `hold` ms ;
   - `SlashStep` : une entaille (`Fx`) posée devant l'entité ;
+  - `CloudStep` : un nuage, des bouffées (`Fx`) droites et teintées posées en cercle autour de
+    l'entité ;
   - `SkinStep` : une action du skin (`SkinAction`), tenue `duration` ms.
 
   `CueStep`, dans `domain/Animation.ts`, est le repère où le gameplay agit : le seul step
@@ -179,7 +181,8 @@ dans la lecture.
 - Tout ce qui se charge est décrit dans `public/assets/pack.json`, jamais en dur dans les
   scènes. Ajouter un sprite = une entrée dans le JSON.
 - Les animations sont générées : `vite/animations.config.json` décrit les spritesheets
-  (disposition en colonnes ou en séquence), le plugin `vite/plugins/animations.ts` produit
+  (disposition en colonnes, sur toutes les lignes ou une liste de lignes, ou en séquence), le
+  plugin `vite/plugins/animations.ts` produit
   `public/assets/animations.json` à chaque démarrage de Vite, et `pack.json` le référence.
   Le fichier généré est gitignoré.
 

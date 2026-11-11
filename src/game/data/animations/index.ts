@@ -2,7 +2,9 @@ import { Animation, CueStep } from '../../domain/Animation';
 import { hitboxRing } from '../../utils/hitboxes';
 import { AnimationId } from '../enums/AnimationId';
 import { FxId } from '../enums/FxId';
+import { Inputs } from '../enums/Inputs';
 import { SkinAction } from '../enums/SkinAction';
+import CloudStep from './CloudStep';
 import SkinStep from './SkinStep';
 import SlashStep from './SlashStep';
 import SwingStep from './SwingStep';
@@ -47,6 +49,12 @@ export const ALL_ANIMATIONS: readonly Animation[] = [
     new SkinStep({ at: 150, action: SkinAction.ATTACK, direction: (facing) => facing.rotate(3), duration: 100 }),
     new SlashStep({ fx: FxId.SLASH_CIRCULAR, reach: 0, size: 192, mirrored: true, duration: 300 }),
     new CueStep({ at: 100, hitboxes: hitboxRing(8, 64, 36) }),
+  ]),
+  new Animation(AnimationId.POISON_CLOUD, [
+    new SkinStep({ action: SkinAction.MUSHROOM_CHARGE, direction: () => Inputs.DOWN }),
+    new SkinStep({ at: 600, action: SkinAction.MUSHROOM_RELEASE, direction: () => Inputs.DOWN, duration: 500 }),
+    new CloudStep({ at: 600, fx: FxId.SMOKE, count: 8, distance: 96, size: 160, tint: 0xba56f5 }),
+    new CueStep({ at: 600, hitboxes: hitboxRing(8, 96, 64) }),
   ]),
 ];
 

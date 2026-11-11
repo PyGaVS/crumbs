@@ -22,6 +22,11 @@ export function polar(x: number, y: number, angle: number, distance: number): [x
   return [x + Math.cos(angle) * distance, y + Math.sin(angle) * distance];
 }
 
+/** count points répartis en cercle à distance px de (x, y). */
+export function ring(x: number, y: number, count: number, distance: number): [x: number, y: number][] {
+  return Array.from({ length: count }, (_, i) => polar(x, y, (2 * Math.PI * i) / count, distance));
+}
+
 const CLOCKWISE: readonly Direction[] = [Inputs.RIGHT, Inputs.DOWN, Inputs.LEFT, Inputs.UP];
 
 function clockwiseAt(index: number): Direction {

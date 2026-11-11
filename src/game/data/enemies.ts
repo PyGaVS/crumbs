@@ -1,16 +1,31 @@
 import { EnemyKind } from '../domain/EnemyKind';
+import { AnimationId } from './enums/AnimationId';
 import { EnemyId } from './enums/EnemyId';
 import { SkinId } from './enums/SkinId';
 
 /** Catalogue des ennemis. */
 export const ALL_ENEMY_KINDS: readonly EnemyKind[] = [
   new EnemyKind(EnemyId.DUMMY, 'Mannequin', SkinId.SNAKE, 30, [], 0),
-  new EnemyKind(EnemyId.MUSHROOM, 'Champignon', SkinId.MUSHROOM, 30, [], 120, {
-    destination: (_mob, scene) => scene.player,
-    interval: 250,
-    shouldHalt: (mob, scene) => mob.reaches(scene.player),
-    disableUTurn: false,
-  }),
+  new EnemyKind(
+    EnemyId.MUSHROOM,
+    'Champignon',
+    SkinId.MUSHROOM,
+    30,
+    [
+      {
+        damage: 10,
+        animationId: AnimationId.POISON_CLOUD,
+        trigger: (mob, scene) => mob.isWithin(96, scene.player),
+      },
+    ],
+    120,
+    {
+      destination: (_mob, scene) => scene.player,
+      interval: 250,
+      shouldHalt: (mob, scene) => mob.reaches(scene.player),
+      disableUTurn: false,
+    },
+  ),
 ];
 
 export function getEnemyKind(id: EnemyId): EnemyKind {

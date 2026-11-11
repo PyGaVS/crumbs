@@ -7,7 +7,8 @@ import type { Plugin } from 'vite';
  * vite/animations.config.json, pour ne pas écrire chaque frame à la main.
  *
  * Deux dispositions de spritesheet sont supportées :
- *   - "column"   : une colonne par animation, une ligne par frame (frame = row * columns + column)
+ *   - "column"   : une colonne par animation, une ligne par frame (frame = row * columns + column),
+ *                  sur toutes les lignes ou sur une liste de lignes
  *   - "sequence" : les animations se suivent, `framesPerAnimation` frames chacune
  */
 
@@ -25,7 +26,7 @@ interface SheetBase {
 interface ColumnSheet extends SheetBase {
   layout: 'column';
   columns: number;
-  rows: number;
+  rows: number | number[];
 }
 
 interface SequenceSheet extends SheetBase {
@@ -52,8 +53,11 @@ interface PhaserAnimation {
 
 function frameIndexes(sheet: Sheet, index: number): number[] {
   switch (sheet.layout) {
-    case 'column':
-      return Array.from({ length: sheet.rows }, (_, row) => row * sheet.columns + index);
+    case 'column': {
+      const rows = typeof sheet.rows === 'number' ? Array.from({ length: sheet.rows }, (_, row) => row) : sheet.rows;
+
+      return rows.map((row) => row * sheet.columns + index);
+    }
     case 'sequence':
       return Array.from({ length: sheet.framesPerAnimation }, (_, i) => index * sheet.framesPerAnimation + i);
     default:

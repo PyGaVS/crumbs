@@ -37,6 +37,35 @@
       "framesPerAnimation": 6,
       "animations": ["fly"],
       "repeat": 0
+    },
+    {
+      "$comment": "Charge du champignon : lignes 2 et 3 de sa feuille, alternées vite.",
+      "keys": ["mushroom-walk"],
+      "prefix": "mushroom-charge",
+      "layout": "column",
+      "columns": 4,
+      "rows": [1, 2],
+      "animations": ["down", "up", "left", "right"],
+      "frameRate": 20
+    },
+    {
+      "$comment": "Lâcher du champignon : ligne 4 de sa feuille, chapeau écrasé.",
+      "keys": ["mushroom-walk"],
+      "prefix": "mushroom-release",
+      "layout": "column",
+      "columns": 4,
+      "rows": [3],
+      "animations": ["down", "up", "left", "right"],
+      "repeat": 0
+    },
+    {
+      "$comment": "Bouffée de fumée : 6 frames jouées une fois, CloudStep peut en imposer la durée.",
+      "keys": ["smoke"],
+      "layout": "sequence",
+      "framesPerAnimation": 6,
+      "animations": ["puff"],
+      "frameRate": 12,
+      "repeat": 0
     }
   ]
 }

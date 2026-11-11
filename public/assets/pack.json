@@ -114,6 +114,15 @@
         }
       },
       {
+        "type": "spritesheet",
+        "key": "smoke",
+        "url": "FX/Smoke/Smoke/SpriteSheet.png",
+        "frameConfig": {
+          "frameWidth": 32,
+          "frameHeight": 32
+        }
+      },
+      {
         "type": "image",
         "key": "lifeBarMini-under",
         "url": "ui/LifeBarMiniUnder.png"

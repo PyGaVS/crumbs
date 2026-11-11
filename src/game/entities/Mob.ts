@@ -2,6 +2,7 @@ import type { Physics } from 'phaser';
 import { SPRITE_SIZE } from '../core/settings';
 import { MobControls } from '../controls/MobControls';
 import { getAnimation } from '../data/animations';
+import type { SkinAction } from '../data/enums/SkinAction';
 import { LifeBar } from '../ui/LifeBar';
 import { fightersInCircle } from '../utils/collision';
 import { strike } from '../utils/combat';
@@ -53,6 +54,10 @@ export class Mob extends Fighter {
 
   halt(): void {
     this.rest(this.kind.skin);
+  }
+
+  override playAction(action: SkinAction, direction: Direction): void {
+    this.play(this.kind.skin.animation(action, direction));
   }
 
   attack(attack: Attack, target: Fighter): void {

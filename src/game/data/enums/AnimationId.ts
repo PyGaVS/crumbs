@@ -4,4 +4,5 @@ export enum AnimationId {
   KUNAI_THROW,
   SHOOT_SLASH,
   SPIN_SLASH,
+  POISON_CLOUD,
 }
