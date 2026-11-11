@@ -14,7 +14,7 @@ import { Fighter } from './Fighter';
 import { Player } from './Player';
 
 /** Un ennemi posé dans l'arène, décrit par son EnemyKind. */
-export class Mob extends Fighter {
+export class Enemy extends Fighter {
   constructor(
     scene: BattleScene,
     x: number,
@@ -73,7 +73,7 @@ export class Mob extends Fighter {
   blocked(direction = this.direction, distance = this.stride): boolean {
     const [x, y] = polar(this.x, this.y, FACING_ANGLES[direction], distance);
 
-    return fightersInCircle(this.scene, x, y, this.hurtboxRadius, Mob).some((mob) => mob !== this);
+    return fightersInCircle(this.scene, x, y, this.hurtboxRadius, Enemy).some((mob) => mob !== this);
   }
 
   private get walking(): boolean {

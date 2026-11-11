@@ -8,7 +8,7 @@ import type { Direction } from '../utils/orientation';
 import { CharClass } from '../domain/CharClass';
 import { Fighter } from './Fighter';
 import { HeldWeapon } from './HeldWeapon';
-import { Mob } from './Mob';
+import { Enemy } from './Enemy';
 import type { Playback } from './Playback';
 import type { Weapon } from '../domain/Weapon';
 import { BattleScene } from '../scenes/BattleScene';
@@ -67,7 +67,7 @@ export class Player extends Fighter {
   private attack(): void {
     const animation = this.weapon.attackAnimation;
 
-    animation.play(this, { onCue: (cue) => strike(this, cue, this.weapon.attack.damage, Mob) });
+    animation.play(this, { onCue: (cue) => strike(this, cue, this.weapon.attack.damage, Enemy) });
   }
 
   override perform(animation: Animation, options: PlayOptions): Playback {

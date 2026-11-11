@@ -1,5 +1,5 @@
 import type { AnimationId } from '../data/enums/AnimationId';
-import type { Mob } from '../entities/Mob';
+import type { Enemy } from '../entities/Enemy';
 import type { BattleScene } from '../scenes/BattleScene';
 
 export type Attack = {
@@ -8,5 +8,5 @@ export type Attack = {
 };
 
 export type MobAttack = Attack & {
-  trigger: (mob: Mob, scene: BattleScene) => boolean;
+  trigger: (mob: Enemy, scene: BattleScene) => boolean;
 };

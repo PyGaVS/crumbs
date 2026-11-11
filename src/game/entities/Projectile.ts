@@ -7,7 +7,7 @@ import { AngleFacing, polar } from '../utils/orientation';
 import { SpritePlayback } from '../data/enums/SpritePlayback';
 import type { Ease, Hitbox } from '../domain/Animation';
 import { Entity } from './Entity';
-import { Mob } from './Mob';
+import { Enemy } from './Enemy';
 import type { EaseFunction } from './Playback';
 import type { ProjectileSkin } from '../domain/ProjectileSkin';
 
@@ -41,7 +41,7 @@ export class Projectile extends Entity {
   private readonly facing: AngleFacing;
   private readonly hitboxes: readonly Hitbox[];
   /** Mobs déjà touchés : chacun ne prend les dégâts qu'une seule fois. */
-  private readonly mobsHit = new Set<Mob>();
+  private readonly mobsHit = new Set<Enemy>();
 
   constructor(scene: Scene, x: number, y: number, skin: ProjectileSkin, config: ProjectileConfig) {
     super(scene, x, y, skin.textureKey);
@@ -107,7 +107,7 @@ export class Projectile extends Entity {
   }
 
   private damageMobs(): void {
-    for (const mob of touchedFighters(this, this.facing, this.hitboxes, Mob)) {
+    for (const mob of touchedFighters(this, this.facing, this.hitboxes, Enemy)) {
       if (this.mobsHit.has(mob)) {
         continue;
       }

@@ -1,6 +1,6 @@
 import { GameObjects, Scenes } from 'phaser';
 import type { MobBehavior } from '../domain/MobBehavior';
-import type { Mob } from '../entities/Mob';
+import type { Enemy } from '../entities/Enemy';
 import type { BattleScene } from '../scenes/BattleScene';
 
 export class MobControls {
@@ -8,7 +8,7 @@ export class MobControls {
 
   constructor(
     private readonly scene: BattleScene,
-    private readonly mob: Mob,
+    private readonly mob: Enemy,
     private readonly behavior: MobBehavior,
   ) {
     // Après la physique, sinon les positions ont une frame de retard

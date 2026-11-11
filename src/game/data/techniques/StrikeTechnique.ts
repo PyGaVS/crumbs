@@ -1,4 +1,4 @@
-import { Mob } from '../../entities/Mob';
+import { Enemy } from '../../entities/Enemy';
 import type { Player } from '../../entities/Player';
 import type { Cue } from '../../domain/Animation';
 import { Technique, type TechniqueOptions } from '../../domain/Technique';
@@ -19,7 +19,7 @@ export default class StrikeTechnique extends Technique {
   }
 
   protected override action(player: Player, cue: Cue): void {
-    strike(player, cue, this.options.damage, Mob);
+    strike(player, cue, this.options.damage, Enemy);
     super.action(player, cue);
   }
 }

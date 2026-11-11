@@ -1,6 +1,6 @@
 import { Physics, Scene } from 'phaser';
 import type { Fighter, FighterClass } from '../entities/Fighter';
-import { Mob } from '../entities/Mob';
+import { Enemy } from '../entities/Enemy';
 
 type ArcadeBody = Physics.Arcade.Body | Physics.Arcade.StaticBody;
 
@@ -44,5 +44,5 @@ export function hasObstacle(
     blockers.walls,
   ) as ArcadeBody[];
 
-  return bodies.some((body) => body instanceof Physics.Arcade.StaticBody || body.gameObject instanceof Mob);
+  return bodies.some((body) => body instanceof Physics.Arcade.StaticBody || body.gameObject instanceof Enemy);
 }

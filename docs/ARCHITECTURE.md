@@ -102,7 +102,7 @@ Les sprites, qui vivent dans une scène :
     (`handPosition`) sert de pivot au sprite.
 - `FxSprite` : un effet purement visuel (`Fx`), posé par un `FxStep` et détruit à la fin de
   son animation. Orienté ou droit, teinté ou non.
-- `Mob` : un ennemi instancié depuis son `EnemyKind`, piloté par `controls/MobControls` s'il
+- `Enemy` : un ennemi instancié depuis son `EnemyKind`, piloté par `controls/MobControls` s'il
   a un `MobBehavior`. Ses attaques passent avant ses déplacements, et il ne décide rien tant
   que son animation joue. Il joue les actions de son skin (`playAction`), donc les `SkinStep`.
 
