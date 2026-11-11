@@ -10,6 +10,7 @@ import { Direction, directionsTowards, FACING_ANGLES, opposite, polar } from '..
 import type { Attack } from '../domain/Attack';
 import { EnemyKind } from '../domain/EnemyKind';
 import type { BattleScene } from '../scenes/BattleScene';
+import type { Entity } from './Entity';
 import { Fighter } from './Fighter';
 import { Player } from './Player';
 
@@ -64,6 +65,15 @@ export class Enemy extends Fighter {
     this.direction = directionsTowards(target.x - this.x, target.y - this.y)[0];
     this.halt();
     getAnimation(attack.animationId).play(this, { onCue: (cue) => strike(this, cue, attack.damage, Player) });
+  }
+
+  /**
+   * Le point devant target pour lui couper la route, d'autant plus loin qu'elle est loin.
+   * @param maxLead avance maximale en px
+   * @param leadRatio avance par px de distance, sous 1 pour finir sur target : sinon le point visé peut tomber sur le mob
+   */
+  ambush(target: Entity, maxLead: number, leadRatio: number): { x: number; y: number } {
+    return target.ahead(Math.min(maxLead, leadRatio * Math.hypot(target.x - this.x, target.y - this.y)));
   }
 
   reaches(other: Fighter): boolean {

@@ -5,22 +5,22 @@ import { SkinId } from './enums/SkinId';
 
 /** Catalogue des ennemis. */
 export const ALL_ENEMY_KINDS: readonly EnemyKind[] = [
-  new EnemyKind(EnemyId.DUMMY, 'Mannequin', SkinId.SNAKE, 30, [], 0),
+  new EnemyKind(EnemyId.DUMMY, 'Mannequin', SkinId.SNAKE, 30, 10, []),
   new EnemyKind(
     EnemyId.MUSHROOM,
     'Champignon',
     SkinId.MUSHROOM,
     30,
+    50,
     [
       {
         damage: 10,
         animationId: AnimationId.POISON_CLOUD,
-        trigger: (mob, scene) => mob.isWithin(96, scene.player),
+        trigger: (mob, scene) => mob.isWithin(110, scene.player),
       },
     ],
-    120,
     {
-      destination: (_mob, scene) => scene.player,
+      destination: (mob, scene) => mob.ambush(scene.player, 200, 0.8),
       interval: 250,
       shouldHalt: (mob, scene) => mob.reaches(scene.player),
       disableUTurn: false,

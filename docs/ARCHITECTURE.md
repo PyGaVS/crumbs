@@ -105,6 +105,9 @@ Les sprites, qui vivent dans une scène :
 - `Enemy` : un ennemi instancié depuis son `EnemyKind`, piloté par `controls/MobControls` s'il
   a un `MobBehavior`. Ses attaques passent avant ses déplacements, et il ne décide rien tant
   que son animation joue. Il joue les actions de son skin (`playAction`), donc les `SkinStep`.
+  `ambush` donne une destination qui coupe la route d'une cible : le point devant elle
+  (`Entity.ahead`), à une avance proportionnelle à la distance (`leadRatio`) jusqu'à un plafond
+  (`maxLead`).
 
 ## Le domaine (`domain/`)
 

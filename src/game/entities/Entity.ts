@@ -1,7 +1,7 @@
 import { GameObjects, Physics, Scene } from 'phaser';
 import { Inputs } from '../data/enums/Inputs';
 import type { SkinAction } from '../data/enums/SkinAction';
-import { Direction, DirectionFacing, orient } from '../utils/orientation';
+import { Direction, DirectionFacing, FACING_ANGLES, orient, polar } from '../utils/orientation';
 import type { Animation, PlayOptions } from '../domain/Animation';
 import type { HeldWeapon } from './HeldWeapon';
 import { Playback } from './Playback';
@@ -71,6 +71,12 @@ export class Entity extends Physics.Arcade.Sprite {
     if (this.assetAngle === undefined) { return; }
 
     orient(this, angle, this.assetAngle);
+  }
+
+  ahead(distance: number): { x: number; y: number } {
+    const [x, y] = polar(this.x, this.y, FACING_ANGLES[this.direction], distance);
+
+    return { x, y };
   }
 
   isCloseTo(pos: { x: number; y: number }, range = 150): boolean {

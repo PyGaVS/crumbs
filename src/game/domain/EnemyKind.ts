@@ -11,8 +11,8 @@ export class EnemyKind {
     readonly name: string,
     readonly skinId: SkinId,
     readonly maxHealth: number,
-    readonly attacks: readonly MobAttack[],
     readonly speed: number,
+    readonly attacks: readonly MobAttack[],
     readonly behavior?: MobBehavior,
   ) {}
 
