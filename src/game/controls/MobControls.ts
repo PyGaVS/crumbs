@@ -17,6 +17,21 @@ export class MobControls {
   }
 
   private update(_time: number, delta: number): void {
+    if (this.mob.performing) {
+      return;
+    }
+
+    const attack = this.scene.player.active
+      ? this.mob.kind.attacks.find((a) => a.trigger(this.mob, this.scene))
+      : undefined;
+
+    if (attack) {
+      this.mob.attack(attack, this.scene.player);
+      this.cooldown = 0;
+
+      return;
+    }
+
     if (this.behavior.shouldHalt(this.mob, this.scene)) {
       this.mob.halt();
       this.cooldown = 0;

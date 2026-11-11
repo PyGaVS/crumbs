@@ -8,6 +8,7 @@ import type { Direction } from '../utils/types';
 import { CharClass } from '../domain/CharClass';
 import { Fighter } from './Fighter';
 import { HeldWeapon } from './HeldWeapon';
+import { Mob } from './Mob';
 import type { Playback } from './Playback';
 import type { Weapon } from '../domain/Weapon';
 import { BattleScene } from '../scenes/BattleScene';
@@ -66,7 +67,7 @@ export class Player extends Fighter {
   private attack(): void {
     const animation = this.weapon.attackAnimation;
 
-    animation.play(this, { onCue: (cue) => strike(this, cue, this.weapon.attack.damage) });
+    animation.play(this, { onCue: (cue) => strike(this, cue, this.weapon.attack.damage, Mob) });
   }
 
   override perform(animation: Animation, options: PlayOptions): Playback {
@@ -87,6 +88,11 @@ export class Player extends Fighter {
   }
 
   private unlock(): void {
+    // Le délai survit à la destruction : mort pendant l'animation, il ne rejoue rien
+    if (!this.active) {
+      return;
+    }
+
     this.locked = false;
 
     const buffered = this.inputBuffer;

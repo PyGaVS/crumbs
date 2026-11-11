@@ -29,6 +29,10 @@ export class Playback {
     this.frame = entity.scene.game.loop.frame;
   }
 
+  get playing(): boolean {
+    return !this.ended;
+  }
+
   start(): void {
     this.advance(0);
   }

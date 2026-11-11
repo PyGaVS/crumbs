@@ -20,13 +20,13 @@ src/
                           HitboxOverlay (touche H)
     entities/             Les sprites Phaser qui vivent dans une scène (Entity, Player…)
     domain/               Les classes métier, sans Phaser (Technique, CharClass, Weapon,
-                          EnemyKind, MobBehavior, Skin, WeaponSkin, ProjectileSkin, Fx,
-                          Animation, Composition)
+                          EnemyKind, Attack, MobBehavior, Skin, WeaponSkin, ProjectileSkin,
+                          Fx, Animation, Composition)
     data/                 La donnée pure : catalogues d'instances et enums
     utils/input.ts        Historique de touches et détection des séquences
     utils/orientation.ts  Angles du regard, miroir, Facing
-    utils/combat.ts       touchedMobs : les mobs sous des hitboxs ; strike : la frappe
-                          d'un repère
+    utils/combat.ts       touchedFighters : les fighters d'une classe sous des hitboxs ;
+                          strike : la frappe d'un repère
     utils/hitboxes.ts     Les formes de hitboxs toutes faites (hitboxRing…)
 vite/
   config.dev.ts / config.prod.ts
@@ -103,7 +103,8 @@ Les sprites, qui vivent dans une scène :
 - `Slash` : une entaille purement visuelle, posée par un `SlashStep` et détruite à la fin de
   son animation.
 - `Mob` : un ennemi instancié depuis son `EnemyKind`, piloté par `controls/MobControls` s'il
-  a un `MobBehavior`.
+  a un `MobBehavior`. Ses attaques passent avant ses déplacements, et il ne décide rien tant
+  que son animation joue.
 
 ## Le domaine (`domain/`)
 
@@ -123,6 +124,9 @@ Les classes métier, instanciées par les catalogues de `data/`. Aucune n'import
     l'opacité de son ombre (`shadowAlpha`, 0.15 par défaut). Une
     `ProjectileTechnique` le référence par id et garde l'usage : taille, course, hitboxs.
   - `Animation` : voir plus bas ; l'attaque de base d'une arme référence la sienne.
+- `Attack` : des dégâts et l'id d'une animation. L'attaque de base d'une `Weapon` en est une ;
+  un `EnemyKind` en liste plusieurs (`MobAttack`), chacune lancée par son `trigger`, la
+  première vraie de la liste l'emportant.
 - `MobBehavior` : le comportement d'un `EnemyKind`.
   - `destination` : le point vers lequel il marche, calculé depuis la scène.
   - `interval` : le délai en ms entre deux calculs de destination.
@@ -152,7 +156,7 @@ dans la lecture.
   frappe : des cercles décrits regard à droite (x vers l'avant, y vers le bas), que
   `Facing.place` pose dans le monde ; `utils/hitboxes.ts` en fournit des formes toutes faites.
   Une technique qui frappe ces hitboxs est une `StrikeTechnique`. Un `Projectile` porte aussi les siennes, tournées vers
-  sa trajectoire et testées à chaque frame. `touchedMobs` compte une seule fois chaque mob,
+  sa trajectoire et testées à chaque frame. `touchedFighters` compte une seule fois chaque fighter de la classe visée,
   quel que soit le nombre de cercles qu'il chevauche, et émet `CombatEvent.STRIKE` : en dev,
   `debug/HitboxOverlay` affiche alors les cercles, pleins sur la frame où ils frappent puis en
   contour jusqu'à `DISPLAY_TIME`, et les corps physiques (touche H).

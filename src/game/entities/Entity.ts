@@ -35,6 +35,10 @@ export class Entity extends Physics.Arcade.Sprite {
     this.once(GameObjects.Events.DESTROY, () => this.playback?.stop());
   }
 
+  get performing(): boolean {
+    return this.playback?.playing ?? false;
+  }
+
   /** Joue une action du skin ; seules les entités au skin animé la définissent. */
   playAction?(action: SkinAction, direction: Direction): void;
 

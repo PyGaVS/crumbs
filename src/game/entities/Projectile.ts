@@ -2,12 +2,12 @@ import { Scene, Tweens } from 'phaser';
 import { SPRITE_SIZE } from '../core/settings';
 import { frameRateOver } from '../utils/animation';
 import { hasObstacle } from '../utils/collision';
-import { touchedMobs } from '../utils/combat';
+import { touchedFighters } from '../utils/combat';
 import { AngleFacing, polar } from '../utils/orientation';
 import { SpritePlayback } from '../data/enums/SpritePlayback';
 import type { Ease, Hitbox } from '../domain/Animation';
 import { Entity } from './Entity';
-import type { Mob } from './Mob';
+import { Mob } from './Mob';
 import type { EaseFunction } from './Playback';
 import type { ProjectileSkin } from '../domain/ProjectileSkin';
 
@@ -107,7 +107,7 @@ export class Projectile extends Entity {
   }
 
   private damageMobs(): void {
-    for (const mob of touchedMobs(this, this.facing, this.hitboxes)) {
+    for (const mob of touchedFighters(this, this.facing, this.hitboxes, Mob)) {
       if (this.mobsHit.has(mob)) {
         continue;
       }

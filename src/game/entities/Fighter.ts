@@ -7,6 +7,8 @@ export enum FighterEvent {
   DAMAGED = 'damaged',
 }
 
+export type FighterClass<T extends Fighter = Fighter> = abstract new (...args: never[]) => T;
+
 export class Fighter extends Entity {
   health: number;
   armor: number;
@@ -48,8 +50,8 @@ export class Fighter extends Entity {
     }
   }
 
-  touches(other: Fighter, margin = 0): boolean {
-    return Math.hypot(other.x - this.x, other.y - this.y) <= this.hurtboxRadius + other.hurtboxRadius + margin;
+  isWithin(distance: number, targets: Fighter | readonly Fighter[]): boolean {
+    return [targets].flat().some((target) => target !== this && this.gap(target) <= distance);
   }
 
   protected walk(skin: Skin, direction: Direction): void {
@@ -69,5 +71,10 @@ export class Fighter extends Entity {
 
   protected get hurtboxRadius(): number {
     return Math.min(this.displayWidth, this.displayHeight) / 2;
+  }
+
+  /** px entre sa hurtbox et celle d'other, négatif quand elles se chevauchent. */
+  private gap(other: Fighter): number {
+    return Math.hypot(other.x - this.x, other.y - this.y) - this.hurtboxRadius - other.hurtboxRadius;
   }
 }

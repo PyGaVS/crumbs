@@ -1,13 +1,17 @@
 import type { Physics } from 'phaser';
 import { SPRITE_SIZE } from '../core/settings';
 import { MobControls } from '../controls/MobControls';
+import { getAnimation } from '../data/animations';
 import { LifeBar } from '../ui/LifeBar';
-import { mobsInCircle } from '../utils/collision';
+import { fightersInCircle } from '../utils/collision';
+import { strike } from '../utils/combat';
 import { directionsTowards, FACING_ANGLES, opposite, polar } from '../utils/orientation';
 import { Direction } from '../utils/types';
+import type { Attack } from '../domain/Attack';
 import { EnemyKind } from '../domain/EnemyKind';
 import type { BattleScene } from '../scenes/BattleScene';
 import { Fighter } from './Fighter';
+import { Player } from './Player';
 
 /** Un ennemi posé dans l'arène, décrit par son EnemyKind. */
 export class Mob extends Fighter {
@@ -52,14 +56,20 @@ export class Mob extends Fighter {
     this.rest(this.kind.skin);
   }
 
+  attack(attack: Attack, target: Fighter): void {
+    this.direction = directionsTowards(target.x - this.x, target.y - this.y)[0];
+    this.halt();
+    getAnimation(attack.animationId).play(this, { onCue: (cue) => strike(this, cue, attack.damage, Player) });
+  }
+
   reaches(other: Fighter): boolean {
-    return this.touches(other, this.stride);
+    return this.isWithin(this.stride, other);
   }
 
   blocked(direction = this.direction, distance = this.stride): boolean {
     const [x, y] = polar(this.x, this.y, FACING_ANGLES[direction], distance);
 
-    return mobsInCircle(this.scene, x, y, this.hurtboxRadius).some((mob) => mob !== this);
+    return fightersInCircle(this.scene, x, y, this.hurtboxRadius, Mob).some((mob) => mob !== this);
   }
 
   private get walking(): boolean {

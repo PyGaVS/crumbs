@@ -38,6 +38,11 @@ export class PlayerControls {
   }
 
   private update(): void {
+    // Tué plus tôt dans cette même frame, il est détruit mais l'émission en cours l'appelle encore
+    if (!this.player.active) {
+      return;
+    }
+
     if (this.keys.get(this.player.direction)?.isDown) {
       this.player.move();
     } else {

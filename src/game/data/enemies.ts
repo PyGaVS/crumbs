@@ -4,8 +4,8 @@ import { SkinId } from './enums/SkinId';
 
 /** Catalogue des ennemis. */
 export const ALL_ENEMY_KINDS: readonly EnemyKind[] = [
-  new EnemyKind(EnemyId.DUMMY, 'Mannequin', SkinId.SNAKE, 30, 0, 0),
-  new EnemyKind(EnemyId.MUSHROOM, 'Champignon', SkinId.MUSHROOM, 30, 10, 120, {
+  new EnemyKind(EnemyId.DUMMY, 'Mannequin', SkinId.SNAKE, 30, [], 0),
+  new EnemyKind(EnemyId.MUSHROOM, 'Champignon', SkinId.MUSHROOM, 30, [], 120, {
     destination: (_mob, scene) => scene.player,
     interval: 250,
     shouldHalt: (mob, scene) => mob.reaches(scene.player),

@@ -1,13 +1,22 @@
 import { Physics, Scene } from 'phaser';
+import type { Fighter, FighterClass } from '../entities/Fighter';
 import { Mob } from '../entities/Mob';
 
 type ArcadeBody = Physics.Arcade.Body | Physics.Arcade.StaticBody;
 
-/** Les mobs dont le corps chevauche le cercle centré en (x, y). */
-export function mobsInCircle(scene: Scene, x: number, y: number, radius: number): Mob[] {
+/** Les fighters de la classe fighterClass dont le corps chevauche le cercle centré en (x, y). */
+export function fightersInCircle<T extends Fighter>(
+  scene: Scene,
+  x: number,
+  y: number,
+  radius: number,
+  fighterClass: FighterClass<T>,
+): T[] {
   const bodies = scene.physics.overlapCirc(x, y, radius, true, false) as ArcadeBody[];
 
-  return bodies.map((body) => body.gameObject).filter((gameObject): gameObject is Mob => gameObject instanceof Mob);
+  return bodies
+    .map((body) => body.gameObject)
+    .filter((gameObject): gameObject is T => gameObject instanceof fighterClass);
 }
 
 /**
