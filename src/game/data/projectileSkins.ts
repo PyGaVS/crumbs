@@ -9,6 +9,7 @@ export const ALL_PROJECTILE_SKINS: readonly ProjectileSkin[] = [
   new ProjectileSkin(ProjectileSkinId.SLASH_ARC, 'slashArc', {
     assetAngle: Math.PI / 2, animation: 'slashArc-fly', playback: SpritePlayback.LIFETIME, shadowAlpha: 0
   }),
+  new ProjectileSkin(ProjectileSkinId.ARROW, 'arrow', { assetAngle: 0 }),
 ];
 
 export function getProjectileSkin(id: ProjectileSkinId): ProjectileSkin {

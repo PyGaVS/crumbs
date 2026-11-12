@@ -45,6 +45,11 @@
         "url": "items/Kunai.png"
       },
       {
+        "type": "image",
+        "key": "arrow",
+        "url": "items/Arrow.png"
+      },
+      {
         "type": "spritesheet",
         "key": "snake-idle",
         "url": "mobs/Snake.png",
@@ -103,6 +108,15 @@
         "type": "image",
         "key": "falchion-inHand",
         "url": "weapons/Sword2/SpriteInHand.png"
+      },
+      {
+        "type": "spritesheet",
+        "key": "bow",
+        "url": "weapons/Bow/SpriteSheet.png",
+        "frameConfig": {
+          "frameWidth": 15,
+          "frameHeight": 18
+        }
       },
       {
         "type": "spritesheet",

@@ -7,6 +7,7 @@ import FxStep from './FxStep';
 import MoveStep from './MoveStep';
 import SkinStep from './SkinStep';
 import SwingStep from './SwingStep';
+import WeaponFramesStep from './WeaponFramesStep';
 
 /** Catalogue des animations. */
 export const ALL_ANIMATIONS: readonly Animation[] = [
@@ -23,6 +24,12 @@ export const ALL_ANIMATIONS: readonly Animation[] = [
       to: { angle: Math.PI / 3 },
       duration: 250, ease: 'Cubic.out', hold: 70,
     }),
+  ]),
+  new Animation(AnimationId.BOW_SHOT, [
+    new SkinStep({ action: SkinAction.ATTACK, duration: 500 }),
+    new SwingStep({ from: { angle: -Math.PI / 2, radius: 0, pivot: 28 }, to: {}, duration: 600, ease: 'Linear' }),
+    new WeaponFramesStep({ frames: [0, 1, 2, 0], duration: 500 }),
+    new CueStep({ at: 300 }),
   ]),
   new Animation(AnimationId.DASH, [new CueStep()]),
   new Animation(AnimationId.SHURIKENS_THROW, [

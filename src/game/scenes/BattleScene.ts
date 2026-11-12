@@ -27,10 +27,10 @@ export class BattleScene extends Scene {
   create() {
     this.add.image(0, 0, 'background').setOrigin(0).setDisplaySize(SCREEN_WIDTH, SCREEN_HEIGHT);
 
-    // En attendant la sélection de perso (roadmap 0.4), la classe ninja et deux fauchons
-    const falchion = getWeapon(WeaponId.FALCHION);
+    // En attendant la sélection de perso (roadmap 0.4)
+    const weapons = [getWeapon(WeaponId.FALCHION), getWeapon(WeaponId.BOW)] as const;
 
-    this.player = new Player(this, new Composition(getCharClass(CharClassId.NINJA), [falchion, falchion]));
+    this.player = new Player(this, new Composition(getCharClass(CharClassId.NINJA), weapons));
     new PlayerControls(this, this.player);
     new Hud(this, this.player);
     new InputHistoryText(this, this.player.inputHistory);

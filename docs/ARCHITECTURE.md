@@ -99,7 +99,8 @@ Les sprites, qui vivent dans une scène :
     sous elle.
   - `HeldWeapon` : l'arme en main du joueur, placée sur la main que montre la frame en cours
     (positions décrites par le `Skin`) et tournée vers son regard. Quand une animation la
-    tient (`hold`), elle suit la pose que la lecture anime. Le point de prise de l'arme
+    tient (`hold`), elle suit la pose que la lecture anime, et revient à sa première frame
+    quand la lecture la rend. Le point de prise de l'arme
     (`handPosition`) sert de pivot au sprite. `wield` prend une arme en main : son sprite
     entier tourne jusqu'à la pose de la main puis laisse place à sa version en main, sur
     l'horloge de la scène et sans verrou. `sheathe` la cache jusqu'à la prochaine prise en
@@ -134,7 +135,8 @@ Les classes métier, instanciées par les catalogues de `data/`. Aucune n'import
   - `Skin` : textures, clés d'animation et position de la main sur chaque frame, pour une
     classe ou un ennemi.
   - `WeaponSkin` : le sprite d'une arme et sa version en main (`<texture>-inHand` dans le
-    pack), avec pour chacun son point de prise et l'angle de sa lame.
+    pack), avec pour chacun son point de prise et l'angle vers lequel il pointe. Sans version
+    en main, l'arme est tenue par son sprite.
   - `ProjectileSkin` : le sprite d'un projectile, son orientation, sa rotation (`spin`), son
     animation en vol, en boucle ou étirée sur toute la course (`SpritePlayback`), et
     l'opacité de son ombre (`shadowAlpha`, 0.15 par défaut). Une
@@ -165,7 +167,9 @@ dans la lecture.
     `count` en cercle, tournés vers le regard ou droits (`upright`), teintés ou non ;
   - `SkinStep` : une action du skin (`SkinAction`), tenue `duration` ms. Elle suit le regard
     si la config la décline par direction (`<skin>-<action>-<direction>`), sinon elle est
-    jouée telle quelle (`<skin>-<action>`).
+    jouée telle quelle (`<skin>-<action>`) ;
+  - `WeaponFramesStep` : des frames de la feuille de l'arme tenue, réparties à parts égales
+    sur `duration` ms, sur l'horloge de la lecture (la charge de l'arc).
 
   `CueStep`, dans `domain/Animation.ts`, est le repère où le gameplay agit : le seul step
   que les abilities connaissent, via `onCue`. Il porte les hitboxs de la
@@ -187,7 +191,8 @@ dans la lecture.
   Les animations sont décrites vers la droite et symétriques : le `clockwise` et le `mirror`
   d'un geste, comme le `mirrored` d'une entaille ou le `clockwise` de `rotate`, valent vers
   la droite, le haut et le bas, et s'inversent vers la gauche.
-- Validation au chargement : un premier geste sans pose de départ lève une erreur. Le
+- Validation au chargement : un premier geste sans pose de départ lève une erreur, comme des
+  frames d'arme sans geste qui la tient. Le
   Preloader vérifie que chaque `Fx` a son animation.
 
 ## Les assets

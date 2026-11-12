@@ -39,6 +39,8 @@ export class HeldWeapon extends Attachment {
 
     if (grip) {
       this.showInHand();
+    } else {
+      this.setFrame(this.texture.firstFrame);
     }
   }
 
@@ -54,7 +56,7 @@ export class HeldWeapon extends Attachment {
     // L'animation qui tenait l'arme peut finir une frame après la fin du verrou du joueur
     this.grip = undefined;
     this.wieldedAt = this.scene.time.now;
-    this.setTexture(weaponSkin.textureKey).setOrigin(...weaponSkin.spriteHandPosition);
+    this.setTexture(weaponSkin.textureKey).setOrigin(...weaponSkin.sprite.handPosition);
   }
 
   protected follow(): void {
@@ -74,7 +76,7 @@ export class HeldWeapon extends Attachment {
 
       this.setVisible(true);
       this.setPosition(...polar(pivotX, pivotY, angle, this.grip.pose.radius));
-      orient(this, angle, this.weaponSkin.assetAngle, this.grip.facing.mirror(this.grip.mirror));
+      orient(this, angle, this.weaponSkin.inHand.assetAngle, this.grip.facing.mirror(this.grip.mirror));
 
       return;
     }
@@ -93,7 +95,7 @@ export class HeldWeapon extends Attachment {
     );
 
     if (this.wieldedAt === undefined) {
-      orient(this, FACING_ANGLES[hand.direction], this.weaponSkin.assetAngle);
+      orient(this, FACING_ANGLES[hand.direction], this.weaponSkin.inHand.assetAngle);
 
       return;
     }
@@ -101,11 +103,11 @@ export class HeldWeapon extends Attachment {
     const facing = new DirectionFacing(hand.direction);
     const progress = WIELD_EASE((this.scene.time.now - this.wieldedAt) / WIELD_DURATION);
 
-    orient(this, facing.toWorld(WIELD_ANGLE * (1 - progress)), this.weaponSkin.spriteAssetAngle, facing.mirrored);
+    orient(this, facing.toWorld(WIELD_ANGLE * (1 - progress)), this.weaponSkin.sprite.assetAngle, facing.mirrored);
   }
 
   private showInHand(): void {
     this.wieldedAt = undefined;
-    this.setTexture(this.weaponSkin.getHandSprite()).setOrigin(...this.weaponSkin.handPosition);
+    this.setTexture(this.weaponSkin.getHandSprite()).setOrigin(...this.weaponSkin.inHand.handPosition);
   }
 }
