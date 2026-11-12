@@ -98,7 +98,8 @@ Les sprites, qui vivent dans une scène :
   - `Shadow` : l'ombre portée que chaque `Entity` crée à sa construction, dessinée juste
     sous elle.
   - `HeldWeapon` : l'arme en main du joueur, placée sur la main que montre la frame en cours
-    (positions décrites par le `Skin`) et tournée vers son regard. Quand une animation la
+    (positions décrites par le `Skin`) et tournée vers son regard. Elle est dessinée derrière
+    le joueur quand il regarde vers le haut, devant sinon. Quand une animation la
     tient (`hold`), elle suit la pose que la lecture anime, et revient à sa première frame
     quand la lecture la rend. Le point de prise de l'arme
     (`handPosition`) sert de pivot au sprite. `wield` prend une arme en main : son sprite

@@ -1,5 +1,6 @@
 import { GameObjects, Tweens } from 'phaser';
-import { DirectionFacing, FACING_ANGLES, type Facing, orient, polar } from '../utils/orientation';
+import { Inputs } from '../data/enums/Inputs';
+import { type Direction, DirectionFacing, FACING_ANGLES, orient, polar } from '../utils/orientation';
 import { Attachment } from './Attachment';
 import type { EaseFunction } from './Playback';
 import type { Skin } from '../domain/Skin';
@@ -8,7 +9,7 @@ import type { WeaponSkin } from '../domain/WeaponSkin';
 /** Pose dans le repère du regard : angle local (radians), rayon et pivot en px. */
 export type WeaponPose = { angle: number; radius: number; pivot: number };
 
-export type WeaponGrip = { readonly facing: Facing; readonly pose: WeaponPose; mirror: boolean };
+export type WeaponGrip = { readonly facing: DirectionFacing; readonly pose: WeaponPose; mirror: boolean };
 
 const WIELD_DURATION = 200;
 const WIELD_ANGLE = -Math.PI / 2;
@@ -75,6 +76,7 @@ export class HeldWeapon extends Attachment {
       const [pivotX, pivotY] = polar(this.target.x, this.target.y, this.grip.facing.angle, this.grip.pose.pivot);
 
       this.setVisible(true);
+      this.layer(this.grip.facing.direction);
       this.setPosition(...polar(pivotX, pivotY, angle, this.grip.pose.radius));
       orient(this, angle, this.weaponSkin.inHand.assetAngle, this.grip.facing.mirror(this.grip.mirror));
 
@@ -89,6 +91,7 @@ export class HeldWeapon extends Attachment {
       return;
     }
 
+    this.layer(hand.direction);
     this.setPosition(
       this.target.x + (hand.x - this.target.displayOriginX) * this.target.scaleX,
       this.target.y + (hand.y - this.target.displayOriginY) * this.target.scaleY,
@@ -104,6 +107,15 @@ export class HeldWeapon extends Attachment {
     const progress = WIELD_EASE((this.scene.time.now - this.wieldedAt) / WIELD_DURATION);
 
     orient(this, facing.toWorld(WIELD_ANGLE * (1 - progress)), this.weaponSkin.sprite.assetAngle, facing.mirrored);
+  }
+
+  /** Derrière le porteur quand il regarde vers le haut */
+  private layer(direction: Direction): void {
+    if (direction === Inputs.UP) {
+      this.scene.children.moveBelow(this, this.target);
+    } else {
+      this.scene.children.moveAbove(this, this.target);
+    }
   }
 
   private showInHand(): void {
