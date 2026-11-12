@@ -31,7 +31,10 @@ export const ALL_ANIMATIONS: readonly Animation[] = [
     new WeaponFramesStep({ frames: [0, 1, 2, 0], duration: 500 }),
     new CueStep({ at: 300 }),
   ]),
-  new Animation(AnimationId.DASH, [new CueStep()]),
+  new Animation(AnimationId.DASH, [
+    new FxStep({ fx: FxId.SMOKE_CIRCULAR, reach: 0, upright: true, size: 48, duration: 200, offset: [0, 32] }),
+    new CueStep(),
+  ]),
   new Animation(AnimationId.SHURIKENS_THROW, [
     new SkinStep({ action: SkinAction.ATTACK, duration: 250 }), 
     new CueStep()

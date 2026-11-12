@@ -165,7 +165,8 @@ dans la lecture.
     dans le sens de rotation `clockwise`, arme miroitée ou non (`mirror`), puis figée sur sa
     pose d'arrivée pendant `hold` ms ;
   - `FxStep` : des effets (`Fx`) posés à `reach` px de l'entité, un seul devant elle ou
-    `count` en cercle, tournés vers le regard ou droits (`upright`), teintés ou non ;
+    `count` en cercle, tournés vers le regard ou droits (`upright`), teintés ou non, décalés
+    à l'écran de `offset` quel que soit le regard ;
   - `SkinStep` : une action du skin (`SkinAction`), tenue `duration` ms. Elle suit le regard
     si la config la décline par direction (`<skin>-<action>-<direction>`), sinon elle est
     jouée telle quelle (`<skin>-<action>`) ;

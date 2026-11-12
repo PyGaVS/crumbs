@@ -1,9 +1,7 @@
 import { Inputs } from '../data/enums/Inputs';
 import { SkinAction } from '../data/enums/SkinAction';
 import type { SkinId } from '../data/enums/SkinId';
-import { CARDINALS, type Direction } from '../utils/orientation';
-
-type Point = readonly [x: number, y: number];
+import { CARDINALS, type Direction, type Point } from '../utils/orientation';
 
 export type Hand = { x: number; y: number; direction: Direction };
 

@@ -6,6 +6,8 @@ export const CARDINALS = [Inputs.RIGHT, Inputs.LEFT, Inputs.UP, Inputs.DOWN] as 
 export type Cardinal = (typeof CARDINALS)[number];
 export type Direction = Cardinal;
 
+export type Point = readonly [x: number, y: number];
+
 /** Angle (radians) du regard du joueur. Rappel : l'axe Y de Phaser pointe vers le bas. */
 export const FACING_ANGLES: Record<Cardinal, number> = {
   [Inputs.RIGHT]: 0,

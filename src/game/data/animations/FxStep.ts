@@ -1,7 +1,7 @@
 import { AnimationStep, type StepOptions } from '../../domain/Animation';
 import { FxSprite, type FxSpriteConfig } from '../../entities/FxSprite';
 import type { Playback } from '../../entities/Playback';
-import { polar, ringAngles } from '../../utils/orientation';
+import { type Point, polar, ringAngles } from '../../utils/orientation';
 import type { FxId } from '../enums/FxId';
 import { getFx } from '../fx';
 
@@ -18,6 +18,7 @@ type FxOptions = StepOptions &
     upright?: boolean;
     /** Miroir vers la droite, le haut et le bas, inversé vers la gauche. */
     mirrored?: boolean;
+    offset?: Point;
   };
 
 /** Des effets posés autour de l'entité, qui finissent seuls. */
@@ -28,10 +29,11 @@ export default class FxStep extends AnimationStep {
 
   start({ entity, facing }: Playback): void {
     const { fx, reach, angle = 0, count = 1, upright = false, mirrored = false, size, duration, tint } = this.options;
+    const [offsetX, offsetY] = this.options.offset ?? [0, 0];
 
     ringAngles(count, angle).forEach((local) => {
       const world = facing.toWorld(local);
-      const [x, y] = polar(entity.x, entity.y, world, reach);
+      const [x, y] = polar(entity.x + offsetX, entity.y + offsetY, world, reach);
 
       new FxSprite(entity.scene, x, y, getFx(fx), {
         angle: upright ? undefined : world,
