@@ -9,7 +9,7 @@ import { Fighter } from './Fighter';
 import { HeldWeapon } from './HeldWeapon';
 import type { Playback } from './Playback';
 import type { Weapon } from '../domain/Weapon';
-import { BattleScene } from '../scenes/BattleScene';
+import type { BattleScene } from '../scenes/BattleScene';
 
 // TODO: move to CharClass
 const MAX_HEALTH = 100;
@@ -23,7 +23,6 @@ export class Player extends Fighter {
   private inputBuffer: Inputs[] = [];
   private activeWeapon: 0 | 1 = 0;
   declare readonly heldWeapon: HeldWeapon;
-  ignoresWalls = false;
   name = 'player';
   speed = 360;
 

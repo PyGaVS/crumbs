@@ -118,12 +118,11 @@ Les sprites, qui vivent dans une scène :
 
 Les classes métier, instanciées par les catalogues de `data/`. Aucune n'importe Phaser :
 
-- `Ability` : ce que fait un fighter. `execute(fighter)` joue son animation et appelle `action`
-  à chaque repère. Les sous-classes de `data/abilities/` surchargent `action` : `StrikeAbility`
+- `Ability` : ce que fait un fighter. `execute(fighter)` joue son animation, obligatoire, et appelle
+  `action` à chaque repère. Les sous-classes de `data/abilities/` surchargent `action` : `StrikeAbility`
   frappe les hitboxs du repère (`strike`) sur la classe de fighters qu'elle vise (`target`),
-  `ProjectileAbility` lance des `Projectile`,
-  `DashAbility` fait dasher le joueur. Son paramètre de type est le fighter qui peut la lancer :
-  `Ability<Player>` est refusée à un ennemi. Le déclencheur est porté par qui la possède :
+  `ProjectileAbility` lance des `Projectile` qui touchent cette classe,
+  `DashAbility` fait dasher le fighter qui la lance. Le déclencheur est porté par qui la possède :
   - `Technique` : ses variantes de séquences (dont découle la notation affichée) et la
     détection `matches(history)` ;
   - l'attaque de base d'une `Weapon`, lancée par un appui sur l'attaque qui ne conclut

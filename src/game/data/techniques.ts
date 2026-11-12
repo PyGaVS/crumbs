@@ -15,12 +15,13 @@ export const ALL_TECHNIQUES: readonly Technique[] = [
     new DashAbility({
       range: 256, ignoreWalls: true,
       tween: { duration: 160, ease: 'Cubic.out' },
+      animationId: AnimationId.DASH,
     }),
   ),
   new Technique(
     TechniqueId.SHURIKENS, 'Shurikens', new Sequence().cardinals().opposite().perpendicular().switch(), 
     new ProjectileAbility({
-      skinId: ProjectileSkinId.SHURIKEN, speed: 1300, range: 512, damage: 7,
+      skinId: ProjectileSkinId.SHURIKEN, speed: 1300, range: 512, damage: 7, target: Enemy,
       hitboxes: [{ x: 0, y: 0, radius: 14 }],
       spreadAngles: [0, -Math.PI / 16, Math.PI / 16],
       animationId: AnimationId.SHURIKENS_THROW,
@@ -28,7 +29,7 @@ export const ALL_TECHNIQUES: readonly Technique[] = [
   ),
   new Technique(
     TechniqueId.KUNAI, 'Kunai', new Sequence().cardinals().same().switch(), new ProjectileAbility({
-      skinId: ProjectileSkinId.KUNAI, speed: 2000, range: 704, damage: 10,
+      skinId: ProjectileSkinId.KUNAI, speed: 2000, range: 704, damage: 10, target: Enemy,
       hitboxes: [{ x: 14, y: 0, radius: 6 }, { x: 0, y: 0, radius: 8 }],
       animationId: AnimationId.KUNAI_THROW,
       crossBody: false
@@ -37,7 +38,7 @@ export const ALL_TECHNIQUES: readonly Technique[] = [
   new Technique(
     TechniqueId.SHOOT_SLASH, 'Shoot Slash', new Sequence().cardinals().perpendicular().opposite(2).attack(), 
     new ProjectileAbility({
-      skinId: ProjectileSkinId.SLASH_ARC, speed: 960, range: 400, damage: 8, size: 192,
+      skinId: ProjectileSkinId.SLASH_ARC, speed: 960, range: 400, damage: 8, target: Enemy, size: 192,
       hitboxes: [{ x: 36, y: 0, radius: 48 }, { x: 8, y: -60, radius: 36 }, { x: 8, y: 60, radius: 36 }],
       ease: 'Quint.out', animationId: AnimationId.SHOOT_SLASH,
     }),

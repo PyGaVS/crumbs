@@ -1,4 +1,4 @@
-import type { Player } from '../../entities/Player';
+import type { Fighter } from '../../entities/Fighter';
 import { Ability, type AbilityOptions } from '../../domain/Ability';
 import { DASH_MAX_EXTENSION, DASH_STEP } from '../../utils/consts';
 import { hasObstacle } from '../../utils/collision';
@@ -15,7 +15,7 @@ type DashOptions = AbilityOptions & {
   tween: DashTweenConfig;
 };
 
-export default class DashAbility extends Ability<Player> {
+export default class DashAbility extends Ability {
   private readonly range: number;
   private readonly ignoreWalls: boolean;
   private readonly crossBody: boolean;
@@ -31,9 +31,9 @@ export default class DashAbility extends Ability<Player> {
     this.tweenConfig = options.tween;
   }
 
-  protected override action(player: Player): void {
+  protected override action(fighter: Fighter): void {
     if (this.ignoreWalls) {
-      player.ignoresWalls = true;
+      fighter.ignoresWalls = true;
     }
 
     const [ux, uy]: [number, number] = (
@@ -43,42 +43,42 @@ export default class DashAbility extends Ability<Player> {
         [Inputs.UP]: [0, -1],
         [Inputs.DOWN]: [0, 1],
       } satisfies Record<Cardinal, [number, number]>
-    )[this.direction ?? player.direction];
+    )[this.direction ?? fighter.direction];
 
-    const target = this.resolveDashTarget(player, ux, uy);
-    const duration = this.resolveDashDuration(player, target);
+    const target = this.resolveDashTarget(fighter, ux, uy);
+    const duration = this.resolveDashDuration(fighter, target);
 
-    player.scene.tweens.add({
+    fighter.scene.tweens.add({
       ...this.tweenConfig,
-      targets: player,
+      targets: fighter,
       duration,
       x: target.x,
       y: target.y,
       onComplete: (tween, targets, ...params) => {
-        player.ignoresWalls = false;
+        fighter.ignoresWalls = false;
         this.tweenConfig.onComplete?.(tween, targets, ...params);
       },
     });
   }
 
-  private resolveDashDuration(player: Player, target: { x: number; y: number }): number {
-    const traveled = Math.abs(target.x - player.x) + Math.abs(target.y - player.y);
+  private resolveDashDuration(fighter: Fighter, target: { x: number; y: number }): number {
+    const traveled = Math.abs(target.x - fighter.x) + Math.abs(target.y - fighter.y);
     return (Number(this.tweenConfig.duration ?? 100) * traveled) / this.range;
   }
 
   /** Le point d'arrêt le plus loin jusqu'à range, prolongé si range tombe dans un obstacle. */
-  private resolveDashTarget(player: Player, ux: number, uy: number): { x: number; y: number } {
-    const reach = (d: number) => ({ x: player.x + ux * d, y: player.y + uy * d });
+  private resolveDashTarget(fighter: Fighter, ux: number, uy: number): { x: number; y: number } {
+    const reach = (d: number) => ({ x: fighter.x + ux * d, y: fighter.y + uy * d });
     let landing = 0;
 
     for (let d = DASH_STEP; d <= this.range + DASH_MAX_EXTENSION; d += DASH_STEP) {
       const { x, y } = reach(d);
 
-      if (!this.canCross(player, x, y)) {
+      if (!this.canCross(fighter, x, y)) {
         break;
       }
 
-      if (this.canLand(player, x, y)) {
+      if (this.canLand(fighter, x, y)) {
         landing = d;
 
         if (d >= this.range) {
@@ -90,17 +90,11 @@ export default class DashAbility extends Ability<Player> {
     return reach(landing);
   }
 
-  private canCross(player: Player, cx: number, cy: number): boolean {
-    return this.isFree(player, cx, cy, { walls: !this.ignoreWalls, mobs: !this.crossBody });
+  private canCross(fighter: Fighter, cx: number, cy: number): boolean {
+    return !hasObstacle(fighter, cx, cy, { walls: !this.ignoreWalls, fighters: !this.crossBody });
   }
 
-  private canLand(player: Player, cx: number, cy: number): boolean {
-    return this.isFree(player, cx, cy, { walls: true, mobs: true });
-  }
-
-  private isFree(player: Player, cx: number, cy: number, blockers: { walls: boolean; mobs: boolean }): boolean {
-    const { width, height } = player.body || { width: 0, height: 0 };
-
-    return !hasObstacle(player.scene, cx, cy, width, height, blockers);
+  private canLand(fighter: Fighter, cx: number, cy: number): boolean {
+    return !hasObstacle(fighter, cx, cy, { walls: true, fighters: true });
   }
 }

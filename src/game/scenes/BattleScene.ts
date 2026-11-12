@@ -11,6 +11,7 @@ import { Inputs } from '../data/enums/Inputs';
 import { WeaponId } from '../data/enums/WeaponId';
 import { Composition } from '../domain/Composition';
 import { Enemy } from '../entities/Enemy';
+import { Fighter } from '../entities/Fighter';
 import { Player } from '../entities/Player';
 import { Hud } from '../ui/Hud';
 import { InputHistoryText } from '../ui/InputHistoryText';
@@ -42,9 +43,10 @@ export class BattleScene extends Scene {
     const reptile = new Enemy(this, SCREEN_WIDTH * 0.9, SCREEN_HEIGHT * 0.75, getEnemyKind(EnemyId.REPTILE), Inputs.LEFT);
 
     const mobs = this.add.group([mushroom, reptile]);
+    const solid = (a: unknown, b: unknown) => a !== b && ![a, b].some((f) => f instanceof Fighter && f.ignoresWalls);
 
-    this.physics.add.collider(this.player, [mushroom, reptile], undefined, () => !this.player.ignoresWalls);
-    this.physics.add.collider(mobs, mobs, undefined, (a, b) => a !== b);
+    this.physics.add.collider(this.player, [mushroom, reptile], undefined, solid);
+    this.physics.add.collider(mobs, mobs, undefined, solid);
   }
 
   update(_time: number, delta: number) {

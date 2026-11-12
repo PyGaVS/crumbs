@@ -4,7 +4,6 @@ import type { WeaponSkinId } from '../data/enums/WeaponSkinId';
 import type { Ability } from './Ability';
 import type { Technique } from './Technique';
 import type { WeaponSkin } from './WeaponSkin';
-import type { Player } from '../entities/Player';
 import { getTechnique } from '../data/techniques';
 import { getWeaponSkin } from '../data/weaponSkins';
 
@@ -14,7 +13,7 @@ export class Weapon {
     readonly id: WeaponId,
     readonly name: string,
     readonly skinId: WeaponSkinId,
-    readonly attack: Ability<Player>,
+    readonly attack: Ability,
     readonly techniqueIds: readonly TechniqueId[],
   ) {}
 

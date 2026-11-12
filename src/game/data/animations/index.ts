@@ -24,6 +24,7 @@ export const ALL_ANIMATIONS: readonly Animation[] = [
       duration: 250, ease: 'Cubic.out', hold: 70,
     }),
   ]),
+  new Animation(AnimationId.DASH, [new CueStep()]),
   new Animation(AnimationId.SHURIKENS_THROW, [
     new SkinStep({ action: SkinAction.ATTACK, duration: 250 }), 
     new CueStep()

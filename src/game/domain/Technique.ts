@@ -2,7 +2,6 @@ import type { Inputs } from '../data/enums/Inputs';
 import { getSymbol } from '../utils/input';
 import type { TechniqueId } from '../data/enums/TechniqueId';
 import type { Ability } from './Ability';
-import type { Player } from '../entities/Player';
 import type Sequence from '../utils/Sequence';
 
 export class Technique {
@@ -13,7 +12,7 @@ export class Technique {
     readonly id: TechniqueId,
     readonly name: string,
     readonly sequence: Sequence,
-    readonly ability: Ability<Player>,
+    readonly ability: Ability,
   ) {
     this.paths = sequence.paths();
   }

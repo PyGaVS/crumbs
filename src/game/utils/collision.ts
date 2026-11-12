@@ -1,6 +1,6 @@
 import { Physics, Scene } from 'phaser';
-import type { Fighter, FighterClass } from '../entities/Fighter';
-import { Enemy } from '../entities/Enemy';
+import type { Entity } from '../entities/Entity';
+import { Fighter, type FighterClass } from '../entities/Fighter';
 
 type ArcadeBody = Physics.Arcade.Body | Physics.Arcade.StaticBody;
 
@@ -20,29 +20,31 @@ export function fightersInCircle<T extends Fighter>(
 }
 
 /**
- * Un obstacle occupe-t-il le rectangle centré en (cx, cy) ?
- * @param blockers murs = corps statiques, mobs = corps dynamiques
+ * Un obstacle occupe-t-il le corps de mover s'il était centré en (cx, cy) ?
+ * @param blockers murs = corps statiques, fighters = les autres fighters
  */
 export function hasObstacle(
-  scene: Scene,
+  mover: Entity,
   cx: number,
   cy: number,
-  width: number,
-  height: number,
-  blockers: { walls: boolean; mobs: boolean },
+  blockers: { walls: boolean; fighters: boolean },
 ): boolean {
-  if (!blockers.walls && !blockers.mobs) {
+  if (!blockers.walls && !blockers.fighters) {
     return false;
   }
 
-  const bodies = scene.physics.overlapRect(
+  const { width, height } = mover.body || { width: 0, height: 0 };
+  const bodies = mover.scene.physics.overlapRect(
     cx - width / 2,
     cy - height / 2,
     width,
     height,
-    blockers.mobs,
+    blockers.fighters,
     blockers.walls,
   ) as ArcadeBody[];
 
-  return bodies.some((body) => body instanceof Physics.Arcade.StaticBody || body.gameObject instanceof Enemy);
+  return bodies.some(
+    (body) =>
+      body instanceof Physics.Arcade.StaticBody || (body.gameObject instanceof Fighter && body.gameObject !== mover),
+  );
 }

@@ -7,7 +7,7 @@ import { AngleFacing, polar } from '../utils/orientation';
 import { SpritePlayback } from '../data/enums/SpritePlayback';
 import type { Ease, Hitbox } from '../domain/Animation';
 import { Entity } from './Entity';
-import { Enemy } from './Enemy';
+import type { Fighter, FighterClass } from './Fighter';
 import type { EaseFunction } from './Playback';
 import type { ProjectileSkin } from '../domain/ProjectileSkin';
 
@@ -17,6 +17,7 @@ export type ProjectileConfig = {
   speed: number;
   range: number;
   damage: number;
+  target: FighterClass;
   /** Décrites regard à droite autour du projectile, tournées vers sa trajectoire. */
   hitboxes: readonly Hitbox[];
   /** Largeur affichée en px. */
@@ -38,10 +39,11 @@ export class Projectile extends Entity {
   private readonly ignoreWalls: boolean;
   private readonly crossBody: boolean;
   private readonly damage: number;
+  private readonly target: FighterClass;
   private readonly facing: AngleFacing;
   private readonly hitboxes: readonly Hitbox[];
-  /** Mobs déjà touchés : chacun ne prend les dégâts qu'une seule fois. */
-  private readonly mobsHit = new Set<Enemy>();
+  /** Fighters déjà touchés : chacun ne prend les dégâts qu'une seule fois. */
+  private readonly fightersHit = new Set<Fighter>();
 
   constructor(scene: Scene, x: number, y: number, skin: ProjectileSkin, config: ProjectileConfig) {
     super(scene, x, y, skin.textureKey);
@@ -51,6 +53,7 @@ export class Projectile extends Entity {
     this.duration = (config.range / config.speed) * 1000;
     this.ease = Tweens.Builders.GetEaseFunction(config.ease ?? 'Linear') as EaseFunction;
     this.damage = config.damage;
+    this.target = config.target;
     this.facing = new AngleFacing(config.angle);
     this.hitboxes = config.hitboxes;
     this.ignoreWalls = config.ignoreWalls ?? false;
@@ -84,7 +87,7 @@ export class Projectile extends Entity {
   override preUpdate(time: number, delta: number): void {
     super.preUpdate(time, delta);
     this.advance(delta);
-    this.damageMobs();
+    this.damageTargets();
 
     if (!this.active) {
       return;
@@ -106,14 +109,14 @@ export class Projectile extends Entity {
     this.setPosition(...polar(this.startX, this.startY, this.facing.angle, distance));
   }
 
-  private damageMobs(): void {
-    for (const [mob, multiplier] of touchedFighters(this, this.facing, this.hitboxes, Enemy)) {
-      if (this.mobsHit.has(mob)) {
+  private damageTargets(): void {
+    for (const [fighter, multiplier] of touchedFighters(this, this.facing, this.hitboxes, this.target)) {
+      if (this.fightersHit.has(fighter)) {
         continue;
       }
 
-      this.mobsHit.add(mob);
-      mob.takeDamage(this.damage * multiplier);
+      this.fightersHit.add(fighter);
+      fighter.takeDamage(this.damage * multiplier);
 
       if (!this.crossBody) {
         this.destroy();
@@ -123,8 +126,6 @@ export class Projectile extends Entity {
   }
 
   private hitsObstacle(): boolean {
-    const { width, height } = this.body || { width: 0, height: 0 };
-
-    return hasObstacle(this.scene, this.x, this.y, width, height, { walls: !this.ignoreWalls, mobs: false });
+    return hasObstacle(this, this.x, this.y, { walls: !this.ignoreWalls, fighters: false });
   }
 }

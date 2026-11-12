@@ -13,6 +13,7 @@ export type FighterClass<T extends Fighter = Fighter> = abstract new (...args: n
 export class Fighter extends Entity {
   health: number;
   armor: number;
+  ignoresWalls = false;
 
   constructor(
     scene: Scene,
