@@ -1,18 +1,15 @@
 import type { Physics } from 'phaser';
 import { SPRITE_SIZE } from '../core/settings';
 import { MobControls } from '../controls/MobControls';
-import { getAnimation } from '../data/animations';
 import type { SkinAction } from '../data/enums/SkinAction';
 import { LifeBar } from '../ui/LifeBar';
 import { fightersInCircle } from '../utils/collision';
-import { strike } from '../utils/combat';
 import { Direction, directionsTowards, FACING_ANGLES, opposite, polar } from '../utils/orientation';
-import type { Attack } from '../domain/Attack';
+import type { MobAttack } from '../domain/MobAttack';
 import { EnemyKind } from '../domain/EnemyKind';
 import type { BattleScene } from '../scenes/BattleScene';
 import type { Entity } from './Entity';
 import { Fighter } from './Fighter';
-import { Player } from './Player';
 
 /** Un ennemi posé dans l'arène, décrit par son EnemyKind. */
 export class Enemy extends Fighter {
@@ -61,10 +58,10 @@ export class Enemy extends Fighter {
     this.act(this.kind.skin, action, direction);
   }
 
-  attack(attack: Attack, target: Fighter): void {
+  attack(attack: MobAttack, target: Fighter): void {
     this.direction = directionsTowards(target.x - this.x, target.y - this.y)[0];
     this.halt();
-    getAnimation(attack.animationId).play(this, { onCue: (cue) => strike(this, cue, attack.damage, Player) });
+    attack.ability.execute(this);
   }
 
   /**

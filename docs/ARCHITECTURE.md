@@ -19,8 +19,8 @@ src/
     debug/                Les outils de dev, créés seulement par `npm run dev` :
                           HitboxOverlay (touche H)
     entities/             Les sprites Phaser qui vivent dans une scène (Entity, Player…)
-    domain/               Les classes métier, sans Phaser (Technique, CharClass, Weapon,
-                          EnemyKind, Attack, MobBehavior, Skin, WeaponSkin, ProjectileSkin,
+    domain/               Les classes métier, sans Phaser (Ability, Technique, CharClass, Weapon,
+                          EnemyKind, MobAttack, MobBehavior, Skin, WeaponSkin, ProjectileSkin,
                           Fx, Animation, Composition)
     data/                 La donnée pure : catalogues d'instances et enums
     utils/input.ts        Historique de touches et détection des séquences
@@ -47,7 +47,7 @@ scenes ──► sprites (Player, FxSprite…) ──► entités métier ◄─
 
 La règle n'est pas portée par les dossiers mais par la nature des fichiers : les entités
 métier et les catalogues de `data/` n'importent Phaser qu'en type. Les sous-classes rangées
-dans `data/<concept>/` pilotent le moteur : `ProjectileTechnique` crée des `Projectile`,
+dans `data/<concept>/` pilotent le moteur : `ProjectileAbility` crée des `Projectile`,
 `FxStep` des `FxSprite`. Elles reçoivent l'entité (`Player`, `Playback`) en import de type
 et passent par ses méthodes publiques. Les accesseurs `getX(id)` relient les concepts et
 chargent donc ces sous-classes.
@@ -69,7 +69,7 @@ Boot ──► Preloader ──► MainMenu ──► Game ⇄ GameOver
 
 - `enums/` : un fichier par enum (`CharClassId.NINJA`…). Ce sont les identifiants uniques
   qui relient les catalogues entre eux.
-- Un catalogue par concept (`techniques/`, `animations/`, `charClasses.ts`, `weapons.ts`,
+- Un catalogue par concept (`techniques.ts`, `animations/`, `charClasses.ts`, `weapons.ts`,
   `enemies.ts`, `skins.ts`, `weaponSkins.ts`, `projectileSkins.ts`, `fx.ts`) :
   un tableau constant d'instances plus un accesseur `getX(id)` qui échoue bruyamment sur un
   id inconnu.
@@ -87,9 +87,8 @@ Les sprites, qui vivent dans une scène :
   corps physique, sa hurtbox, est un cercle inscrit dans sa frame. Il ne connaît pas l'UI : il émet `FighterEvent.DAMAGED`, que `ui/LifeBar` et `ui/Hud` écoutent.
 - `Player` : le ninja. Il ignore d'où viennent ses ordres : `press(input)` inscrit un appui
   dans l'historique de touches, `move()` et `halt()` le font marcher ou l'arrêtent. Un appui
-  sur l'attaque qui ne conclut aucune technique déclenche l'attaque de base de son arme : il
-  joue l'animation d'attaque de l'arme, figé jusqu'à sa fin, et frappe les hitboxs (`strike`)
-  de chacun de ses repères. Aujourd'hui c'est `controls/PlayerControls` qui les appelle
+  sur l'attaque qui ne conclut aucune technique déclenche l'attaque de base de son arme, une
+  `Ability`, figé jusqu'à la fin de son animation. Aujourd'hui c'est `controls/PlayerControls` qui les appelle
   depuis le clavier. Il expose aussi les primitives que les techniques utilisent (`lock`,
   `playAction`…). Il reçoit une `Composition` et ne reconnaît que les techniques de sa classe
   et de son arme active. Un appui sur le switch passe à l'autre arme, après la technique
@@ -109,7 +108,8 @@ Les sprites, qui vivent dans une scène :
   son animation. Orienté ou droit, teinté ou non.
 - `Enemy` : un ennemi instancié depuis son `EnemyKind`, piloté par `controls/MobControls` s'il
   a un `MobBehavior`. Ses attaques passent avant ses déplacements, et il ne décide rien tant
-  que son animation joue. Il joue les actions de son skin (`playAction`), donc les `SkinStep`.
+  que son animation joue. Une attaque le tourne vers sa cible puis lance son `Ability`. Il joue
+  les actions de son skin (`playAction`), donc les `SkinStep`.
   `ambush` donne une destination qui coupe la route d'une cible : le point devant elle
   (`Entity.ahead`), à une avance proportionnelle à la distance (`leadRatio`) jusqu'à un plafond
   (`maxLead`).
@@ -118,9 +118,18 @@ Les sprites, qui vivent dans une scène :
 
 Les classes métier, instanciées par les catalogues de `data/`. Aucune n'importe Phaser :
 
-- `Technique` : ses variantes de séquences (dont découle la notation affichée), la
-  détection `matches(history)` et `execute(player)`, qui joue son animation et appelle
-  `action` à chaque repère. Les sous-classes de `data/techniques/` surchargent `action`.
+- `Ability` : ce que fait un fighter. `execute(fighter)` joue son animation et appelle `action`
+  à chaque repère. Les sous-classes de `data/abilities/` surchargent `action` : `StrikeAbility`
+  frappe les hitboxs du repère (`strike`) sur la classe de fighters qu'elle vise (`target`),
+  `ProjectileAbility` lance des `Projectile`,
+  `DashAbility` fait dasher le joueur. Son paramètre de type est le fighter qui peut la lancer :
+  `Ability<Player>` est refusée à un ennemi. Le déclencheur est porté par qui la possède :
+  - `Technique` : ses variantes de séquences (dont découle la notation affichée) et la
+    détection `matches(history)` ;
+  - l'attaque de base d'une `Weapon`, lancée par un appui sur l'attaque qui ne conclut
+    aucune technique ;
+  - `MobAttack` : une attaque d'`EnemyKind`, lancée dès qu'un de ses `triggers` est vrai, la
+    première de la liste l'emportant.
 - `CharClass`, `Weapon`, `EnemyKind` : les concepts du design et leurs chiffres. Leur rendu
   vit à part et se référence par id :
   - `Skin` : textures, clés d'animation et position de la main sur chaque frame, pour une
@@ -130,11 +139,8 @@ Les classes métier, instanciées par les catalogues de `data/`. Aucune n'import
   - `ProjectileSkin` : le sprite d'un projectile, son orientation, sa rotation (`spin`), son
     animation en vol, en boucle ou étirée sur toute la course (`SpritePlayback`), et
     l'opacité de son ombre (`shadowAlpha`, 0.15 par défaut). Une
-    `ProjectileTechnique` le référence par id et garde l'usage : taille, course, hitboxs.
-  - `Animation` : voir plus bas ; l'attaque de base d'une arme référence la sienne.
-- `Attack` : des dégâts et l'id d'une animation. L'attaque de base d'une `Weapon` en est une ;
-  un `EnemyKind` en liste plusieurs (`MobAttack`), chacune lancée dès qu'un de ses `triggers` est
-  vrai, la première de la liste l'emportant.
+    `ProjectileAbility` le référence par id et garde l'usage : taille, course, hitboxs.
+  - `Animation` : voir plus bas ; une `Ability` référence la sienne.
 - `MobBehavior` : le comportement d'un `EnemyKind`.
   - `destination` : le point vers lequel il marche, calculé depuis la scène.
   - `interval` : le délai en ms entre deux calculs de destination.
@@ -151,7 +157,7 @@ dans la lecture.
 - `Animation` : une liste de steps datés (`at` en ms), dans `data/animations/index.ts`.
   `animation.play(entity, { onCue, direction })` la joue sur n'importe quelle `Entity` et coupe
   sa lecture en cours. Ajouter une animation ne demande que de la donnée.
-- `AnimationStep` : la classe de base des steps, comme `Technique` pour les techniques. Ses
+- `AnimationStep` : la classe de base des steps, comme `Ability` pour les abilities. Ses
   enfants, dans `data/animations/`, surchargent `start(playback)` :
   - `SwingStep` : un geste de l'arme tenue, d'une pose (angle local, rayon, pivot) à une autre,
     dans le sens de rotation `clockwise`, arme miroitée ou non (`mirror`), puis figée sur sa
@@ -163,10 +169,10 @@ dans la lecture.
     jouée telle quelle (`<skin>-<action>`).
 
   `CueStep`, dans `domain/Animation.ts`, est le repère où le gameplay agit : le seul step
-  que les techniques et les armes connaissent, via `onCue`. Il porte les hitboxs de la
+  que les abilities connaissent, via `onCue`. Il porte les hitboxs de la
   frappe : des cercles décrits regard à droite (x vers l'avant, y vers le bas), que
   `Facing.place` pose dans le monde ; `utils/hitboxes.ts` en fournit des formes toutes faites.
-  Une technique qui frappe ces hitboxs est une `StrikeTechnique`. Un `Projectile` porte aussi les siennes, tournées vers
+  Une ability qui frappe ces hitboxs est une `StrikeAbility`. Un `Projectile` porte aussi les siennes, tournées vers
   sa trajectoire et testées à chaque frame. `touchedFighters` compte une seule fois chaque fighter de la classe visée,
   quel que soit le nombre de cercles qu'il chevauche, et émet `CombatEvent.STRIKE` : en dev,
   `debug/HitboxOverlay` affiche alors les cercles, pleins sur la frame où ils frappent puis en

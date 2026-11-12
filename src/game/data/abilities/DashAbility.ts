@@ -1,15 +1,13 @@
-import { Player } from '../../entities/Player';
-import { Technique, type TechniqueOptions } from '../../domain/Technique';
+import type { Player } from '../../entities/Player';
+import { Ability, type AbilityOptions } from '../../domain/Ability';
 import { DASH_MAX_EXTENSION, DASH_STEP } from '../../utils/consts';
 import { hasObstacle } from '../../utils/collision';
 import { Cardinal, Direction } from '../../utils/orientation';
-import Sequence from '../../utils/Sequence';
 import { Inputs } from '../enums/Inputs';
-import { TechniqueId } from '../enums/TechniqueId';
 
 type DashTweenConfig = Omit<Phaser.Types.Tweens.TweenBuilderConfig, 'targets' | 'x' | 'y'>;
 
-type DashOptions = TechniqueOptions & {
+type DashOptions = AbilityOptions & {
   range: number;
   ignoreWalls?: boolean;
   crossBody?: boolean;
@@ -17,15 +15,15 @@ type DashOptions = TechniqueOptions & {
   tween: DashTweenConfig;
 };
 
-export default class DashTechnique extends Technique {
+export default class DashAbility extends Ability<Player> {
   private readonly range: number;
   private readonly ignoreWalls: boolean;
   private readonly crossBody: boolean;
   private readonly direction?: Direction;
   private readonly tweenConfig: DashTweenConfig;
 
-  constructor(id: TechniqueId, name: string, sequence: Sequence, options: DashOptions) {
-    super(id, name, sequence, options);
+  constructor(options: DashOptions) {
+    super(options);
     this.range = options.range;
     this.ignoreWalls = options.ignoreWalls ?? false;
     this.crossBody = options.crossBody ?? true;
@@ -59,7 +57,6 @@ export default class DashTechnique extends Technique {
       onComplete: (tween, targets, ...params) => {
         player.ignoresWalls = false;
         this.tweenConfig.onComplete?.(tween, targets, ...params);
-        this.afterEffect(player);
       },
     });
   }

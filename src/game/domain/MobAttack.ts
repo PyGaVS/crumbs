@@ -1,12 +1,8 @@
-import type { AnimationId } from '../data/enums/AnimationId';
+import type { Ability } from './Ability';
 import type { Enemy } from '../entities/Enemy';
 import type { BattleScene } from '../scenes/BattleScene';
 
-export type Attack = {
-  damage: number;
-  animationId: AnimationId;
-};
-
-export type MobAttack = Attack & {
+export type MobAttack = {
+  ability: Ability<Enemy>;
   triggers: readonly ((mob: Enemy, scene: BattleScene) => boolean)[];
 };

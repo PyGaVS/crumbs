@@ -1,7 +1,9 @@
 import { EnemyKind } from '../domain/EnemyKind';
+import { Player } from '../entities/Player';
 import { AnimationId } from './enums/AnimationId';
 import { EnemyId } from './enums/EnemyId';
 import { SkinId } from './enums/SkinId';
+import StrikeAbility from './abilities/StrikeAbility';
 
 /** Catalogue des ennemis. */
 export const ALL_ENEMY_KINDS: readonly EnemyKind[] = [
@@ -12,8 +14,7 @@ export const ALL_ENEMY_KINDS: readonly EnemyKind[] = [
     30, 50,
     [
       {
-        damage: 10,
-        animationId: AnimationId.POISON_CLOUD,
+        ability: new StrikeAbility({ damage: 10, animationId: AnimationId.POISON_CLOUD, target: Player }),
         triggers: [
           (mob, scene) => mob.isWithin(110, scene.player), 
           (mob, scene) => mob.reachesDestination(scene)],
@@ -31,7 +32,7 @@ export const ALL_ENEMY_KINDS: readonly EnemyKind[] = [
     'Reptile',
     SkinId.REPTILE,
     50, 150,
-    [{ damage: 10, animationId: AnimationId.REPTILE_LEAP, 
+    [{ ability: new StrikeAbility({ damage: 10, animationId: AnimationId.REPTILE_LEAP, target: Player }),
       triggers: [
         (mob, scene) => mob.isWithin(80, scene.player)
       ] }],

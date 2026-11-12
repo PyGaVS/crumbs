@@ -2,27 +2,20 @@ import type { Player } from '../../entities/Player';
 import { Projectile, type ProjectileConfig } from '../../entities/Projectile';
 import type { ProjectileSkin } from '../../domain/ProjectileSkin';
 import type { Cue } from '../../domain/Animation';
-import { Technique, type TechniqueOptions } from '../../domain/Technique';
-import Sequence from '../../utils/Sequence';
+import { Ability, type AbilityOptions } from '../../domain/Ability';
 import type { ProjectileSkinId } from '../enums/ProjectileSkinId';
-import { TechniqueId } from '../enums/TechniqueId';
 import { getProjectileSkin } from '../projectileSkins';
 
-type ProjectileOptions = TechniqueOptions &
+type ProjectileOptions = AbilityOptions &
   Omit<ProjectileConfig, 'angle'> & {
     skinId: ProjectileSkinId;
     /** Écarts (radians) autour du regard du joueur, un projectile par écart. */
     spreadAngles?: readonly number[];
   };
 
-export default class ProjectileTechnique extends Technique {
-  constructor(
-    id: TechniqueId,
-    name: string,
-    sequence: Sequence,
-    private readonly options: ProjectileOptions,
-  ) {
-    super(id, name, sequence, options);
+export default class ProjectileAbility extends Ability<Player> {
+  constructor(private readonly options: ProjectileOptions) {
+    super(options);
   }
 
   get skin(): ProjectileSkin {
@@ -36,7 +29,5 @@ export default class ProjectileTechnique extends Technique {
         angle: cue.facing.angle + spread,
       });
     }
-
-    super.action(player, cue);
   }
 }

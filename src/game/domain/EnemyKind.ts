@@ -1,6 +1,6 @@
 import type { EnemyId } from '../data/enums/EnemyId';
 import type { SkinId } from '../data/enums/SkinId';
-import type { MobAttack } from './Attack';
+import type { MobAttack } from './MobAttack';
 import type { MobBehavior } from './MobBehavior';
 import type { Skin } from './Skin';
 import { getSkin } from '../data/skins';

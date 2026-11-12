@@ -1,43 +1,21 @@
-import type { AnimationId } from '../data/enums/AnimationId';
 import type { Inputs } from '../data/enums/Inputs';
 import { getSymbol } from '../utils/input';
-import { DirectionFacing } from '../utils/orientation';
 import type { TechniqueId } from '../data/enums/TechniqueId';
-import type { Animation, Cue } from './Animation';
+import type { Ability } from './Ability';
 import type { Player } from '../entities/Player';
 import type Sequence from '../utils/Sequence';
-import { getAnimation } from '../data/animations';
-
-export type TechniqueOptions = {
-  beforeEffect?: (player: Player) => void;
-  effect?: (player: Player) => void;
-  afterEffect?: (player: Player) => void;
-  animationId?: AnimationId;
-};
 
 export class Technique {
   /** Les suites d'inputs acceptées, aplaties depuis l'arbre à la construction. */
   private readonly paths: Inputs[][];
-  protected readonly beforeEffect: (player: Player) => void;
-  protected readonly effect: (player: Player) => void;
-  protected readonly afterEffect: (player: Player) => void;
-  readonly animationId?: AnimationId;
 
   constructor(
     readonly id: TechniqueId,
     readonly name: string,
     readonly sequence: Sequence,
-    options: TechniqueOptions = {},
+    readonly ability: Ability<Player>,
   ) {
     this.paths = sequence.paths();
-    this.beforeEffect = options.beforeEffect ?? (() => {});
-    this.effect = options.effect ?? (() => {});
-    this.afterEffect = options.afterEffect ?? (() => {});
-    this.animationId = options.animationId;
-  }
-
-  get animation(): Animation | undefined {
-    return this.animationId === undefined ? undefined : getAnimation(this.animationId);
   }
 
   /** Notation affichée au joueur, une par branche de l'arbre. */
@@ -47,25 +25,6 @@ export class Technique {
 
   matches(history: readonly Inputs[]): boolean {
     return this.paths.some((path) => pathMatches(path, history));
-  }
-
-  execute(player: Player): void {
-    const { animation } = this;
-
-    this.beforeEffect(player);
-    this.effect(player);
-
-    if (animation) {
-      animation.play(player, { onCue: (cue) => this.action(player, cue) });
-    } else {
-      this.action(player, { facing: new DirectionFacing(player.direction), index: 0, last: true, hitboxes: [] });
-    }
-  }
-
-  protected action(player: Player, cue: Cue): void {
-    if (cue.last) {
-      this.afterEffect(player);
-    }
   }
 }
 

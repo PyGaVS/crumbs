@@ -2,13 +2,11 @@ import { SCREEN_HEIGHT, SCREEN_WIDTH, SPRITE_SIZE } from '../core/settings';
 import { Inputs } from '../data/enums/Inputs';
 import type { SkinAction } from '../data/enums/SkinAction';
 import type { Animation, PlayOptions } from '../domain/Animation';
-import { strike } from '../utils/combat';
 import { InputHistory, isCardinal } from '../utils/input';
 import type { Direction } from '../utils/orientation';
 import type { Composition } from '../domain/Composition';
 import { Fighter } from './Fighter';
 import { HeldWeapon } from './HeldWeapon';
-import { Enemy } from './Enemy';
 import type { Playback } from './Playback';
 import type { Weapon } from '../domain/Weapon';
 import { BattleScene } from '../scenes/BattleScene';
@@ -62,9 +60,9 @@ export class Player extends Fighter {
       .find((t) => t.matches(this.inputHistory.history));
 
     if (technique) {
-      technique.execute(this);
+      technique.ability.execute(this);
     } else if (input === Inputs.ATTACK) {
-      this.attack();
+      this.weapon.attack.execute(this);
     }
 
     if (input === Inputs.SWITCH) {
@@ -81,12 +79,6 @@ export class Player extends Fighter {
     } else {
       this.heldWeapon.wield(this.weapon.skin);
     }
-  }
-
-  private attack(): void {
-    const animation = this.weapon.attackAnimation;
-
-    animation.play(this, { onCue: (cue) => strike(this, cue, this.weapon.attack.damage, Enemy) });
   }
 
   override perform(animation: Animation, options: PlayOptions): Playback {

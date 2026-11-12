@@ -1,11 +1,10 @@
 import type { TechniqueId } from '../data/enums/TechniqueId';
 import type { WeaponId } from '../data/enums/WeaponId';
 import type { WeaponSkinId } from '../data/enums/WeaponSkinId';
-import type { Animation } from './Animation';
-import type { Attack } from './Attack';
+import type { Ability } from './Ability';
 import type { Technique } from './Technique';
 import type { WeaponSkin } from './WeaponSkin';
-import { getAnimation } from '../data/animations';
+import type { Player } from '../entities/Player';
 import { getTechnique } from '../data/techniques';
 import { getWeaponSkin } from '../data/weaponSkins';
 
@@ -15,16 +14,12 @@ export class Weapon {
     readonly id: WeaponId,
     readonly name: string,
     readonly skinId: WeaponSkinId,
-    readonly attack: Attack,
+    readonly attack: Ability<Player>,
     readonly techniqueIds: readonly TechniqueId[],
   ) {}
 
   get skin(): WeaponSkin {
     return getWeaponSkin(this.skinId);
-  }
-
-  get attackAnimation(): Animation {
-    return getAnimation(this.attack.animationId);
   }
 
   get techniques(): Technique[] {
