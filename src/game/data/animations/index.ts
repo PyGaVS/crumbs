@@ -40,8 +40,8 @@ export const ALL_ANIMATIONS: readonly Animation[] = [
       distance: 256, duration: 160, ease: 'Cubic.out',
       obstacles: { crossWalls: true, crossFighters: true },
     }),
-    new ScaleStep({ scale: [1, 0.6], duration: 60, hold: 80, recover: 60, ease: 'Quad.out' }),
-    new HurtboxStep({ scale: 0.6, duration: 60, hold: 80, recover: 60, ease: 'Quad.out' }),
+    new ScaleStep({ scale: [1.2, 0.7], duration: 60, hold: 80, recover: 60, ease: 'Quad.out' }),
+    new HurtboxStep({ scale: 0.7, duration: 60, hold: 80, recover: 60, ease: 'Quad.out' }),
   ]),
   new Animation(AnimationId.SHURIKENS_THROW, [
     new SkinStep({ action: SkinAction.ATTACK, duration: 250 }), 

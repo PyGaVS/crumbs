@@ -182,7 +182,7 @@ dans la lecture.
     sur `duration` ms, sur l'horloge de la lecture (la charge de l'arc) ;
   - `PulseStep` : la base des effets qui montent à leur plus fort en `duration` ms, y restent
     `hold` ms, puis reviennent en `recover` ms. Ses enfants disent ce que l'effet touche :
-    - `ScaleStep` : le skin aplati, étiré ou grossi (`scale`, multiplicateurs [largeur, hauteur]) ;
+    - `ScaleStep` : le skin aplati, étiré ou grossi (`scale`, multiplicateurs [le long du regard, en travers], qui suit le regard sauf `upright`) ;
     - `HurtboxStep` : le rayon de la hurtbox multiplié par `scale`, autour de son centre.
 
   `CueStep`, dans `domain/Animation.ts`, est le repère où le gameplay agit : le seul step
