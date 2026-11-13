@@ -59,7 +59,10 @@ export class Projectile extends Entity {
     this.ignoreWalls = config.ignoreWalls ?? false;
     this.crossBody = config.crossBody ?? true;
     this.assetAngle = skin.assetAngle;
-    this.setScale((config.size ?? SPRITE_SIZE / 2) / this.width);
+    const fit = (config.size ?? SPRITE_SIZE / 2) / this.width;
+    const [scaleX, scaleY] = skin.scale;
+
+    this.setScale(fit * scaleX, fit * scaleY);
     this.setCollideWorldBounds(false);
     this.shadow.setAlpha(skin.shadowAlpha);
     this.orientTo(config.angle);
