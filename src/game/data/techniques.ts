@@ -1,22 +1,18 @@
 import { AnimationId } from './enums/AnimationId';
 import { ProjectileSkinId } from './enums/ProjectileSkinId';
 import { TechniqueId } from './enums/TechniqueId';
+import { Ability } from '../domain/Ability';
 import { Technique } from '../domain/Technique';
 import Sequence from '../utils/Sequence';
 import { Enemy } from '../entities/Enemy';
-import DashAbility from './abilities/DashAbility';
 import ProjectileAbility from './abilities/ProjectileAbility';
 import StrikeAbility from './abilities/StrikeAbility';
 
 /** Catalogue des techniques. */
 export const ALL_TECHNIQUES: readonly Technique[] = [
   new Technique(
-    TechniqueId.DASH, 'Dash', new Sequence().cardinals().same().opposite(), 
-    new DashAbility({
-      range: 256, ignoreWalls: true,
-      tween: { duration: 160, ease: 'Cubic.out' },
-      animationId: AnimationId.DASH,
-    }),
+    TechniqueId.DASH, 'Dash', new Sequence().cardinals().same().opposite(),
+    new Ability({ animationId: AnimationId.DASH }),
   ),
   new Technique(
     TechniqueId.SHURIKENS, 'Shurikens', new Sequence().cardinals().opposite().perpendicular().switch(), 

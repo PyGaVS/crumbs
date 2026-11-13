@@ -25,6 +25,7 @@ export class Entity extends Physics.Arcade.Sprite {
   readonly shadow: Shadow;
   /** Multiplicateurs de l'échelle, ancrés aux pieds, appliqués au seul rendu : corps, hurtbox et attaches ne les voient pas. */
   readonly renderScale = { x: 1, y: 1 };
+  ignoresWalls = false;
   private playback?: Playback;
   private _altitude = 0;
   private unscaled?: { scaleX: number; scaleY: number; y: number };

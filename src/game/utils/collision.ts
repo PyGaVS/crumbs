@@ -1,6 +1,8 @@
 import { Physics, Scene } from 'phaser';
 import type { Entity } from '../entities/Entity';
 import { Fighter, type FighterClass } from '../entities/Fighter';
+import { DASH_MAX_EXTENSION, DASH_STEP } from './consts';
+import { polar } from './orientation';
 
 type ArcadeBody = Physics.Arcade.Body | Physics.Arcade.StaticBody;
 
@@ -47,4 +49,36 @@ export function hasObstacle(
     (body) =>
       body instanceof Physics.Arcade.StaticBody || (body.gameObject instanceof Fighter && body.gameObject !== mover),
   );
+}
+
+/**
+ * Le point d'arrêt le plus loin de mover vers angle jusqu'à distance, prolongé si distance tombe dans un obstacle.
+ * @param cross les obstacles traversables en chemin ; on ne s'arrête jamais dans aucun
+ * @returns la distance jusqu'à ce point, en px
+ */
+export function landingDistance(
+  mover: Entity,
+  angle: number,
+  distance: number,
+  cross: { walls: boolean; fighters: boolean },
+): number {
+  let landing = 0;
+
+  for (let d = DASH_STEP; d <= distance + DASH_MAX_EXTENSION; d += DASH_STEP) {
+    const [x, y] = polar(mover.x, mover.y, angle, d);
+
+    if (hasObstacle(mover, x, y, { walls: !cross.walls, fighters: !cross.fighters })) {
+      break;
+    }
+
+    if (!hasObstacle(mover, x, y, { walls: true, fighters: true })) {
+      landing = d;
+
+      if (d >= distance) {
+        break;
+      }
+    }
+  }
+
+  return landing;
 }

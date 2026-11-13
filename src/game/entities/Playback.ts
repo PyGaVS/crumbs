@@ -113,6 +113,7 @@ export class Playback {
     this.ended = true;
     Object.assign(this.entity.renderScale, { x: 1, y: 1 });
     this.entity.scaleHurtbox?.(1);
+    this.entity.ignoresWalls = false;
 
     if (this.grip) {
       this.entity.heldWeapon?.hold();

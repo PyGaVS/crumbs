@@ -83,7 +83,8 @@ Les sprites, qui vivent dans une scène :
 - `Entity` : un sprite qui avance dans une direction et qui sait
   tester une collision en rectangle. Il joue une animation à la fois (`perform`), qu'il
   avance dans son `preUpdate` et arrête à sa destruction. Comme `altitude`, son `renderScale`
-  (multiplicateurs de l'échelle) ne touche que le rendu.
+  (multiplicateurs de l'échelle) ne touche que le rendu. `ignoresWalls` coupe ses collisions
+  avec les fighters pendant un `MoveStep` qui traverse ; la fin d'une lecture le remet à faux.
 - `Fighter` : une `Entity` avec PV et armure, l'ordre des dégâts et la mort à zéro PV. Son
   corps physique, sa hurtbox, est un cercle inscrit dans sa frame, que `scaleHurtbox` agrandit
   ou réduit autour de son centre ; la fin d'une lecture la rend à sa taille. Il ne connaît pas l'UI : il émet `FighterEvent.DAMAGED`, que `ui/LifeBar` et `ui/Hud` écoutent.
@@ -123,10 +124,11 @@ Les sprites, qui vivent dans une scène :
 Les classes métier, instanciées par les catalogues de `data/`. Aucune n'importe Phaser :
 
 - `Ability` : ce que fait un fighter. `execute(fighter)` joue son animation, obligatoire, et appelle
-  `action` à chaque repère. Les sous-classes de `data/abilities/` surchargent `action` : `StrikeAbility`
+  `action` à chaque repère, sans effet par défaut : une `Ability` nue n'est que son animation,
+  comme le dash. Les sous-classes de `data/abilities/` surchargent `action` : `StrikeAbility`
   frappe les hitboxs du repère (`strike`) sur la classe de fighters qu'elle vise (`target`),
-  `ProjectileAbility` lance des `Projectile` qui touchent cette classe,
-  `DashAbility` fait dasher le fighter qui la lance. Le déclencheur est porté par qui la possède :
+  `ProjectileAbility` lance des `Projectile` qui touchent cette classe. Le déclencheur est
+  porté par qui la possède :
   - `Technique` : ses variantes de séquences (dont découle la notation affichée) et la
     détection `matches(history)` ;
   - l'attaque de base d'une `Weapon`, lancée par un appui sur l'attaque qui ne conclut
@@ -172,6 +174,10 @@ dans la lecture.
   - `SkinStep` : une action du skin (`SkinAction`), tenue `duration` ms. Elle suit le regard
     si la config la décline par direction (`<skin>-<action>-<direction>`), sinon elle est
     jouée telle quelle (`<skin>-<action>`) ;
+  - `MoveStep` : un déplacement de `distance` px le long du regard en `duration` ms, en arc si
+    `height`. Avec `obstacles`, il s'arrête avant un obstacle infranchissable et ne se pose
+    jamais dedans (`landingDistance`), finit plus tôt si le trajet raccourcit, et coupe les
+    collisions avec les fighters s'il traverse les murs (`crossWalls`) ;
   - `WeaponFramesStep` : des frames de la feuille de l'arme tenue, réparties à parts égales
     sur `duration` ms, sur l'horloge de la lecture (la charge de l'arc) ;
   - `PulseStep` : la base des effets qui montent à leur plus fort en `duration` ms, y restent

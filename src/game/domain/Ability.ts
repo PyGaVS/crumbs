@@ -8,7 +8,7 @@ export type AbilityOptions = {
 };
 
 /** Ce que fait un fighter : une animation et l'effet de chacun de ses repères. */
-export abstract class Ability {
+export class Ability {
   readonly animationId: AnimationId;
 
   constructor(options: AbilityOptions) {
@@ -23,5 +23,5 @@ export abstract class Ability {
     this.animation.play(fighter, { onCue: (cue) => this.action(fighter, cue) });
   }
 
-  protected abstract action(fighter: Fighter, cue: Cue): void;
+  protected action(_fighter: Fighter, _cue: Cue): void {}
 }

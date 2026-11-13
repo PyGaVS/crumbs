@@ -13,7 +13,6 @@ export type FighterClass<T extends Fighter = Fighter> = abstract new (...args: n
 export class Fighter extends Entity {
   health: number;
   armor: number;
-  ignoresWalls = false;
   /** Rayon de la hurtbox en px de la frame source, avant scaleHurtbox. */
   private readonly hurtboxBase: number;
   private hurtboxScale = 1;
