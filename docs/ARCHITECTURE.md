@@ -82,7 +82,8 @@ Les sprites, qui vivent dans une scène :
 
 - `Entity` : un sprite qui avance dans une direction et qui sait
   tester une collision en rectangle. Il joue une animation à la fois (`perform`), qu'il
-  avance dans son `preUpdate` et arrête à sa destruction.
+  avance dans son `preUpdate` et arrête à sa destruction. Comme `altitude`, son `renderScale`
+  (multiplicateurs de l'échelle) ne touche que le rendu.
 - `Fighter` : une `Entity` avec PV et armure, l'ordre des dégâts et la mort à zéro PV. Son
   corps physique, sa hurtbox, est un cercle inscrit dans sa frame. Il ne connaît pas l'UI : il émet `FighterEvent.DAMAGED`, que `ui/LifeBar` et `ui/Hud` écoutent.
 - `Player` : le ninja. Il ignore d'où viennent ses ordres : `press(input)` inscrit un appui
@@ -171,7 +172,9 @@ dans la lecture.
     si la config la décline par direction (`<skin>-<action>-<direction>`), sinon elle est
     jouée telle quelle (`<skin>-<action>`) ;
   - `WeaponFramesStep` : des frames de la feuille de l'arme tenue, réparties à parts égales
-    sur `duration` ms, sur l'horloge de la lecture (la charge de l'arc).
+    sur `duration` ms, sur l'horloge de la lecture (la charge de l'arc) ;
+  - `ScaleStep` : le skin aplati, étiré ou grossi (`scale`, multiplicateurs [largeur, hauteur])
+    en `duration` ms, tenu `hold` ms, puis reformé en `recover` ms.
 
   `CueStep`, dans `domain/Animation.ts`, est le repère où le gameplay agit : le seul step
   que les abilities connaissent, via `onCue`. Il porte les hitboxs de la
@@ -184,6 +187,8 @@ dans la lecture.
   contour jusqu'à `DISPLAY_TIME`, et les corps physiques (touche H).
 - `Playback` : une lecture, avancée par l'entité à chaque frame, sans import Phaser. C'est l'unique horloge des
   steps et des gestes, sans minuterie ni tween Phaser : `stop()` suffit à tout arrêter.
+  `animate` fait varier les nombres d'un objet (la pose de l'arme), `during` appelle une
+  fonction à chaque frame avec le temps écoulé (déplacement, frames d'arme, échelle de rendu).
 - `Facing` : le regard figé au lancement, seul endroit qui décide du miroir. L'arme,
   l'entaille, le skin et le gameplay lisent le même. Deux enfants :
   - `DirectionFacing` : un cardinal, le regard des animations, miroité vers la gauche

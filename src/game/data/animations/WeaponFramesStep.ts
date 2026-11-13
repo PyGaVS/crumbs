@@ -30,18 +30,9 @@ export default class WeaponFramesStep extends AnimationStep {
     }
 
     const { frames, duration } = this.options;
-    let progress = 0;
 
-    const film = {
-      get progress(): number {
-        return progress;
-      },
-      set progress(t: number) {
-        progress = t;
-        weapon.setFrame(frames[Math.min(frames.length - 1, Math.floor(t * frames.length))]);
-      },
-    };
-
-    playback.animate(film, { progress: 1 }, duration, (t) => t);
+    playback.during(duration, (_ms, progress) => {
+      weapon.setFrame(frames[Math.min(frames.length - 1, Math.floor(progress * frames.length))]);
+    });
   }
 }

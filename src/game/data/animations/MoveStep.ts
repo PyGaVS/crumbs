@@ -31,19 +31,12 @@ export default class MoveStep extends AnimationStep {
     const { distance, height = 0, duration } = this.options;
     const { x: fromX, y: fromY } = entity;
     const [toX, toY] = polar(fromX, fromY, facing.angle, distance);
-    let progress = 0;
 
-    const path = {
-      get progress(): number {
-        return progress;
-      },
-      set progress(t: number) {
-        progress = t;
-        entity.altitude = height * Math.sin(Math.PI * t);
-        entity.setPosition(fromX + (toX - fromX) * t, fromY + (toY - fromY) * t);
-      },
-    };
+    playback.during(duration, (_ms, progress) => {
+      const t = this.ease(progress);
 
-    playback.animate(path, { progress: 1 }, duration, this.ease);
+      entity.altitude = height * Math.sin(Math.PI * t);
+      entity.setPosition(fromX + (toX - fromX) * t, fromY + (toY - fromY) * t);
+    });
   }
 }

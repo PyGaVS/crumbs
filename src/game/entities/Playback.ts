@@ -89,13 +89,30 @@ export class Playback {
     this.motions.set(target, { from: { ...target }, to: to as Values, start: this.now, duration, ease });
   }
 
-  /** Steps en attente abandonnés, arme rendue ; les FX lancés finissent seuls. */
+  during(duration: number, tick: (ms: number, progress: number) => void): void {
+    let elapsed = 0;
+
+    const clock = {
+      get elapsed(): number {
+        return elapsed;
+      },
+      set elapsed(ms: number) {
+        elapsed = ms;
+        tick(ms, duration > 0 ? ms / duration : 1);
+      },
+    };
+
+    this.animate(clock, { elapsed: duration }, duration, (t) => t);
+  }
+
+  /** Steps en attente abandonnés, arme rendue, entité reformée ; les FX lancés finissent seuls. */
   stop(): void {
     if (this.ended) {
       return;
     }
 
     this.ended = true;
+    Object.assign(this.entity.renderScale, { x: 1, y: 1 });
 
     if (this.grip) {
       this.entity.heldWeapon?.hold();

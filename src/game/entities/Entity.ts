@@ -1,4 +1,4 @@
-import { GameObjects, Physics, Scene } from 'phaser';
+import { GameObjects, Physics, Scene, Scenes } from 'phaser';
 import { Inputs } from '../data/enums/Inputs';
 import type { SkinAction } from '../data/enums/SkinAction';
 import { Direction, DirectionFacing, FACING_ANGLES, orient, polar } from '../utils/orientation';
@@ -23,8 +23,11 @@ export class Entity extends Physics.Arcade.Sprite {
   assetAngle?: number;
   readonly heldWeapon?: HeldWeapon;
   readonly shadow: Shadow;
+  /** Multiplicateurs de l'échelle, ancrés aux pieds, appliqués au seul rendu : corps, hurtbox et attaches ne les voient pas. */
+  readonly renderScale = { x: 1, y: 1 };
   private playback?: Playback;
   private _altitude = 0;
+  private unscaled?: { scaleX: number; scaleY: number; y: number };
 
   constructor(scene: Scene, x: number, y: number, texture: string, frame?: string | number) {
     super(scene, x, y, texture, frame);
@@ -32,7 +35,13 @@ export class Entity extends Physics.Arcade.Sprite {
     scene.physics.add.existing(this);
     this.setCollideWorldBounds(true);
     this.shadow = new Shadow(this);
-    this.once(GameObjects.Events.DESTROY, () => this.playback?.stop());
+    scene.events.on(Scenes.Events.PRE_RENDER, this.applyRenderScale, this);
+    scene.events.on(Scenes.Events.RENDER, this.removeRenderScale, this);
+    this.once(GameObjects.Events.DESTROY, () => {
+      this.playback?.stop();
+      scene.events.off(Scenes.Events.PRE_RENDER, this.applyRenderScale, this);
+      scene.events.off(Scenes.Events.RENDER, this.removeRenderScale, this);
+    });
   }
 
   /** px au-dessus du sol. */
@@ -51,6 +60,34 @@ export class Entity extends Physics.Arcade.Sprite {
 
   get performing(): boolean {
     return this.playback?.playing ?? false;
+  }
+
+  /** Juste avant le rendu : l'échelle déformée, et la position décalée pour garder le bas de la frame en place. */
+  private applyRenderScale(): void {
+    const { x, y } = this.renderScale;
+
+    if (x === 1 && y === 1) {
+      return;
+    }
+
+    const { scaleX, scaleY } = this;
+
+    this.unscaled = { scaleX, scaleY, y: this.y };
+    this.y += (this.height - this.displayOriginY) * scaleY * (1 - y);
+    this.setScale(scaleX * x, scaleY * y);
+  }
+
+  /** Juste après le rendu : l'échelle et la position d'avant. */
+  private removeRenderScale(): void {
+    if (!this.unscaled) {
+      return;
+    }
+
+    const { scaleX, scaleY, y } = this.unscaled;
+
+    this.setScale(scaleX, scaleY);
+    this.y = y;
+    this.unscaled = undefined;
   }
 
   /** Joue une action du skin ; seules les entités au skin animé la définissent. */
