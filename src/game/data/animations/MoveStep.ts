@@ -4,6 +4,8 @@ import type { EaseFunction, Playback } from '../../entities/Playback';
 import { landingDistance } from '../../utils/collision';
 import { polar } from '../../utils/orientation';
 
+export type MoveObstacles = { crossWalls?: boolean; crossFighters?: boolean };
+
 type MoveOptions = StepOptions & {
   /** px vers le regard, négatif pour reculer. */
   distance: number;
@@ -13,7 +15,7 @@ type MoveOptions = StepOptions & {
   duration: number;
   ease: Ease;
   /** Arrêt avant un obstacle infranchissable, jamais d'atterrissage dedans ; absent, le trajet les ignore. */
-  obstacles?: { crossWalls?: boolean; crossFighters?: boolean };
+  obstacles?: MoveObstacles;
 };
 
 /** Un déplacement de l'entité le long du regard figé, en arc si height. */

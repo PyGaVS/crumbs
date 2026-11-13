@@ -4,9 +4,8 @@ import { AnimationId } from '../enums/AnimationId';
 import { FxId } from '../enums/FxId';
 import { SkinAction } from '../enums/SkinAction';
 import FxStep from './FxStep';
-import HurtboxStep from './HurtboxStep';
 import MoveStep from './MoveStep';
-import ScaleStep from './ScaleStep';
+import { dash } from './presets';
 import SkinStep from './SkinStep';
 import SwingStep from './SwingStep';
 import WeaponFramesStep from './WeaponFramesStep';
@@ -34,14 +33,7 @@ export const ALL_ANIMATIONS: readonly Animation[] = [
     new CueStep({ at: 300 }),
   ]),
   new Animation(AnimationId.DASH, [
-    new SkinStep({ action: SkinAction.WALK }),
-    new FxStep({ fx: FxId.SMOKE_CIRCULAR, reach: 0, upright: true, size: 48, duration: 200, offset: [0, 32] }),
-    new MoveStep({
-      distance: 256, duration: 160, ease: 'Cubic.out',
-      obstacles: { crossWalls: true, crossFighters: true },
-    }),
-    new ScaleStep({ scale: [1.2, 0.7], duration: 60, hold: 80, recover: 60, ease: 'Quad.out' }),
-    new HurtboxStep({ scale: 0.7, duration: 60, hold: 80, recover: 60, ease: 'Quad.out' }),
+    ...dash()
   ]),
   new Animation(AnimationId.SHURIKENS_THROW, [
     new SkinStep({ action: SkinAction.ATTACK, duration: 250 }), 
