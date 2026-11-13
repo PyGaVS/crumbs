@@ -1,6 +1,5 @@
 import { GameObjects, Tweens } from 'phaser';
-import { Inputs } from '../data/enums/Inputs';
-import { type Direction, DirectionFacing, FACING_ANGLES, orient, polar } from '../utils/orientation';
+import { DirectionFacing, FACING_ANGLES, orient, polar } from '../utils/orientation';
 import { Attachment } from './Attachment';
 import type { EaseFunction } from './Playback';
 import type { Skin } from '../domain/Skin';
@@ -107,15 +106,6 @@ export class HeldWeapon extends Attachment {
     const progress = WIELD_EASE((this.scene.time.now - this.wieldedAt) / WIELD_DURATION);
 
     orient(this, facing.toWorld(WIELD_ANGLE * (1 - progress)), this.weaponSkin.sprite.assetAngle, facing.mirrored);
-  }
-
-  /** Derrière le porteur quand il regarde vers le haut */
-  private layer(direction: Direction): void {
-    if (direction === Inputs.UP) {
-      this.scene.children.moveBelow(this, this.target);
-    } else {
-      this.scene.children.moveAbove(this, this.target);
-    }
   }
 
   private showInHand(): void {

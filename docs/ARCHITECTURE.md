@@ -97,7 +97,7 @@ Les sprites, qui vivent dans une scène :
   et de son arme active. Un appui sur le switch passe à l'autre arme, après la technique
   qu'il conclut éventuellement : il ne fige pas le joueur.
 - `Attachment` : une image accrochée à un sprite, recalée sur lui après la physique à chaque
-  frame et détruite avec lui. Deux déclinaisons :
+  frame et détruite avec lui. Trois déclinaisons :
   - `Shadow` : l'ombre portée que chaque `Entity` crée à sa construction, dessinée juste
     sous elle.
   - `HeldWeapon` : l'arme en main du joueur, placée sur la main que montre la frame en cours
@@ -109,6 +109,11 @@ Les sprites, qui vivent dans une scène :
     entier tourne jusqu'à la pose de la main puis laisse place à sa version en main, sur
     l'horloge de la scène et sans verrou. `sheathe` la cache jusqu'à la prochaine prise en
     main, le temps de la technique conclue par le switch.
+  - `HeldSprite` : un sprite tenu autour de l'entité (`position`, décrite regard à droite et
+    placée par `Facing.place` comme une hitbox), sur le regard d'une lecture, à l'échelle de
+    son porteur. Comme l'arme (`layer`, commun aux attaches), il passe derrière le porteur
+    quand celui-ci regarde vers le haut, et reste juste au-dessus de l'arme. Posé par un
+    `SpriteStep`, il disparaît avec la lecture.
 - `FxSprite` : un effet purement visuel (`Fx`), posé par un `FxStep` et détruit à la fin de
   son animation. Orienté ou droit, teinté ou non.
 - `Enemy` : un ennemi instancié depuis son `EnemyKind`, piloté par `controls/MobControls` s'il
@@ -182,6 +187,9 @@ dans la lecture.
     collisions avec les fighters s'il traverse les murs (`crossWalls`) ;
   - `WeaponFramesStep` : des frames de la feuille de l'arme tenue, réparties à parts égales
     sur `duration` ms, sur l'horloge de la lecture (la charge de l'arc) ;
+  - `SpriteStep` : le sprite d'un `ProjectileSkin` tenu autour de l'entité pendant `duration` ms,
+    ses `positions` (décrites regard à droite) réparties à parts égales comme des frames (la
+    flèche encochée) ;
   - `PulseStep` : la base des effets qui montent à leur plus fort en `duration` ms, y restent
     `hold` ms, puis reviennent en `recover` ms. Ses enfants disent ce que l'effet touche :
     - `ScaleStep` : le skin aplati, étiré ou grossi (`scale`, multiplicateurs [le long du regard, en travers], qui suit le regard sauf `upright`) ;

@@ -1,4 +1,6 @@
 import { GameObjects, Scenes } from 'phaser';
+import { Inputs } from '../data/enums/Inputs';
+import type { Direction } from '../utils/orientation';
 
 /** Une image accrochée à un sprite : recalée après la physique à chaque frame, détruite avec lui. */
 export abstract class Attachment<T extends GameObjects.Sprite = GameObjects.Sprite> extends GameObjects.Image {
@@ -22,4 +24,13 @@ export abstract class Attachment<T extends GameObjects.Sprite = GameObjects.Spri
   }
 
   protected abstract follow(): void;
+
+  /** Derrière la cible quand elle regarde vers le haut */
+  protected layer(direction: Direction): void {
+    if (direction === Inputs.UP) {
+      this.scene.children.moveBelow(this, this.target);
+    } else {
+      this.scene.children.moveAbove(this, this.target);
+    }
+  }
 }
