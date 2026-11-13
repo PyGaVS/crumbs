@@ -85,7 +85,8 @@ Les sprites, qui vivent dans une scène :
   avance dans son `preUpdate` et arrête à sa destruction. Comme `altitude`, son `renderScale`
   (multiplicateurs de l'échelle) ne touche que le rendu.
 - `Fighter` : une `Entity` avec PV et armure, l'ordre des dégâts et la mort à zéro PV. Son
-  corps physique, sa hurtbox, est un cercle inscrit dans sa frame. Il ne connaît pas l'UI : il émet `FighterEvent.DAMAGED`, que `ui/LifeBar` et `ui/Hud` écoutent.
+  corps physique, sa hurtbox, est un cercle inscrit dans sa frame, que `scaleHurtbox` agrandit
+  ou réduit autour de son centre ; la fin d'une lecture la rend à sa taille. Il ne connaît pas l'UI : il émet `FighterEvent.DAMAGED`, que `ui/LifeBar` et `ui/Hud` écoutent.
 - `Player` : le ninja. Il ignore d'où viennent ses ordres : `press(input)` inscrit un appui
   dans l'historique de touches, `move()` et `halt()` le font marcher ou l'arrêtent. Un appui
   sur l'attaque qui ne conclut aucune technique déclenche l'attaque de base de son arme, une
@@ -173,8 +174,10 @@ dans la lecture.
     jouée telle quelle (`<skin>-<action>`) ;
   - `WeaponFramesStep` : des frames de la feuille de l'arme tenue, réparties à parts égales
     sur `duration` ms, sur l'horloge de la lecture (la charge de l'arc) ;
-  - `ScaleStep` : le skin aplati, étiré ou grossi (`scale`, multiplicateurs [largeur, hauteur])
-    en `duration` ms, tenu `hold` ms, puis reformé en `recover` ms.
+  - `PulseStep` : la base des effets qui montent à leur plus fort en `duration` ms, y restent
+    `hold` ms, puis reviennent en `recover` ms. Ses enfants disent ce que l'effet touche :
+    - `ScaleStep` : le skin aplati, étiré ou grossi (`scale`, multiplicateurs [largeur, hauteur]) ;
+    - `HurtboxStep` : le rayon de la hurtbox multiplié par `scale`, autour de son centre.
 
   `CueStep`, dans `domain/Animation.ts`, est le repère où le gameplay agit : le seul step
   que les abilities connaissent, via `onCue`. Il porte les hitboxs de la

@@ -1,4 +1,4 @@
-import { Scene } from 'phaser';
+import { Physics, Scene } from 'phaser';
 import type { SkinAction } from '../data/enums/SkinAction';
 import type { Skin } from '../domain/Skin';
 import type { Direction } from '../utils/orientation';
@@ -14,6 +14,9 @@ export class Fighter extends Entity {
   health: number;
   armor: number;
   ignoresWalls = false;
+  /** Rayon de la hurtbox en px de la frame source, avant scaleHurtbox. */
+  private readonly hurtboxBase: number;
+  private hurtboxScale = 1;
 
   constructor(
     scene: Scene,
@@ -30,7 +33,21 @@ export class Fighter extends Entity {
 
     const radius = Math.min(this.width, this.height) / 2;
 
+    this.hurtboxBase = radius;
     this.setCircle(radius, this.width / 2 - radius, this.height / 2 - radius);
+  }
+
+  override scaleHurtbox(scale: number): void {
+    if (scale === this.hurtboxScale) {
+      return;
+    }
+
+    const body = this.body as Physics.Arcade.Body;
+    const radius = this.hurtboxBase * scale;
+    const shift = body.radius - radius;
+
+    this.hurtboxScale = scale;
+    this.setCircle(radius, body.offset.x + shift, body.offset.y + shift);
   }
 
   takeDamage(amount: number): void {
@@ -84,7 +101,7 @@ export class Fighter extends Entity {
   }
 
   protected get hurtboxRadius(): number {
-    return Math.min(this.displayWidth, this.displayHeight) / 2;
+    return (Math.min(this.displayWidth, this.displayHeight) / 2) * this.hurtboxScale;
   }
 
   /** px entre sa hurtbox et celle d'other, négatif quand elles se chevauchent. */

@@ -105,7 +105,6 @@ export class Playback {
     this.animate(clock, { elapsed: duration }, duration, (t) => t);
   }
 
-  /** Steps en attente abandonnés, arme rendue, entité reformée ; les FX lancés finissent seuls. */
   stop(): void {
     if (this.ended) {
       return;
@@ -113,6 +112,7 @@ export class Playback {
 
     this.ended = true;
     Object.assign(this.entity.renderScale, { x: 1, y: 1 });
+    this.entity.scaleHurtbox?.(1);
 
     if (this.grip) {
       this.entity.heldWeapon?.hold();

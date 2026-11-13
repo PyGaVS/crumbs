@@ -93,6 +93,8 @@ export class Entity extends Physics.Arcade.Sprite {
   /** Joue une action du skin ; seules les entités au skin animé la définissent. */
   playAction?(action: SkinAction, direction: Direction): void;
 
+  scaleHurtbox?(scale: number): void;
+
   /** Joue animation en coupant la lecture en cours : passer par Animation.play. */
   perform(animation: Animation, options: PlayOptions): Playback {
     const playback = new Playback(this, new DirectionFacing(options.direction ?? this.direction), animation, options);
