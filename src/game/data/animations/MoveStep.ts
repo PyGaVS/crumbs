@@ -14,7 +14,7 @@ type MoveOptions = StepOptions & {
   /** ms */
   duration: number;
   ease: Ease;
-  /** Arrêt avant un obstacle infranchissable, jamais d'atterrissage dedans ; absent, le trajet les ignore. */
+  /** Arrêt avant un obstacle infranchissable, jamais d'atterrissage dedans */
   obstacles?: MoveObstacles;
 };
 
@@ -58,13 +58,9 @@ export default class MoveStep extends AnimationStep {
   private landing({ entity }: Playback, angle: number): number {
     const { distance, obstacles } = this.options;
 
-    if (!obstacles) {
-      return Math.abs(distance);
-    }
-
     return landingDistance(entity, angle, Math.abs(distance), {
-      walls: obstacles.crossWalls ?? false,
-      fighters: obstacles.crossFighters ?? false,
+      walls: obstacles?.crossWalls ?? false,
+      fighters: obstacles?.crossFighters ?? false,
     });
   }
 }
