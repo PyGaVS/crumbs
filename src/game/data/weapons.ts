@@ -20,7 +20,7 @@ export const ALL_WEAPONS: readonly Weapon[] = [
       hitboxes: [{ x: 18, y: 0, radius: 8 }],
       crossBody: false, animationId: AnimationId.BOW_SHOT,
     }),
-    [],
+    [TechniqueId.POWER_SHOT],
   ),
 ];
 

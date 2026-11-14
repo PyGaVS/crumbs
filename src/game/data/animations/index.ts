@@ -2,15 +2,12 @@ import { Animation, CueStep } from '../../domain/Animation';
 import { hitboxRing } from '../../utils/hitboxes';
 import { AnimationId } from '../enums/AnimationId';
 import { FxId } from '../enums/FxId';
-import { ProjectileSkinId } from '../enums/ProjectileSkinId';
 import { SkinAction } from '../enums/SkinAction';
 import FxStep from './FxStep';
 import MoveStep from './MoveStep';
-import { dash } from './presets';
+import { bow, dash } from './presets';
 import SkinStep from './SkinStep';
-import SpriteStep from './SpriteStep';
 import SwingStep from './SwingStep';
-import WeaponFramesStep from './WeaponFramesStep';
 
 /** Catalogue des animations. */
 export const ALL_ANIMATIONS: readonly Animation[] = [
@@ -29,11 +26,11 @@ export const ALL_ANIMATIONS: readonly Animation[] = [
     }),
   ]),
   new Animation(AnimationId.BOW_SHOT, [
-    new SkinStep({ action: SkinAction.ATTACK, duration: 500 }),
-    new SwingStep({ from: { angle: -Math.PI / 2, radius: 0, pivot: 28 }, to: {}, duration: 600, ease: 'Linear' }),
-    new WeaponFramesStep({ frames: [0, 1, 2, 0], duration: 500 }),
-    new SpriteStep({ skinId: ProjectileSkinId.ARROW, positions: [[38, 0], [30, 0], [26, 0]], duration: 375 }),
-    new CueStep({ at: 300 }),
+    ...bow({ frames: [0, 1, 2, 0], positions: [[38, 0], [30, 0], [26, 0]] }),
+  ]),
+  new Animation(AnimationId.POWER_SHOT, [
+    ...bow({ frames: [0, 1, 2, 3, 0], positions: [[38, 0], [30, 0], [26, 0], [-6, 0]] }),
+    new MoveStep({ at: 525, distance: -48, duration: 50, ease: 'Quad.out'}),
   ]),
   new Animation(AnimationId.DASH, [
     ...dash()

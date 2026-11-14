@@ -169,7 +169,7 @@ dans la lecture.
   `animation.play(entity, { onCue, direction })` la joue sur n'importe quelle `Entity` et coupe
   sa lecture en cours. Ajouter une animation ne demande que de la donnée.
   `data/animations/presets.ts` fournit des suites de steps toutes faites et paramétrables
-  (`dash`), que le catalogue appelle pour ses variantes, comme `hitboxRing` pour les hitboxs.
+  (`dash`, `bow`), que le catalogue appelle pour ses variantes, comme `hitboxRing` pour les hitboxs.
 - `AnimationStep` : la classe de base des steps, comme `Ability` pour les abilities. Ses
   enfants, dans `data/animations/`, surchargent `start(playback)` :
   - `SwingStep` : un geste de l'arme tenue, d'une pose (angle local, rayon, pivot) à une autre,
