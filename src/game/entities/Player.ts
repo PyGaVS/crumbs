@@ -111,7 +111,11 @@ export class Player extends Fighter {
 
     const buffered = this.inputBuffer;
     this.inputBuffer = [];
-    buffered.forEach((input) => this.press(input));
+
+    for (const input of buffered) {
+      this.press(input);
+      if (this.locked) { break; }
+    }
   }
 
   /** Avance vers sa direction, sans effet pendant une animation. */
