@@ -11,10 +11,10 @@ export class Technique {
   constructor(
     readonly id: TechniqueId,
     readonly name: string,
-    readonly sequence: Sequence,
+    readonly sequences: readonly Sequence[],
     readonly ability: Ability,
   ) {
-    this.paths = sequence.paths();
+    this.paths = sequences.flatMap((sequence) => sequence.paths());
   }
 
   /** Notation affichée au joueur, une par branche de l'arbre. */

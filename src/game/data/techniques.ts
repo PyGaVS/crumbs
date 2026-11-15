@@ -19,11 +19,11 @@ import SwingStep from './animations/SwingStep';
 /** Catalogue des techniques. */
 export const ALL_TECHNIQUES: readonly Technique[] = [
   new Technique(
-    TechniqueId.DASH, 'Dash', new Sequence().cardinals().same().opposite(),
+    TechniqueId.DASH, 'Dash', [new Sequence().cardinals().same().opposite()],
     new Ability({ animation: new Animation(dash()) }),
   ),
   new Technique(
-    TechniqueId.SHURIKENS, 'Shurikens', new Sequence().cardinals().opposite().perpendicular().switch(), 
+    TechniqueId.SHURIKENS, 'Shurikens', [new Sequence().cardinals().opposite().perpendicular().switch()], 
     new ProjectileAbility({
       skinId: ProjectileSkinId.SHURIKEN, speed: 1300, range: 512, damage: 7, target: Enemy,
       hitboxes: [{ x: 0, y: 0, radius: 14 }],
@@ -35,7 +35,7 @@ export const ALL_TECHNIQUES: readonly Technique[] = [
     }),
   ),
   new Technique(
-    TechniqueId.KUNAI, 'Kunai', new Sequence().cardinals().same().switch(), new ProjectileAbility({
+    TechniqueId.KUNAI, 'Kunai', [new Sequence().cardinals().same().switch()], new ProjectileAbility({
       skinId: ProjectileSkinId.KUNAI, speed: 2000, range: 704, damage: 10, target: Enemy,
       hitboxes: [{ x: 14, y: 0, radius: 6 }, { x: 0, y: 0, radius: 8 }],
       crossBody: false,
@@ -46,7 +46,7 @@ export const ALL_TECHNIQUES: readonly Technique[] = [
     }),
   ),
   new Technique(
-    TechniqueId.SHOOT_SLASH, 'Shoot Slash', new Sequence().cardinals().perpendicular().opposite(2).attack(), 
+    TechniqueId.SHOOT_SLASH, 'Shoot Slash', [new Sequence().cardinals().perpendicular().opposite(2).attack()], 
     new ProjectileAbility({
       skinId: ProjectileSkinId.SLASH_ARC, speed: 960, range: 400, damage: 8, target: Enemy, size: 192,
       hitboxes: [{ x: 36, y: 0, radius: 48 }, { x: 8, y: -60, radius: 36 }, { x: 8, y: 60, radius: 36 }],
@@ -63,7 +63,7 @@ export const ALL_TECHNIQUES: readonly Technique[] = [
     }),
   ),
   new Technique(
-    TechniqueId.SPIN_SLASH, 'Spin Slash', new Sequence().cardinals().perpendicular().opposite(2).opposite(2), 
+    TechniqueId.SPIN_SLASH, 'Spin Slash', [new Sequence().cardinals().perpendicular().opposite(2).opposite(2)], 
     new StrikeAbility({
       damage: 8, target: Enemy,
       animation: new Animation([
@@ -74,7 +74,7 @@ export const ALL_TECHNIQUES: readonly Technique[] = [
     }),
   ),
   new Technique(
-    TechniqueId.POWER_SHOT, 'Power Shot', new Sequence().cardinals().perpendicular().attack(),
+    TechniqueId.POWER_SHOT, 'Power Shot', [new Sequence().cardinals().perpendicular().attack()],
     new ProjectileAbility({
       skinId: ProjectileSkinId.ARROW, speed: 2500, range: 1000, damage: 15, target: Enemy, size: 48,
       hitboxes: [{ x: 18, y: 0, radius: 8 }],
@@ -86,7 +86,7 @@ export const ALL_TECHNIQUES: readonly Technique[] = [
     }),
   ),
   new Technique(
-    TechniqueId.KOCK_AWAY, 'Kock away', new Sequence().cardinals().same().attack(),
+    TechniqueId.KOCK_AWAY, 'Kock away', [new Sequence().cardinals().same().attack()],
     new StrikeAbility({
       damage: 2, target: Enemy,
       onHit: new Animation([new MoveStep({ distance: 160, duration: 200, ease: 'Quad.out' })]),
