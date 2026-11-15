@@ -1,5 +1,5 @@
 import { AUTO, Game, Scale } from 'phaser';
-import { SCREEN_HEIGHT, SCREEN_TITLE, SCREEN_WIDTH } from './core/settings';
+import { GAME_SPEED, SCREEN_HEIGHT, SCREEN_TITLE, SCREEN_WIDTH } from './core/settings';
 import { Boot } from './scenes/Boot';
 import { BattleScene as MainGame } from './scenes/BattleScene';
 import { GameOver } from './scenes/GameOver';
@@ -29,7 +29,10 @@ const config: Phaser.Types.Core.GameConfig = {
 };
 
 const StartGame = (parent: string) => {
-  return new Game({ ...config, parent });
+  const game = new Game({ ...config, parent });
+  const step = game.step.bind(game);
+  game.step = (time, delta) => step(time, delta * GAME_SPEED);
+  return game;
 };
 
 export default StartGame;

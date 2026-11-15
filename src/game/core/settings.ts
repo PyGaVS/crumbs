@@ -3,6 +3,9 @@ export const SCREEN_WIDTH = 1440;
 export const SCREEN_HEIGHT = 768;
 export const SCREEN_TITLE = 'Crumbs';
 
+/** Facteur appliqué au temps du jeu : 0.25 pour un ralenti x4 en test. */
+export const GAME_SPEED = 1;
+
 /** Taille d'affichage des sprites en pixels (Python : `scale = 64 / sprite.width`). */
 export const SPRITE_SIZE = 64;
 
