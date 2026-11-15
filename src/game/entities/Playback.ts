@@ -60,12 +60,12 @@ export class Playback {
     const weapon = this.entity.heldWeapon;
 
     if (!weapon) {
-      throw new Error(`Animation ${this.animation.id} : geste d'arme sur une entité sans arme`);
+      throw new Error(`Geste d'arme sur l'entité ${this.entity.texture.key}, sans arme`);
     }
 
     if (!this.grip) {
       if (!from) {
-        throw new Error(`Animation ${this.animation.id} : premier geste sans pose`);
+        throw new Error('Premier geste sans pose');
       }
 
       this.grip = { facing: this.facing, pose: { ...from }, mirror };

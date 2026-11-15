@@ -21,9 +21,9 @@ export default class SkinStep extends AnimationStep {
     return this.options.duration ?? 0;
   }
 
-  start({ entity, facing, animation }: Playback): void {
+  start({ entity, facing }: Playback): void {
     if (!entity.playAction) {
-      throw new Error(`Animation ${animation.id} : action de skin sur une entité sans skin animé`);
+      throw new Error(`Action de skin sur l'entité ${entity.texture.key}, sans skin animé`);
     }
 
     entity.playAction(this.options.action, this.options.direction?.(facing) ?? facing.direction);

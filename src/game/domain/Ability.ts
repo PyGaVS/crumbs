@@ -1,22 +1,16 @@
-import type { AnimationId } from '../data/enums/AnimationId';
 import type { Animation, Cue } from './Animation';
 import type { Fighter } from '../entities/Fighter';
-import { getAnimation } from '../data/animations';
 
 export type AbilityOptions = {
-  animationId: AnimationId;
+  animation: Animation;
 };
 
 /** Ce que fait un fighter : une animation et l'effet de chacun de ses repères. */
 export class Ability {
-  readonly animationId: AnimationId;
+  readonly animation: Animation;
 
   constructor(options: AbilityOptions) {
-    this.animationId = options.animationId;
-  }
-
-  get animation(): Animation {
-    return getAnimation(this.animationId);
+    this.animation = options.animation;
   }
 
   execute(fighter: Fighter): void {

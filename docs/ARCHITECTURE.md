@@ -69,12 +69,14 @@ Boot ──► Preloader ──► MainMenu ──► Game ⇄ GameOver
 
 - `enums/` : un fichier par enum (`CharClassId.NINJA`…). Ce sont les identifiants uniques
   qui relient les catalogues entre eux.
-- Un catalogue par concept (`techniques.ts`, `animations/`, `charClasses.ts`, `weapons.ts`,
+- Un catalogue par concept (`techniques.ts`, `charClasses.ts`, `weapons.ts`,
   `enemies.ts`, `skins.ts`, `weaponSkins.ts`, `projectileSkins.ts`, `fx.ts`) :
   un tableau constant d'instances plus un accesseur `getX(id)` qui échoue bruyamment sur un
   id inconnu.
-- Les liens entre concepts passent par les ids (`techniqueIds: TechniqueId[]`), jamais par
-  des références directes : pas d'imports circulaires.
+- Les liens entre concepts partagés passent par les ids (`techniqueIds: TechniqueId[]`), jamais
+  par des références directes : pas d'imports circulaires. Ce qu'un seul concept possède n'a
+  pas d'id et s'écrit dans son catalogue : l'`Ability` d'une technique, d'une arme ou d'une
+  attaque de mob, et l'`Animation` de cette ability.
 
 ## Les entités (`entities/`)
 
@@ -151,7 +153,7 @@ Les classes métier, instanciées par les catalogues de `data/`. Aucune n'import
     animation en vol, en boucle ou étirée sur toute la course (`SpritePlayback`), et
     l'opacité de son ombre (`shadowAlpha`, 0.15 par défaut). Une
     `ProjectileAbility` le référence par id et garde l'usage : taille, course, hitboxs.
-  - `Animation` : voir plus bas ; une `Ability` référence la sienne.
+  - `Animation` : voir plus bas ; une `Ability` porte la sienne.
 - `MobBehavior` : le comportement d'un `EnemyKind`.
   - `destination` : le point vers lequel il marche, calculé depuis la scène.
   - `interval` : le délai en ms entre deux calculs de destination.
@@ -165,11 +167,11 @@ Les classes métier, instanciées par les catalogues de `data/`. Aucune n'import
 La donnée est partagée et sans état, l'état vit
 dans la lecture.
 
-- `Animation` : une liste de steps datés (`at` en ms), dans `data/animations/index.ts`.
+- `Animation` : une liste de steps datés (`at` en ms), écrite dans l'ability qui la joue.
   `animation.play(entity, { onCue, direction })` la joue sur n'importe quelle `Entity` et coupe
   sa lecture en cours. Ajouter une animation ne demande que de la donnée.
   `data/animations/presets.ts` fournit des suites de steps toutes faites et paramétrables
-  (`dash`, `bow`), que le catalogue appelle pour ses variantes, comme `hitboxRing` pour les hitboxs.
+  (`dash`, `bow`), que les catalogues appellent pour leurs variantes, comme `hitboxRing` pour les hitboxs.
 - `AnimationStep` : la classe de base des steps, comme `Ability` pour les abilities. Ses
   enfants, dans `data/animations/`, surchargent `start(playback)` :
   - `SwingStep` : un geste de l'arme tenue, d'une pose (angle local, rayon, pivot) à une autre,

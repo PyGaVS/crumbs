@@ -14,7 +14,7 @@ export default class HurtboxStep extends PulseStep {
 
   override start(playback: Playback): void {
     if (!playback.entity.scaleHurtbox) {
-      throw new Error(`Animation ${playback.animation.id} : hurtbox sur une entité sans hurtbox`);
+      throw new Error(`Hurtbox sur l'entité ${playback.entity.texture.key}, sans hurtbox`);
     }
 
     super.start(playback);

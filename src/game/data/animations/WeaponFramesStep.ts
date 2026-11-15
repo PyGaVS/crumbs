@@ -18,7 +18,7 @@ export default class WeaponFramesStep extends AnimationStep {
 
   override check(state: StepCheck): void {
     if (!state.holdsWeapon) {
-      throw new Error(`Animation ${state.id} : frames d'arme sans geste qui la tient`);
+      throw new Error("Frames d'arme sans geste qui la tient");
     }
   }
 
@@ -26,7 +26,7 @@ export default class WeaponFramesStep extends AnimationStep {
     const weapon = playback.entity.heldWeapon;
 
     if (!weapon) {
-      throw new Error(`Animation ${playback.animation.id} : frames d'arme sur une entité sans arme`);
+      throw new Error(`Frames d'arme sur l'entité ${playback.entity.texture.key}, sans arme`);
     }
 
     const { frames, duration } = this.options;

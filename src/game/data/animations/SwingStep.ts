@@ -30,7 +30,7 @@ export default class SwingStep extends AnimationStep {
 
   override check(state: StepCheck): void {
     if (!this.options.from && !state.holdsWeapon) {
-      throw new Error(`Animation ${state.id} : premier geste sans pose de départ`);
+      throw new Error('Premier geste sans pose de départ');
     }
 
     state.holdsWeapon = true;

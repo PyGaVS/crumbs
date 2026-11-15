@@ -1,4 +1,3 @@
-import type { AnimationId } from '../data/enums/AnimationId';
 import type { Direction, DirectionFacing } from '../utils/orientation';
 import type { Entity } from '../entities/Entity';
 import type { Playback } from '../entities/Playback';
@@ -32,7 +31,7 @@ export type StepOptions = {
 };
 
 /** Partagé par les steps d'une animation pendant sa validation, dans l'ordre chronologique. */
-export type StepCheck = { readonly id: AnimationId; holdsWeapon: boolean };
+export type StepCheck = { holdsWeapon: boolean };
 
 export abstract class AnimationStep {
   readonly at: number;
@@ -73,16 +72,13 @@ export class Animation {
   readonly cues: readonly CueStep[];
   readonly duration: number;
 
-  constructor(
-    readonly id: AnimationId,
-    steps: readonly AnimationStep[],
-  ) {
+  constructor(steps: readonly AnimationStep[]) {
     // Tri stable : à at égal, l'ordre du tableau fait foi
     this.steps = [...steps].sort((a, b) => a.at - b.at);
     this.cues = this.steps.filter((s): s is CueStep => s instanceof CueStep);
     this.duration = Math.max(0, ...this.steps.map((s) => s.at + s.duration));
 
-    const state: StepCheck = { id, holdsWeapon: false };
+    const state: StepCheck = { holdsWeapon: false };
 
     this.steps.forEach((s) => s.check(state));
   }
