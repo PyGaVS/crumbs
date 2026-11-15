@@ -1,9 +1,14 @@
 import { Geom } from 'phaser';
-import type { Cue, Hitbox } from '../domain/Animation';
+import type { Animation, Cue, Hitbox } from '../domain/Animation';
 import type { Entity } from '../entities/Entity';
 import type { Fighter, FighterClass } from '../entities/Fighter';
 import { fightersInCircle } from './collision';
-import type { Facing } from './orientation';
+import type { Direction, Facing } from './orientation';
+
+export type Hit = {
+  damage: number;
+  onHit?: Animation;
+};
 
 export enum CombatEvent {
   STRIKE = 'strike',
@@ -47,9 +52,16 @@ function outranks(a: Hitbox, b: Hitbox): boolean {
   return priority !== 0 ? priority > 0 : (a.multiplier ?? 1) > (b.multiplier ?? 1);
 }
 
-/** Inflige damage, pondéré par la hitbox retenue, une seule fois à chaque fighter de la classe target touché. */
-export function strike(attacker: Entity, { facing, hitboxes }: Cue, damage: number, target: FighterClass): void {
+export function inflict(fighter: Fighter, { damage, onHit }: Hit, multiplier: number, direction: Direction): void {
+  fighter.takeDamage(damage * multiplier);
+
+  if (fighter.active) {
+    onHit?.play(fighter, { direction });
+  }
+}
+
+export function strike(attacker: Entity, { facing, hitboxes }: Cue, hit: Hit, target: FighterClass): void {
   touchedFighters(attacker, facing, hitboxes, target).forEach((multiplier, fighter) =>
-    fighter.takeDamage(damage * multiplier),
+    inflict(fighter, hit, multiplier, facing.direction),
   );
 }

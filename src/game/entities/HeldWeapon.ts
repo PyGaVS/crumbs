@@ -5,8 +5,11 @@ import type { EaseFunction } from './Playback';
 import type { Skin } from '../domain/Skin';
 import type { WeaponSkin } from '../domain/WeaponSkin';
 
-/** Pose dans le repère du regard : angle local (radians), rayon et pivot en px. */
-export type WeaponPose = { angle: number; radius: number; pivot: number };
+/**
+ * Pose dans le repère du regard : angle local (radians), rayon en px autour du pivot, le centre de rotation,
+ * décalé en px de frontShift vers l'avant et sideShift vers le bas regard à droite, 0 par défaut.
+ */
+export type WeaponPose = { angle: number; radius: number; frontShift?: number; sideShift?: number };
 
 export type WeaponGrip = { readonly facing: DirectionFacing; readonly pose: WeaponPose; mirror: boolean };
 
@@ -72,7 +75,8 @@ export class HeldWeapon extends Attachment {
 
     if (this.grip) {
       const angle = this.grip.facing.toWorld(this.grip.pose.angle);
-      const [pivotX, pivotY] = polar(this.target.x, this.target.y, this.grip.facing.angle, this.grip.pose.pivot);
+      const { frontShift = 0, sideShift = 0 } = this.grip.pose;
+      const [pivotX, pivotY] = this.grip.facing.place(this.target.x, this.target.y, frontShift, sideShift);
 
       this.setVisible(true);
       this.layer(this.grip.facing.direction);

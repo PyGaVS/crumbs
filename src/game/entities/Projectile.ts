@@ -2,7 +2,7 @@ import { Scene, Tweens } from 'phaser';
 import { SPRITE_SIZE } from '../core/settings';
 import { frameRateOver } from '../utils/animation';
 import { hasObstacle } from '../utils/collision';
-import { touchedFighters } from '../utils/combat';
+import { inflict, touchedFighters, type Hit } from '../utils/combat';
 import { AngleFacing, polar } from '../utils/orientation';
 import { SpritePlayback } from '../data/enums/SpritePlayback';
 import type { Ease, Hitbox } from '../domain/Animation';
@@ -11,12 +11,11 @@ import type { Fighter, FighterClass } from './Fighter';
 import type { EaseFunction } from './Playback';
 import type { ProjectileSkin } from '../domain/ProjectileSkin';
 
-export type ProjectileConfig = {
+export type ProjectileConfig = Hit & {
   angle: number;
   /** px par seconde, en moyenne sur la course. */
   speed: number;
   range: number;
-  damage: number;
   target: FighterClass;
   /** Décrites regard à droite autour du projectile, tournées vers sa trajectoire. */
   hitboxes: readonly Hitbox[];
@@ -38,11 +37,11 @@ export class Projectile extends Entity {
   private elapsed = 0;
   private readonly ignoreWalls: boolean;
   private readonly crossBody: boolean;
-  private readonly damage: number;
+  private readonly hit: Hit;
   private readonly target: FighterClass;
   private readonly facing: AngleFacing;
   private readonly hitboxes: readonly Hitbox[];
-  /** Fighters déjà touchés : chacun ne prend les dégâts qu'une seule fois. */
+  /** Fighters déjà touchés : chacun ne prend le coup qu'une seule fois. */
   private readonly fightersHit = new Set<Fighter>();
 
   constructor(scene: Scene, x: number, y: number, skin: ProjectileSkin, config: ProjectileConfig) {
@@ -52,7 +51,7 @@ export class Projectile extends Entity {
     this.range = config.range;
     this.duration = (config.range / config.speed) * 1000;
     this.ease = Tweens.Builders.GetEaseFunction(config.ease ?? 'Linear') as EaseFunction;
-    this.damage = config.damage;
+    this.hit = config;
     this.target = config.target;
     this.facing = new AngleFacing(config.angle);
     this.hitboxes = config.hitboxes;
@@ -119,7 +118,7 @@ export class Projectile extends Entity {
       }
 
       this.fightersHit.add(fighter);
-      fighter.takeDamage(this.damage * multiplier);
+      inflict(fighter, this.hit, multiplier, this.facing.direction);
 
       if (!this.crossBody) {
         this.destroy();

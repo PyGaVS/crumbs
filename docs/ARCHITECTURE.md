@@ -26,7 +26,7 @@ src/
     utils/input.ts        Historique de touches et détection des séquences
     utils/orientation.ts  Directions (Cardinal, Direction), angles du regard, miroir, Facing
     utils/combat.ts       touchedFighters : les fighters d'une classe sous des hitboxs ;
-                          strike : la frappe d'un repère
+                          inflict : un coup porté à un fighter ; strike : la frappe d'un repère
     utils/hitboxes.ts     Les formes de hitboxs toutes faites (hitboxRing…)
 vite/
   config.dev.ts / config.prod.ts
@@ -134,7 +134,9 @@ Les classes métier, instanciées par les catalogues de `data/`. Aucune n'import
   `action` à chaque repère, sans effet par défaut : une `Ability` nue n'est que son animation,
   comme le dash. Les sous-classes de `data/abilities/` surchargent `action` : `StrikeAbility`
   frappe les hitboxs du repère (`strike`) sur la classe de fighters qu'elle vise (`target`),
-  `ProjectileAbility` lance des `Projectile` qui touchent cette classe. Le déclencheur est
+  `ProjectileAbility` lance des `Projectile` qui touchent cette classe. Les deux portent un
+  coup (`Hit`) : des dégâts et, en option, `onHit`, une animation que le fighter touché
+  joue vers le sens du coup (`inflict`), comme un recul. Le déclencheur est
   porté par qui la possède :
   - `Technique` : ses variantes de séquences (dont découle la notation affichée) et la
     détection `matches(history)` ;
@@ -174,9 +176,10 @@ dans la lecture.
   (`dash`, `bow`), que les catalogues appellent pour leurs variantes, comme `hitboxRing` pour les hitboxs.
 - `AnimationStep` : la classe de base des steps, comme `Ability` pour les abilities. Ses
   enfants, dans `data/animations/`, surchargent `start(playback)` :
-  - `SwingStep` : un geste de l'arme tenue, d'une pose (angle local, rayon, pivot) à une autre,
-    dans le sens de rotation `clockwise`, arme miroitée ou non (`mirror`), puis figée sur sa
-    pose d'arrivée pendant `hold` ms ;
+  - `SwingStep` : un geste de l'arme tenue, d'une pose (angle local, rayon, pivot) à une autre.
+    Le pivot, centre de rotation, est décalé regard à droite de `frontShift` vers l'avant et
+    `sideShift` vers le bas, chacun à 0 par défaut. Le geste tourne dans le sens `clockwise`, arme
+    miroitée ou non (`mirror`), puis figée sur sa pose d'arrivée pendant `hold` ms ;
   - `FxStep` : des effets (`Fx`) posés à `reach` px de l'entité, un seul devant elle ou
     `count` en cercle, tournés vers le regard ou droits (`upright`), teintés ou non, décalés
     à l'écran de `offset` quel que soit le regard ;

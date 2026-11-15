@@ -147,6 +147,8 @@ function apply(target: Values, { from, to, start, duration, ease }: Motion, time
   const progress = duration > 0 ? ease(Math.min(1, (time - start) / duration)) : 1;
 
   for (const key in to) {
-    target[key] = from[key] + (to[key] - from[key]) * progress;
+    const origin = from[key] ?? 0;
+
+    target[key] = origin + (to[key] - origin) * progress;
   }
 }

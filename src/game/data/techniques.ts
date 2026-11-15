@@ -54,7 +54,7 @@ export const ALL_TECHNIQUES: readonly Technique[] = [
       animation: new Animation([
         new SkinStep({ action: SkinAction.ATTACK }),
         new SwingStep({
-          from: { angle: -Math.PI*2 / 5, radius: 40, pivot: 0 },
+          from: { angle: -Math.PI*2 / 5, radius: 40 },
           to: { angle: Math.PI*2 / 5 },
           duration: 220, ease: 'Cubic.out', hold: 120,
         }),
@@ -82,6 +82,24 @@ export const ALL_TECHNIQUES: readonly Technique[] = [
       animation: new Animation([
         ...bow({ frames: [0, 1, 2, 3, 0], positions: [[38, 0], [30, 0], [26, 0], [-6, 0]] }),
         new MoveStep({ at: 525, distance: -48, duration: 50, ease: 'Quad.out' }),
+      ]),
+    }),
+  ),
+  new Technique(
+    TechniqueId.KOCK_AWAY, 'Kock away', new Sequence().cardinals().same().attack(),
+    new StrikeAbility({
+      damage: 2, target: Enemy,
+      onHit: new Animation([new MoveStep({ distance: 160, duration: 200, ease: 'Quad.out' })]),
+      animation: new Animation([
+        ...dash({ distance: 64, duration: 100, obstacles: { crossWalls: false, crossFighters: false } }),
+        new SkinStep({ at: 120, action: SkinAction.ATTACK }),
+        new SwingStep({
+          at: 120,
+          from: { angle: -Math.PI / 2, radius: 30, frontShift: 28 },
+          to: { angle: 0, radius: 30, frontShift: 28, sideShift: 30 },
+          duration: 100, ease: 'Cubic.out', hold: 100,
+        }),
+        new CueStep({ at: 170, hitboxes: [{ x: 50, y: 0, radius: 35 }] }),
       ]),
     }),
   ),

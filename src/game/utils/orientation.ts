@@ -78,6 +78,11 @@ export class AngleFacing extends Facing {
   constructor(angle: number) {
     super(angle, isMirrored(angle));
   }
+
+  /** Le cardinal le plus proche de l'angle. */
+  get direction(): Direction {
+    return directionsTowards(Math.cos(this.angle), Math.sin(this.angle))[0];
+  }
 }
 
 /** Un regard sur un cardinal, celui des animations : miroité vers la gauche seulement. */

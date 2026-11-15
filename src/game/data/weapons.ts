@@ -28,7 +28,7 @@ export const ALL_WEAPONS: readonly Weapon[] = [
         }),
         new FxStep({ fx: FxId.SLASH_02, reach: 30, size: 150, mirrored: true }),
         new SwingStep({
-          from: { angle: -Math.PI / 3, radius: 40, pivot: 0 },
+          from: { angle: -Math.PI / 3, radius: 40 },
           to: { angle: Math.PI / 3 },
           duration: 250, ease: 'Cubic.out', hold: 70,
         }),
@@ -43,7 +43,7 @@ export const ALL_WEAPONS: readonly Weapon[] = [
       crossBody: false,
       animation: new Animation(bow({ frames: [0, 1, 2, 0], positions: [[38, 0], [30, 0], [26, 0]] })),
     }),
-    [TechniqueId.POWER_SHOT],
+    [TechniqueId.POWER_SHOT, TechniqueId.KOCK_AWAY],
   ),
 ];
 

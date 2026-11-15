@@ -40,7 +40,7 @@ export function dash({
 export function bow({ frames, positions }: BowOptions): AnimationStep[] {
   return [
     new SkinStep({ action: SkinAction.ATTACK, duration: 800 }),
-    new SwingStep({ from: { angle: -Math.PI / 2, radius: 0, pivot: 28 }, to: {}, duration: 800, ease: 'Linear' }),
+    new SwingStep({ from: { angle: -Math.PI / 2, radius: 0, frontShift: 28 }, to: {}, duration: 800, ease: 'Linear' }),
     new WeaponFramesStep({ frames, duration: 700 }),
     new SpriteStep({ skinId: ProjectileSkinId.ARROW, positions, duration: 525 }),
     new CueStep({ at: 525 }),

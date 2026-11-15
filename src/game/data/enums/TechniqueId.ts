@@ -5,4 +5,5 @@ export enum TechniqueId {
   SHOOT_SLASH,
   SPIN_SLASH,
   POWER_SHOT,
+  KOCK_AWAY,
 }
