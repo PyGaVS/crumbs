@@ -25,6 +25,8 @@ export type ProjectileConfig = Hit & {
   ease?: Ease;
   ignoreWalls?: boolean;
   crossBody?: boolean;
+  /** ms avant qu'un même fighter puisse être retouché, 500 par défaut. */
+  hitboxReset?: number;
 };
 
 export class Projectile extends Entity {
@@ -41,8 +43,9 @@ export class Projectile extends Entity {
   private readonly target: FighterClass;
   private readonly facing: AngleFacing;
   private readonly hitboxes: readonly Hitbox[];
-  /** Fighters déjà touchés : chacun ne prend le coup qu'une seule fois. */
-  private readonly fightersHit = new Set<Fighter>();
+  /** Valeur d'elapsed au dernier coup porté à chaque fighter. */
+  private readonly lastHits = new Map<Fighter, number>();
+  private readonly hitboxReset: number;
 
   constructor(scene: Scene, x: number, y: number, skin: ProjectileSkin, config: ProjectileConfig) {
     super(scene, x, y, skin.textureKey);
@@ -57,6 +60,7 @@ export class Projectile extends Entity {
     this.hitboxes = config.hitboxes;
     this.ignoreWalls = config.ignoreWalls ?? false;
     this.crossBody = config.crossBody ?? true;
+    this.hitboxReset = config.hitboxReset ?? 500;
     this.assetAngle = skin.assetAngle;
     const fit = (config.size ?? SPRITE_SIZE / 2) / this.width;
     const [scaleX, scaleY] = skin.scale;
@@ -113,11 +117,13 @@ export class Projectile extends Entity {
 
   private damageTargets(): void {
     for (const [fighter, multiplier] of touchedFighters(this, this.facing, this.hitboxes, this.target)) {
-      if (this.fightersHit.has(fighter)) {
+      const lastHit = this.lastHits.get(fighter);
+
+      if (lastHit !== undefined && this.elapsed - lastHit < this.hitboxReset) {
         continue;
       }
 
-      this.fightersHit.add(fighter);
+      this.lastHits.set(fighter, this.elapsed);
       inflict(fighter, this.hit, multiplier, this.facing.direction);
 
       if (!this.crossBody) {
