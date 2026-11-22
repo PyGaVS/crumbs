@@ -61,7 +61,7 @@
       {
         "type": "spritesheet",
         "key": "mushroom-walk",
-        "url": "mobs/mushroom.png",
+        "url": "mobs/Mushroom.png",
         "frameConfig": {
           "frameWidth": 16,
           "frameHeight": 16
@@ -70,7 +70,7 @@
       {
         "type": "spritesheet",
         "key": "mushroom-idle",
-        "url": "mobs/mushroom.png",
+        "url": "mobs/Mushroom.png",
         "frameConfig": {
           "frameWidth": 16,
           "frameHeight": 16
