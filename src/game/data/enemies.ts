@@ -4,12 +4,15 @@ import { Player } from '../entities/Player';
 import { hitboxRing } from '../utils/hitboxes';
 import { EnemyId } from './enums/EnemyId';
 import { FxId } from './enums/FxId';
+import { ProjectileSkinId } from './enums/ProjectileSkinId';
 import { SkinAction } from './enums/SkinAction';
 import { SkinId } from './enums/SkinId';
+import ProjectileAbility from './abilities/ProjectileAbility';
 import StrikeAbility from './abilities/StrikeAbility';
 import FxStep from './animations/FxStep';
 import MoveStep from './animations/MoveStep';
 import SkinStep from './animations/SkinStep';
+import SpriteStep from './animations/SpriteStep';
 
 /** Catalogue des ennemis. */
 export const ALL_ENEMY_KINDS: readonly EnemyKind[] = [
@@ -65,6 +68,34 @@ export const ALL_ENEMY_KINDS: readonly EnemyKind[] = [
       destination: (_mob, scene) => scene.player,
       interval: 250,
       shouldHalt: (mob, scene) => mob.reaches(scene.player),
+    },
+  ),
+  new EnemyKind(
+    EnemyId.HEART_RED,
+    'Cœur rouge',
+    SkinId.HEART_RED,
+    30, 100,
+    [{ ability: new ProjectileAbility({
+        skinId: ProjectileSkinId.ARROW, speed: 400, range: 700, damage: 5, target: Player, size: 48,
+        hitboxes: [{ x: 18, y: 0, radius: 8 }],
+        crossBody: false,
+        animation: new Animation([
+          new SkinStep({ action: SkinAction.ATTACK, duration: 2000 }),
+          new SpriteStep({ skinId: ProjectileSkinId.ARROW, positions: [[40, 0], [32, 0], [28, 0]], duration: 600 }),
+          new CueStep({ at: 600 }),
+          new SpriteStep({ at: 600, skinId: ProjectileSkinId.ARROW, positions: [[40, 0], [28, 0]], duration: 250 }),
+          new CueStep({ at: 1100 }),
+        ]),
+      }),
+      customAngle: (mob, scene) => Math.atan2(scene.player.y - mob.y, scene.player.x - mob.x),
+      triggers: [
+        (mob, scene) => mob.gap(scene.player) > 150 && mob.gap(scene.player) <= 400,
+        { when: (mob, scene) => mob.gap(scene.player) <= 150, after: 2000 },
+      ] }],
+    {
+      destination: (mob, scene) => (mob.gap(scene.player) <= 150 ? mob.retreat(scene.player, 150) : scene.player),
+      interval: 150,
+      shouldHalt: () => false,
     },
   ),
 ];

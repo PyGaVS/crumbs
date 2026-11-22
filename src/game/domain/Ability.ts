@@ -13,9 +13,12 @@ export class Ability {
     this.animation = options.animation;
   }
 
-  execute(fighter: Fighter): void {
-    this.animation.play(fighter, { onCue: (cue) => this.action(fighter, cue) });
+  /**
+   * @param customAngle angle (radians) des tirs à la place du regard, renseigné par les ennemis
+   */
+  execute(fighter: Fighter, customAngle?: number): void {
+    this.animation.play(fighter, { onCue: (cue) => this.action(fighter, cue, customAngle) });
   }
 
-  protected action(_fighter: Fighter, _cue: Cue): void {}
+  protected action(_fighter: Fighter, _cue: Cue, _customAngle?: number): void {}
 }

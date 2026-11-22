@@ -22,11 +22,13 @@ export default class ProjectileAbility extends Ability {
     return getProjectileSkin(this.options.skinId);
   }
 
-  protected override action(fighter: Fighter, cue: Cue): void {
+  protected override action(fighter: Fighter, cue: Cue, customAngle?: number): void {
+    const angle = customAngle ?? cue.facing.angle;
+
     for (const spread of this.options.spreadAngles ?? [0]) {
       new Projectile(fighter.scene, fighter.x, fighter.y, this.skin, {
         ...this.options,
-        angle: cue.facing.angle + spread,
+        angle: angle + spread,
       });
     }
   }

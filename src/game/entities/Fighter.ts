@@ -104,7 +104,7 @@ export class Fighter extends Entity {
   }
 
   /** px entre sa hurtbox et celle d'other, négatif quand elles se chevauchent. */
-  private gap(other: Fighter): number {
+  gap(other: Fighter): number {
     return Math.hypot(other.x - this.x, other.y - this.y) - this.hurtboxRadius - other.hurtboxRadius;
   }
 }

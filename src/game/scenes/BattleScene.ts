@@ -42,7 +42,8 @@ export class BattleScene extends Scene {
     const ennemies = [
       new Enemy(this, SCREEN_WIDTH * 0.9, SCREEN_HEIGHT / 4, getEnemyKind(EnemyId.MUSHROOM), Inputs.LEFT),
       new Enemy(this, SCREEN_WIDTH * 0.9, SCREEN_HEIGHT * 0.75, getEnemyKind(EnemyId.REPTILE), Inputs.LEFT),
-      new Enemy(this, SCREEN_WIDTH * 0.9, SCREEN_HEIGHT / 2, getEnemyKind(EnemyId.REPTILE), Inputs.LEFT)
+      new Enemy(this, SCREEN_WIDTH * 0.9, SCREEN_HEIGHT / 2, getEnemyKind(EnemyId.REPTILE), Inputs.LEFT),
+      new Enemy(this, SCREEN_WIDTH * 0.1, SCREEN_HEIGHT / 4, getEnemyKind(EnemyId.HEART_RED), Inputs.RIGHT),
     ];
     
     const mobs = this.add.group(ennemies);

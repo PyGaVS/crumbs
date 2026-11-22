@@ -1,10 +1,13 @@
 import { GameObjects, Scenes } from 'phaser';
+import type { MobAttack, MobTrigger } from '../domain/MobAttack';
 import type { MobBehavior } from '../domain/MobBehavior';
 import type { Enemy } from '../entities/Enemy';
 import type { BattleScene } from '../scenes/BattleScene';
 
 export class MobControls {
   private cooldown = 0;
+  /** ms d'affilée où chaque trigger à délai est vrai. */
+  private readonly held = new Map<MobTrigger, number>();
 
   constructor(
     private readonly scene: BattleScene,
@@ -21,12 +24,11 @@ export class MobControls {
       return;
     }
 
-    const attack = this.scene.player.active
-      ? this.mob.kind.attacks.find((a) => a.triggers.some((trigger) => trigger(this.mob, this.scene)))
-      : undefined;
+    const attack = this.scene.player.active ? this.triggeredAttack(delta) : undefined;
 
     if (attack) {
-      this.mob.attack(attack, this.scene.player);
+      this.mob.attack(attack, this.scene.player, attack.customAngle?.(this.mob, this.scene));
+      this.held.clear();
       this.cooldown = 0;
 
       return;
@@ -47,6 +49,24 @@ export class MobControls {
       this.cooldown = this.behavior.interval;
       this.mob.walkTowards(x, y, this.mob.lookahead, this.behavior.disableUTurn);
     }
+  }
+
+  /**
+   * Avance de delta ms les triggers à délai, puis cherche l'attaque à lancer.
+   * @returns la première attaque dont un trigger est vrai
+   */
+  private triggeredAttack(delta: number): MobAttack | undefined {
+    const { attacks } = this.mob.kind;
+
+    for (const trigger of attacks.flatMap((a) => a.triggers)) {
+      if (typeof trigger !== 'function') {
+        this.held.set(trigger, trigger.when(this.mob, this.scene) ? (this.held.get(trigger) ?? 0) + delta : 0);
+      }
+    }
+
+    return attacks.find((a) =>
+      a.triggers.some((t) => (typeof t === 'function' ? t(this.mob, this.scene) : (this.held.get(t) ?? 0) >= t.after)),
+    );
   }
 
   private destroy(): void {

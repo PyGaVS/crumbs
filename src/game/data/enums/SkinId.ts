@@ -3,4 +3,5 @@ export enum SkinId {
   SNAKE,
   MUSHROOM,
   REPTILE,
+  HEART_RED,
 }

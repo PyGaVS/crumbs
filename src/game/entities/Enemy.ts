@@ -4,7 +4,15 @@ import { MobControls } from '../controls/MobControls';
 import type { SkinAction } from '../data/enums/SkinAction';
 import { LifeBar } from '../ui/LifeBar';
 import { fightersInCircle } from '../utils/collision';
-import { Direction, directionsTowards, FACING_ANGLES, opposite, polar } from '../utils/orientation';
+import {
+  CARDINALS,
+  Direction,
+  directionsTowards,
+  FACING_ANGLES,
+  opposite,
+  polar,
+  type Point,
+} from '../utils/orientation';
 import type { MobAttack } from '../domain/MobAttack';
 import { EnemyKind } from '../domain/EnemyKind';
 import type { BattleScene } from '../scenes/BattleScene';
@@ -58,10 +66,11 @@ export class Enemy extends Fighter {
     this.act(this.kind.skin, action, direction);
   }
 
-  attack(attack: MobAttack, target: Fighter): void {
+  /** @param customAngle angle (radians) des tirs, absent pour tirer vers son regard */
+  attack(attack: MobAttack, target: Fighter, customAngle?: number): void {
     this.direction = directionsTowards(target.x - this.x, target.y - this.y)[0];
     this.halt();
-    attack.ability.execute(this);
+    attack.ability.execute(this, customAngle);
   }
 
   /**
@@ -71,6 +80,32 @@ export class Enemy extends Fighter {
    */
   ambush(target: Entity, maxLead: number, leadRatio: number): { x: number; y: number } {
     return target.ahead(Math.min(maxLead, leadRatio * Math.hypot(target.x - this.x, target.y - this.y)));
+  }
+
+  /**
+   * Le point de l'arène le plus proche sur un axe de target, à distance d'elle : de là, un tir droit l'atteint.
+   * @param distance px, sous la moitié de la plus petite dimension de l'arène pour qu'un point y tombe
+   */
+  lineUp(target: Entity, distance: number): { x: number; y: number } {
+    const away = ([x, y]: Point) => Math.hypot(x - this.x, y - this.y);
+    const [x, y] = CARDINALS.map((d) => polar(target.x, target.y, FACING_ANGLES[d], distance))
+      .filter(([x, y]) => this.scene.physics.world.bounds.contains(x, y))
+      .reduce((best, point) => (away(point) < away(best) ? point : best));
+
+    return { x, y };
+  }
+
+  /** Le point le plus proche où sa hurtbox est à gap px de celle de target, pour la fuir. */
+  retreat(target: Fighter, gap: number): { x: number; y: number } {
+    const radii = Math.hypot(this.x - target.x, this.y - target.y) - this.gap(target);
+    const [x, y] = polar(target.x, target.y, Math.atan2(this.y - target.y, this.x - target.x), radii + gap);
+
+    return { x, y };
+  }
+
+  /** Sur un axe de target à tolerance px près, dans la ligne d'un tir droit. */
+  isAlignedWith(target: Entity, tolerance: number): boolean {
+    return Math.min(Math.abs(target.x - this.x), Math.abs(target.y - this.y)) <= tolerance;
   }
 
   reaches(other: Fighter): boolean {

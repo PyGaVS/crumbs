@@ -124,17 +124,20 @@ Les sprites, qui vivent dans une scène :
   les actions de son skin (`playAction`), donc les `SkinStep`.
   `ambush` donne une destination qui coupe la route d'une cible : le point devant elle
   (`Entity.ahead`), à une avance proportionnelle à la distance (`leadRatio`) jusqu'à un plafond
-  (`maxLead`).
+  (`maxLead`). `lineUp` donne le point de l'arène le plus proche sur un axe d'une cible, à
+  distance d'elle, et `isAlignedWith` dit si le mob y est : ses tirs partent sur un cardinal.
+  `retreat` donne le point le plus proche à un écart donné de la hurtbox d'une cible, pour la fuir.
 
 ## Le domaine (`domain/`)
 
 Les classes métier, instanciées par les catalogues de `data/`. Aucune n'importe Phaser :
 
-- `Ability` : ce que fait un fighter. `execute(fighter)` joue son animation, obligatoire, et appelle
+- `Ability` : ce que fait un fighter. `execute(fighter, customAngle?)` joue son animation, obligatoire, et appelle
   `action` à chaque repère, sans effet par défaut : une `Ability` nue n'est que son animation,
   comme le dash. Les sous-classes de `data/abilities/` surchargent `action` : `StrikeAbility`
   frappe les hitboxs du repère (`strike`) sur la classe de fighters qu'elle vise (`target`),
-  `ProjectileAbility` lance des `Projectile` qui touchent cette classe. Les deux portent un
+  `ProjectileAbility` lance des `Projectile` qui touchent cette classe, vers le regard ou vers
+  `customAngle` quand il est renseigné. Les deux portent un
   coup (`Hit`) : des dégâts et, en option, `onHit`, une animation que le fighter touché
   joue vers le sens du coup (`inflict`), comme un recul. Le déclencheur est
   porté par qui la possède :
@@ -143,7 +146,9 @@ Les classes métier, instanciées par les catalogues de `data/`. Aucune n'import
   - l'attaque de base d'une `Weapon`, lancée par un appui sur l'attaque qui ne conclut
     aucune technique ;
   - `MobAttack` : une attaque d'`EnemyKind`, lancée dès qu'un de ses `triggers` est vrai, la
-    première de la liste l'emportant.
+    première de la liste l'emportant. Un trigger `{ when, after }` n'est vrai qu'une fois `when`
+    validé `after` ms d'affilée ; ces compteurs, propres à chaque mob dans `MobControls`,
+    repartent à zéro à chaque attaque. `customAngle`, calculé au lancement, fixe l'angle des tirs.
 - `CharClass`, `Weapon`, `EnemyKind` : les concepts du design et leurs chiffres. Leur rendu
   vit à part et se référence par id :
   - `Skin` : textures, clés d'animation et position de la main sur chaque frame, pour une

@@ -6,7 +6,7 @@
   "sheets": [
     {
       "$comment": "Pack Ninja Adventure : une colonne par direction, une ligne par frame de marche.",
-      "keys": ["ninjaGreen-walk", "mushroom-walk", "reptile-walk"],
+      "keys": ["ninjaGreen-walk", "mushroom-walk", "reptile-walk", "heartRed-walk"],
       "layout": "column",
       "columns": 4,
       "rows": 4,
@@ -61,6 +61,14 @@
       "prefix": "mushroom",
       "layout": "frames",
       "animations": { "release": [12] },
+      "repeat": 0
+    },
+    {
+      "$comment": "Tir du cœur, bouche ouverte vers chaque direction.",
+      "keys": ["heartRed-walk"],
+      "prefix": "heartRed-attack",
+      "layout": "frames",
+      "animations": { "down": [8], "up": [9], "left": [10], "right": [11] },
       "repeat": 0
     },
     {

@@ -27,6 +27,7 @@ export const ALL_SKINS: readonly Skin[] = [
   new Skin(SkinId.SNAKE, 'snake'),
   new Skin(SkinId.MUSHROOM, 'mushroom'),
   new Skin(SkinId.REPTILE, 'reptile'),
+  new Skin(SkinId.HEART_RED, 'heartRed'),
 ];
 
 export function getSkin(id: SkinId): Skin {
