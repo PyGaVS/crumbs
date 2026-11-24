@@ -1,9 +1,9 @@
-import { orient, type Point } from '../utils/orientation';
+import { orient, type AngleFacing, type DirectionFacing, type Point } from '../utils/orientation';
 import { Attachment } from './Attachment';
 import type { Entity } from './Entity';
 import type { Playback } from './Playback';
 
-/** Un sprite tenu sur l'axe du regard d'une lecture, placé comme l'arme mais au-dessus d'elle, détruit avec la lecture. */
+/** Un sprite tenu sur l'axe de facing, placé comme l'arme mais au-dessus d'elle, détruit avec la lecture. */
 export class HeldSprite extends Attachment<Entity> {
   /** Centre du sprite autour de l'entité, en px décrits regard à droite. */
   position: Point = [0, 0];
@@ -11,6 +11,7 @@ export class HeldSprite extends Attachment<Entity> {
   constructor(
     private readonly playback: Playback,
     texture: string,
+    private readonly facing: AngleFacing | DirectionFacing,
     private readonly assetAngle?: number,
   ) {
     super(playback.entity, texture);
@@ -23,7 +24,7 @@ export class HeldSprite extends Attachment<Entity> {
       return;
     }
 
-    const { facing } = this.playback;
+    const { facing } = this;
 
     this.setPosition(...facing.place(this.target.x, this.target.y, ...this.position));
 

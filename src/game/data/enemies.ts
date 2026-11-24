@@ -81,9 +81,13 @@ export const ALL_ENEMY_KINDS: readonly EnemyKind[] = [
         crossBody: false,
         animation: new Animation([
           new SkinStep({ action: SkinAction.ATTACK, duration: 2000 }),
-          new SpriteStep({ skinId: ProjectileSkinId.ARROW, positions: [[40, 0], [32, 0], [28, 0]], duration: 600 }),
+          new SpriteStep({
+            skinId: ProjectileSkinId.ARROW, positions: [[40, 0], [32, 0], [28, 0]], duration: 600, useCustomAngle: true,
+          }),
           new CueStep({ at: 600 }),
-          new SpriteStep({ at: 600, skinId: ProjectileSkinId.ARROW, positions: [[40, 0], [28, 0]], duration: 250 }),
+          new SpriteStep({
+            at: 600, skinId: ProjectileSkinId.ARROW, positions: [[40, 0], [28, 0]], duration: 250, useCustomAngle: true,
+          }),
           new CueStep({ at: 1100 }),
         ]),
       }),

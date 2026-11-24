@@ -24,6 +24,7 @@ export type Cue = {
 export type PlayOptions = {
   onCue?: (cue: Cue) => void;
   direction?: Direction;
+  customAngle?: number;
 };
 
 export type StepOptions = {

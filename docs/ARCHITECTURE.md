@@ -112,7 +112,7 @@ Les sprites, qui vivent dans une scène :
     l'horloge de la scène et sans verrou. `sheathe` la cache jusqu'à la prochaine prise en
     main, le temps de la technique conclue par le switch.
   - `HeldSprite` : un sprite tenu autour de l'entité (`position`, décrite regard à droite et
-    placée par `Facing.place` comme une hitbox), sur le regard d'une lecture, à l'échelle de
+    placée par `Facing.place` comme une hitbox), sur un regard donné par son step, à l'échelle de
     son porteur. Comme l'arme (`layer`, commun aux attaches), il passe derrière le porteur
     quand celui-ci regarde vers le haut, et reste juste au-dessus de l'arme. Posé par un
     `SpriteStep`, il disparaît avec la lecture.
@@ -175,7 +175,7 @@ La donnée est partagée et sans état, l'état vit
 dans la lecture.
 
 - `Animation` : une liste de steps datés (`at` en ms), écrite dans l'ability qui la joue.
-  `animation.play(entity, { onCue, direction })` la joue sur n'importe quelle `Entity` et coupe
+  `animation.play(entity, { onCue, direction, customAngle })` la joue sur n'importe quelle `Entity` et coupe
   sa lecture en cours. Ajouter une animation ne demande que de la donnée.
   `data/animations/presets.ts` fournit des suites de steps toutes faites et paramétrables
   (`dash`, `bow`), que les catalogues appellent pour leurs variantes, comme `hitboxRing` pour les hitboxs.
@@ -199,7 +199,7 @@ dans la lecture.
     sur `duration` ms, sur l'horloge de la lecture (la charge de l'arc) ;
   - `SpriteStep` : le sprite d'un `ProjectileSkin` tenu autour de l'entité pendant `duration` ms,
     ses `positions` (décrites regard à droite) réparties à parts égales comme des frames (la
-    flèche encochée) ;
+    flèche encochée), le long du regard, ou du `customAngle` de la lecture avec `useCustomAngle` ;
   - `PulseStep` : la base des effets qui montent à leur plus fort en `duration` ms, y restent
     `hold` ms, puis reviennent en `recover` ms. Ses enfants disent ce que l'effet touche :
     - `ScaleStep` : le skin aplati, étiré ou grossi (`scale`, multiplicateurs [le long du regard, en travers], qui suit le regard sauf `upright`) ;

@@ -33,6 +33,10 @@ export class Playback {
     return !this.ended;
   }
 
+  get customAngle(): number | undefined {
+    return this.options.customAngle;
+  }
+
   start(): void {
     this.advance(0);
   }

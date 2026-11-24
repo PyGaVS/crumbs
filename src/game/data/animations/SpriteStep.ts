@@ -1,7 +1,7 @@
 import { AnimationStep, type StepOptions } from '../../domain/Animation';
 import { HeldSprite } from '../../entities/HeldSprite';
 import type { Playback } from '../../entities/Playback';
-import type { Point } from '../../utils/orientation';
+import { AngleFacing, type Point } from '../../utils/orientation';
 import type { ProjectileSkinId } from '../enums/ProjectileSkinId';
 import { getProjectileSkin } from '../projectileSkins';
 
@@ -10,6 +10,7 @@ type SpriteOptions = StepOptions & {
   /** Centres successifs du sprite autour de l'entité, décrits regard à droite, un par part égale de duration. */
   positions: readonly Point[];
   duration: number;
+  useCustomAngle?: boolean;
 };
 
 /** Un sprite tenu devant l'entité, à l'échelle de son porteur, qui disparaît après duration. */
@@ -23,9 +24,11 @@ export default class SpriteStep extends AnimationStep {
   }
 
   start(playback: Playback): void {
-    const { skinId, positions, duration } = this.options;
+    const { skinId, positions, duration, useCustomAngle } = this.options;
     const { textureKey, assetAngle } = getProjectileSkin(skinId);
-    const sprite = new HeldSprite(playback, textureKey, assetAngle);
+    const customAngle = useCustomAngle ? playback.customAngle : undefined;
+    const facing = customAngle === undefined ? playback.facing : new AngleFacing(customAngle);
+    const sprite = new HeldSprite(playback, textureKey, facing, assetAngle);
 
     playback.during(duration, (_ms, progress) => {
       if (progress >= 1) {
