@@ -20,7 +20,7 @@ const WIELD_EASE = Tweens.Builders.GetEaseFunction('Back.out') as EaseFunction;
 /** L'arme en main, recalée chaque frame sur la main que montre la frame du skin, sauf quand une animation la tient. */
 export class HeldWeapon extends Attachment {
   private grip?: WeaponGrip;
-  private _sheathed = false;
+  private sheathed = false;
   /** Instant de la prise en main. */
   private wieldedAt?: number;
 
@@ -33,8 +33,9 @@ export class HeldWeapon extends Attachment {
     this.showInHand();
   }
 
-  get sheathed(): boolean {
-    return this._sheathed;
+  /** @returns `true` si weaponSkin est en main et pas cachée. */
+  holds(weaponSkin: WeaponSkin): boolean {
+    return !this.sheathed && this.weaponSkin === weaponSkin;
   }
 
   hold(grip?: WeaponGrip): void {
@@ -49,13 +50,13 @@ export class HeldWeapon extends Attachment {
 
   /** Cache l'arme jusqu'à la prochaine prise en main. */
   sheathe(): void {
-    this._sheathed = true;
+    this.sheathed = true;
   }
 
   /** Prend weaponSkin en main : son sprite entier tourne jusqu'à sa pose, puis laisse place à sa version en main. */
   wield(weaponSkin: WeaponSkin): void {
     this.weaponSkin = weaponSkin;
-    this._sheathed = false;
+    this.sheathed = false;
     // L'animation qui tenait l'arme peut finir une frame après la fin du verrou du joueur
     this.grip = undefined;
     this.wieldedAt = this.scene.time.now;
@@ -67,7 +68,7 @@ export class HeldWeapon extends Attachment {
       this.showInHand();
     }
 
-    if (this._sheathed) {
+    if (this.sheathed) {
       this.setVisible(false);
 
       return;

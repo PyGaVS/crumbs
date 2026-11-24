@@ -97,7 +97,10 @@ Les sprites, qui vivent dans une scène :
   depuis le clavier. Il expose aussi les primitives que les techniques utilisent (`lock`,
   `playAction`…). Il reçoit une `Composition` et ne reconnaît que les techniques de sa classe
   et de son arme active. Un appui sur le switch passe à l'autre arme, après la technique
-  qu'il conclut éventuellement : il ne fige pas le joueur.
+  qu'il conclut éventuellement : il ne fige pas le joueur. Pendant une animation, un appui
+  entre aussitôt dans l'historique ; la première ability qu'il déclenche attend la fin de
+  l'animation pour se lancer, avec l'arme active au moment de l'appui. Un switch ne change
+  l'arme en main qu'à la fin d'une animation.
 - `Attachment` : une image accrochée à un sprite, recalée sur lui après la physique à chaque
   frame et détruite avec lui. Trois déclinaisons :
   - `Shadow` : l'ombre portée que chaque `Entity` crée à sa construction, dessinée juste

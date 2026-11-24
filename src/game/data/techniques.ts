@@ -74,7 +74,10 @@ export const ALL_TECHNIQUES: readonly Technique[] = [
     }),
   ),
   new Technique(
-    TechniqueId.POWER_SHOT, 'Power Shot', [new Sequence().cardinals().perpendicular().attack()],
+    TechniqueId.POWER_SHOT, 'Power Shot', [
+      new Sequence().cardinals().perpendicular().attack(),
+      new Sequence().cardinals().same().attack().attack()
+    ],
     new ProjectileAbility({
       skinId: ProjectileSkinId.ARROW, speed: 2500, range: 1000, damage: 15, target: Enemy, size: 48,
       hitboxes: [{ x: 18, y: 0, radius: 8 }],

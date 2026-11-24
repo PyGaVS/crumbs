@@ -1,6 +1,7 @@
 import { SCREEN_HEIGHT, SCREEN_WIDTH, SPRITE_SIZE } from '../core/settings';
 import { Inputs } from '../data/enums/Inputs';
 import type { SkinAction } from '../data/enums/SkinAction';
+import type { Ability } from '../domain/Ability';
 import type { Animation, PlayOptions } from '../domain/Animation';
 import { InputHistory, isCardinal } from '../utils/input';
 import type { Direction } from '../utils/orientation';
@@ -20,7 +21,8 @@ export class Player extends Fighter {
   inputHistory = new InputHistory();
   private idle = false;
   private locked = false;
-  private inputBuffer: Inputs[] = [];
+  /** Déclenchée pendant l'animation, lancée à sa fin avec l'arme d'alors ; `switched` si le switch l'a conclue. */
+  private queued?: { ability: Ability; weapon: Weapon; switched: boolean };
   private activeWeapon: 0 | 1 = 0;
   declare readonly heldWeapon: HeldWeapon;
   name = 'player';
@@ -46,32 +48,33 @@ export class Player extends Fighter {
       this.direction = input;
     }
 
-    if (this.locked) {
-      this.inputBuffer.push(input);
-
-      return;
-    }
-
     this.inputHistory.addInput(input);
 
     const technique = this.composition
       .techniquesWith(this.activeWeapon)
       .find((t) => t.matches(this.inputHistory.history));
+    const ability = technique?.ability ?? (input === Inputs.ATTACK ? this.weapon.attack : undefined);
+    const switched = input === Inputs.SWITCH;
+    const weapon = this.weapon;
 
-    if (technique) {
-      technique.ability.execute(this);
-    } else if (input === Inputs.ATTACK) {
-      this.weapon.attack.execute(this);
+    if (switched) {
+      this.activeWeapon = this.activeWeapon === 0 ? 1 : 0;
     }
 
-    if (input === Inputs.SWITCH) {
-      this.switchWeapon();
+    if (!this.locked) {
+      this.launch(ability, switched);
+    } else if (ability) {
+      this.queued ??= { ability, weapon, switched };
     }
   }
 
-  /** Passe à l'autre arme, prise en main à la fin de l'animation en cours. */
-  private switchWeapon(): void {
-    this.activeWeapon = this.activeWeapon === 0 ? 1 : 0;
+  /** Lance ability puis, après un switch, prend l'arme active en main, ou la cache jusqu'à la fin de l'animation. */
+  private launch(ability: Ability | undefined, switched: boolean): void {
+    ability?.execute(this);
+
+    if (!switched) {
+      return;
+    }
 
     if (this.locked) {
       this.heldWeapon.sheathe();
@@ -105,16 +108,17 @@ export class Player extends Fighter {
 
     this.locked = false;
 
-    if (this.heldWeapon.sheathed) {
-      this.heldWeapon.wield(this.weapon.skin);
+    const queued = this.queued;
+    const weapon = queued?.weapon ?? this.weapon;
+
+    this.queued = undefined;
+
+    if (!this.heldWeapon.holds(weapon.skin)) {
+      this.heldWeapon.wield(weapon.skin);
     }
 
-    const buffered = this.inputBuffer;
-    this.inputBuffer = [];
-
-    for (const input of buffered) {
-      this.press(input);
-      if (this.locked) { break; }
+    if (queued) {
+      this.launch(queued.ability, queued.switched);
     }
   }
 
